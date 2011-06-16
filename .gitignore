@@ -2,4 +2,5 @@
 .idea/*/**
 .loadpath
 .project
-topaz.gemspec
+*.gem
+*.gemspec
