@@ -1,0 +1,31 @@
+= diamond
+
+MIDI arpeggiator in Ruby
+  
+== gem dependencies
+
+* {gamelan}[http://github.com/jvoorhis/gamelan]
+* {midi-eye}[http://github.com/arirusso/midi-eye]
+* {midi-message}[http://github.com/arirusso/midi-message]
+* {nibbler}[http://github.com/arirusso/nibbler]
+* {topaz}[http://github.com/arirusso/topaz]
+* {unimidi}[http://github.com/arirusso/unimidi]
+
+these will install automatically with the gem
+
+== Usage
+    
+== Documentation
+
+* {examples}[http://github.com/arirusso/diamond/tree/master/examples]
+* {rdoc}[http://rdoc.info/gems/diamond] 
+
+== Author
+
+* {Ari Russo}[http://github.com/arirusso] <ari.russo at gmail.com>
+
+== License
+
+Apache 2.0, See the file LICENSE
+
+Copyright (c) 2011 Ari Russo
