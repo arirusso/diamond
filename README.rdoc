@@ -4,7 +4,6 @@ MIDI arpeggiator in Ruby
   
 == gem dependencies
 
-* {midi-eye}[http://github.com/arirusso/midi-eye]
 * {midi-message}[http://github.com/arirusso/midi-message]
 * {topaz}[http://github.com/arirusso/topaz]
 * {unimidi}[http://github.com/arirusso/unimidi]

@@ -5,8 +5,10 @@
 # 
 
 require 'midi-message'
+require 'topaz'
 
 require 'diamond/arpeggiator'
+require 'diamond/clock'
 #require 'diamond/pattern'
 
 module Diamond
