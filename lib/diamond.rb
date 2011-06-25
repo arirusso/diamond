@@ -3,12 +3,14 @@
 # MIDI arpeggiator in Ruby
 # (c)2011 Ari Russo and licensed under the Apache 2.0 License
 # 
+require 'forwardable'
 
 require 'midi-message'
 require 'topaz'
 
 require 'diamond/arpeggiator'
-require 'diamond/clock'
+require 'diamond/note_event'
+require 'diamond/sequencer'
 #require 'diamond/pattern'
 
 module Diamond

@@ -7,37 +7,36 @@ require "unimidi"
 
 UniMIDI::Output.first.open do |output|
 
-kb = MIDIController.new
+#kb = MIDIController.new
 
-arp = Diamond::Arpeggiator.new(:steps => 4, :interval => 7)
+opts = { 
+  :gate => 90, 
+  :steps => 4, 
+  :interval => 7,
+  :rate => 8,
+  :resolution => 64
+}
 
-tempo = Topaz::Tempo.new(138) do 
-  arp.step
-  data = arp.messages_as_bytes
+arp = Diamond::Arpeggiator.new(175, opts) do |msgs|
+  data = msgs.map { |msg| msg.to_bytes }.flatten
   p data 
   output.puts(data) unless data.empty?
 end
 
-#opts = { 
-#  :gate => 128, 
-#  :steps => 4, 
-#  :interval => 7, 
-#  :background => true 
-#}
-#
-#arpeggiator = Diamond.new(138, opts) do |msgs|
-#  data = msgs.map { |msg| msg.to_bytes }
-#  p data 
-#  output.puts(data) unless data.empty?
-#end 
+notes = [
+  MIDIMessage::NoteOn["C4"].new(0, 100),
+  MIDIMessage::NoteOn["E4"].new(0, 100),
+  MIDIMessage::NoteOn["G4"].new(0, 100)
+]
+   
+arp.start
+#(:background => true)
 
-tempo.start(:background => true)
-
-kb.capture do |msg|
-  case msg
-    when MIDIMessage::NoteOn then arp.add(msg)
-    when MIDIMessage::NoteOff then arp.remove(msg)
-  end
-end
+#kb.capture do |msg|
+#  case msg
+#    when MIDIMessage::NoteOn then arp.add(msg)
+#    when MIDIMessage::NoteOff then arp.remove(msg)
+#  end
+#end
 
 end
