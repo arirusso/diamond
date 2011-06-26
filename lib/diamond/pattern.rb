@@ -10,8 +10,8 @@ module Diamond
       @proc = proc      
     end
     
-    def compute(range)
-      @proc.call(range)
+    def compute(range, interval)
+      @proc.call(range, interval)
     end
     
     def self.all
@@ -32,23 +32,30 @@ module Diamond
       @patterns ||= []
       return unless @patterns.empty?
       
-      @patterns << Pattern.new("Up") do |r| 
-          a = []
-          0.upto(r) { |i| a << i }
-          a
+      @patterns << Pattern.new("Up") do |r, i| 
+        a = []
+        0.upto(r) { |n| a << (n * i) }
+        a
       end
         
-      @patterns << Pattern.new("Down") do |r|
-          a = []
-          r.downto(0) { |i| a << i }
-          a
-        end
+      @patterns << Pattern.new("Down") do |r, i|
+        a = []
+        r.downto(0) { |n| a << (n * i) }
+        a
+      end
         
-      @patterns << Pattern.new("UpDown") do |r|
-          a = []
-          0.upto(r) { |i| a << i }
-          r.downto(0) { |i| a << i }
-          a
+      @patterns << Pattern.new("UpDown") do |r, i|
+        a = []
+        0.upto(r) { |n| a << (n * i) }
+        [(r-1), 0].max.downto(0) { |n| a << (n * i) }
+        a
+      end
+      
+      @patterns << Pattern.new("DownUp") do |r, i|
+        a = []
+        r.downto(0) { |n| a << (n * i) }
+        1.upto(r) { |n| a << (n * i) }          
+        a
       end
         
     end

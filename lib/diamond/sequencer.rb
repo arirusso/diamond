@@ -14,14 +14,13 @@ module Diamond
       @resolution = resolution
       @interval = options[:interval] || 12
       @range = options[:range] || 3
-      @pattern = options[:pattern] || Pattern.all.values.first
+      @pattern = options[:pattern] || Pattern.all.first
       @input_note_messages = []
       @rate = options[:rate] || 4
       @gate = options[:gate] || 75
       
       # realtime
       @changed = false
-      @interval_pointer = false
       @pointer = -1
       @queue = []
       
@@ -36,6 +35,7 @@ module Diamond
       queue_next
       messages = @queue.shift || []
       yield(messages)
+      messages
     end
     
     def add(note_messages)
@@ -102,20 +102,18 @@ module Diamond
           @sequence[index] = [NoteEvent.new(note_msg, @gate)] unless @sequence[index].nil?
         end
       end
-      
+      @sequence
     end
     
     def computed_pattern
-      @pattern.compute(@range)
+      @pattern.compute(@range, @interval)
     end
     
     def get_note_sequence
       notes = []
-      computed_pattern.each do |pattern_factor|
-        notes += @input_note_messages.map do |msg|
-          interval_factor = (@interval_pointer ? 1 : 0) * @interval 
-          note = msg.note + (interval_factor * (pattern_factor + 1))
-          @interval_pointer = !@interval_pointer
+      computed_pattern.each do |degree|
+        notes += @input_note_messages.map do |msg| 
+          note = msg.note + degree
           MIDIMessage::NoteOn.new(msg.channel, note, msg.velocity)
         end
       end
