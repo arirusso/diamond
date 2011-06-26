@@ -3,15 +3,16 @@
 # MIDI arpeggiator in Ruby
 # (c)2011 Ari Russo and licensed under the Apache 2.0 License
 # 
-require 'forwardable'
+require "forwardable"
 
-require 'midi-message'
-require 'topaz'
+require "midi-message"
+require "topaz"
+require "unimidi"
 
-require 'diamond/arpeggiator'
-require 'diamond/note_event'
-require 'diamond/pattern'
-require 'diamond/sequencer'
+require "diamond/arpeggiator"
+require "diamond/note_event"
+require "diamond/pattern"
+require "diamond/sequencer"
 
 
 module Diamond
