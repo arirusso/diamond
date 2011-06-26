@@ -10,15 +10,18 @@ module Diamond
       @proc = proc      
     end
     
+    # compute scale degrees using the pattern with the given <em>range</em> and <em>interval</em>
     def compute(range, interval)
       @proc.call(range, interval)
     end
     
+    # all patterns
     def self.all
       ensure_populated
       @patterns
     end
     
+    # find a pattern by its name
     def self.find(name)
       all.find { |p| p.name == name }
     end

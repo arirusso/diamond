@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 module Diamond
   
+  # a NoteEvent is a pairing of a MIDI NoteOn and NoteOff message
+  # has a length that corresponds to sequencer ticks
   class NoteEvent
     
     extend Forwardable
@@ -15,8 +17,7 @@ module Diamond
       @start = note_on_message
       @length = length
       
-      @finish = note_on_message.to_note_off
-      
+      @finish = note_on_message.to_note_off    
     end
           
   end
