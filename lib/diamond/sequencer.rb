@@ -14,13 +14,14 @@ module Diamond
       @resolution = resolution
       @interval = options[:interval] || 12
       @range = options[:range] || 3
-      #@pattern = options[:pattern] || Pattern.from_yaml(filename).first
+      @pattern = options[:pattern] || Pattern.all.values.first
       @input_note_messages = []
-      @pattern = []
       @rate = options[:rate] || 4
       @gate = options[:gate] || 75
       
+      # realtime
       @changed = false
+      @interval_pointer = false
       @pointer = -1
       @queue = []
       
@@ -104,11 +105,17 @@ module Diamond
       
     end
     
+    def computed_pattern
+      @pattern.compute(@range)
+    end
+    
     def get_note_sequence
       notes = []
-      @range.times do |range_factor|
+      computed_pattern.each do |pattern_factor|
         notes += @input_note_messages.map do |msg|
-          note = msg.note + (@interval * (range_factor + 1))
+          interval_factor = (@interval_pointer ? 1 : 0) * @interval 
+          note = msg.note + (interval_factor * (pattern_factor + 1))
+          @interval_pointer = !@interval_pointer
           MIDIMessage::NoteOn.new(msg.channel, note, msg.velocity)
         end
       end
