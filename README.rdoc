@@ -33,6 +33,8 @@ The Arpeggiator has a number of options that you can control. {Click here}[optio
 Then instantiate the Arpeggiator, passing in a tempo value. In this case 138 BPM
 
   arp = Diamond::Arpeggiator.new(138, opts)
+  
+And of course, the Arpeggiator needs input notes
 
   chord = [
     MIDIMessage::NoteOn["C4"].new(0, 100),
