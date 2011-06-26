@@ -2,6 +2,8 @@
 
 MIDI arpeggiator in Ruby
 
+An arpeggiator is a type of music sequencer that derives melodies from inputted notes and/or chords.
+
 == Installation
 
   gem install diamond

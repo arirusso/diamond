@@ -9,8 +9,8 @@ module Diamond
                 :sequencer
     
     def_delegators :clock, 
-                     :start, 
-                     :stop, 
+                     :start,
+                     :sync_from,
                      :sync_to, 
                      :<<
     def_delegators :sequencer, 
@@ -59,6 +59,13 @@ module Diamond
     # is this arpeggiator muted?
     def muted?
       @mute
+    end
+    
+    # stops the clock and sends any remaining MIDI note-off messages that are in the queue
+    def stop
+      @clock.stop
+      data = @sequencer.pending_note_offs.map { |msg| msg.to_bytes }
+      @midi_destinations.each { |o| o.puts(data) } unless data.empty?      
     end
     
     private
