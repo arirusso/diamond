@@ -1,6 +1,10 @@
 = diamond
 
 MIDI arpeggiator in Ruby
+
+== installation
+
+  gem install diamond
   
 == gem dependencies
 
@@ -11,6 +15,29 @@ MIDI arpeggiator in Ruby
 these will install automatically with the gem
 
 == Usage
+
+  require "diamond"
+
+  opts = { 
+    :gate => 90, 
+    :range => 4, 
+    :interval => 7,
+    :midi => UniMIDI::Output.first.open,
+    :rate => 8,
+    :resolution => 64
+  }
+
+  arp = Diamond::Arpeggiator.new(175, opts)
+
+  notes = [
+    MIDIMessage::NoteOn["C4"].new(0, 100),
+    MIDIMessage::NoteOn["E4"].new(0, 100),
+    MIDIMessage::NoteOn["G4"].new(0, 100)
+  ]
+
+  arp.add(notes)
+   
+  arp.start(:background => true)
     
 == Documentation
 
