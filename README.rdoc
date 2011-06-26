@@ -2,11 +2,11 @@
 
 MIDI arpeggiator in Ruby
 
-== installation
+== Installation
 
   gem install diamond
   
-== gem dependencies
+== Gem dependencies
 
 * {midi-message}[http://github.com/arirusso/midi-message]
 * {topaz}[http://github.com/arirusso/topaz]
