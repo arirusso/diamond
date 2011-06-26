@@ -8,8 +8,24 @@ module Diamond
     attr_reader :clock,
                 :sequencer
     
-    def_delegators :clock, :start, :stop
-    def_delegators :sequencer, :add, :remove
+    def_delegators :clock, 
+                     :start, 
+                     :stop, 
+                     :sync_to, 
+                     :<<
+    def_delegators :sequencer, 
+                     :add, 
+                     :remove, 
+                     :gate, 
+                     :gate=, 
+                     :interval, 
+                     :interval=,
+                     :pattern,
+                     :pattern=,
+                     :pointer,
+                     :resolution, 
+                     :rate, 
+                     :rate=
                 
     def initialize(tempo, options = {}, &block)
       resolution = options[:resolution] || 128
@@ -18,14 +34,16 @@ module Diamond
       initialize_midi_io(options[:midi]) unless options[:midi].nil?
       
       @sequencer = Sequencer.new(resolution, options)
-      initialize_clock(tempo, resolution)
+      initialize_clock(tempo, resolution, options)
       bind_events(&block)
     end
     
     private
     
-    def initialize_clock(tempo, resolution)
-      @clock = Topaz::Tempo.new(tempo)
+    def initialize_clock(tempo, resolution, options)
+      sync_to = [options[:sync_to]].flatten.compact
+      children = [options[:children]].flatten.compact
+      @clock = Topaz::Tempo.new(tempo, :sync_to => sync_to, :children => children)
       dif = resolution / @clock.interval  
       @clock.interval = @clock.interval * dif
     end

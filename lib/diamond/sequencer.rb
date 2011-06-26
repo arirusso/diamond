@@ -8,7 +8,8 @@ module Diamond
                 :pattern,
                 :range,
                 :rate,
-                :pointer
+                :pointer,
+                :resolution
     
     def initialize(resolution, options = {})
       @resolution = resolution
@@ -63,6 +64,16 @@ module Diamond
     
     def range=(num)
       @range = num
+      mark_changed
+    end
+    
+    def rate=(num)
+      @rate = num
+      mark_changed
+    end
+    
+    def pattern=(pattern)
+      @pattern = pattern
       mark_changed
     end
         

@@ -10,7 +10,7 @@ UniMIDI::Output.first.open do |output|
 
   opts = { 
     :gate => 90, 
-    :steps => 4, 
+    :range => 4, 
     :interval => 12,
     :midi => output,
     :pattern => Diamond::Pattern["Up"],

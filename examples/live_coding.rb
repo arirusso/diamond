@@ -5,13 +5,11 @@ require "diamond"
 
 include MIDIMessage
 
-output = UniMIDI::Output.first.open
-
 opts = { 
   :gate => 90, 
-  :steps => 4, 
+  :range => 4, 
   :interval => 7,
-  :midi => output,
+  :midi => UniMIDI::Output.first.open,
   :rate => 8,
   :resolution => 64
 }
