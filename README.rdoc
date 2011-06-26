@@ -20,7 +20,7 @@ these will install automatically with the gem
 
   require "diamond"
 
-the arpeggiator has a number of options that you can control. click here for a more in-depth explanation of those options.
+The Arpeggiator has a number of options that you can control. {Click here}[options] for a more in-depth explanation of those options.
  
   opts = { 
     :gate => 90, 
@@ -29,8 +29,10 @@ the arpeggiator has a number of options that you can control. click here for a m
     :midi => UniMIDI::Output.first.open,
     :rate => 8
   }
+  
+Then instantiate the Arpeggiator, passing in a tempo value. In this case 138 BPM
 
-  arp = Diamond::Arpeggiator.new(175, opts)
+  arp = Diamond::Arpeggiator.new(138, opts)
 
   chord = [
     MIDIMessage::NoteOn["C4"].new(0, 100),
@@ -46,9 +48,9 @@ If you are using this example in irb, you can start the arpeggiator in a backgro
    
   arp.start(:background => true)
   
-Read more about live coding with diamond {here}[blog post].
+Read more about live coding with diamond {here}[blogpost].
   
-You can also start the arpeggiator in the foreground simply by calling
+To start the arpeggiator in the foreground simply call
 
   arp.start  
     
