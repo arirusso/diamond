@@ -23,11 +23,14 @@ module Diamond
                      :pattern,
                      :pattern=,
                      :pointer,
-                     :resolution, 
+                     :resolution,
+                     :range,
+                     :range=, 
                      :rate, 
                      :rate=
                 
     def initialize(tempo, options = {}, &block)
+      @mute = false
       resolution = options[:resolution] || 128
       quarter_note = resolution / 4
       
@@ -36,6 +39,26 @@ module Diamond
       @sequencer = Sequencer.new(resolution, options)
       initialize_clock(tempo, resolution, options)
       bind_events(&block)
+    end
+    
+    # toggle mute on this arpeggiator
+    def toggle_mute
+      @mute = !@mute
+    end
+    
+    # mute this arpeggiator
+    def mute
+      @mute = true
+    end
+    
+    # unmute this arpeggiator
+    def unmute
+      @mute = false
+    end
+    
+    # is this arpeggiator muted?
+    def muted?
+      @mute
     end
     
     private
@@ -59,7 +82,7 @@ module Diamond
         @sequencer.with_next do |msgs|
           data = msgs.map { |msg| msg.to_bytes }.flatten
           @midi_destinations.each { |o| o.puts(data) } unless data.empty?
-          yield(msgs) unless block.nil?
+          yield(msgs) unless block.nil? || muted?
         end
       end 
     end

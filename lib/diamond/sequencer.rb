@@ -28,6 +28,8 @@ module Diamond
       update_sequence
     end
     
+    # yields to <em>block</em>, passing in the next messages in the queue
+    # also returns the next messages
     def with_next(&block)
       if @changed && (@pointer % @rate == 0)
         update_sequence
@@ -35,15 +37,19 @@ module Diamond
       end
       queue_next
       messages = @queue.shift || []
-      yield(messages)
+      yield(messages) unless block.nil?
       messages
     end
     
+    # add input note_messages
+    # takes a single message or an array
     def add(note_messages)
       @input_note_messages += [note_messages].flatten
       mark_changed
     end
     
+    # remove input note messages with the same note value
+    # takes a single message or an array
     def remove(note_messages)
       @input_note_messages.delete_if do |msg|
         deletion_queue = [note_messages].flatten.map { |note_message| note_message.note }
@@ -76,6 +82,13 @@ module Diamond
       @pattern = pattern
       mark_changed
     end
+    
+    # returns an array containing all NoteOff messages in the queue
+    def pending_note_offs
+      @queue.map do |slot|
+        slot.find { |m| m.class == MIDIMessage::NoteOff }
+      end.flatten.compact
+    end
         
     private
     
@@ -88,7 +101,7 @@ module Diamond
     def note_length
       @resolution / @rate
     end
-    
+        
     def add_to_queue(events)
       events.each do |event|
         @queue[0] ||= []
