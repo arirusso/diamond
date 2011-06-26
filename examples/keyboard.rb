@@ -13,16 +13,13 @@ opts = {
   :gate => 90, 
   :steps => 4, 
   :interval => 12,
+  :midi => output,
   :pattern => Diamond::Pattern["Up"],
   :rate => 8,
   :resolution => 32
 }
 
-arp = Diamond::Arpeggiator.new(150, opts) do |msgs|
-  data = msgs.map { |msg| msg.to_bytes }.flatten
-  p data 
-  output.puts(data) unless data.empty?
-end
+arp = Diamond::Arpeggiator.new(150, opts) { |msgs| p data } 
    
 arp.start(:background => true)
 

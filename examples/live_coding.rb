@@ -4,29 +4,27 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 require "diamond"
 require "unimidi"
 
-UniMIDI::Output.first.open do |output|
+include MIDIMessage
 
-  opts = { 
-    :gate => 90, 
-    :steps => 4, 
-    :interval => 7,
-    :rate => 8,
-    :resolution => 64
-  }
+output = UniMIDI::Output.first.open
 
-  arp = Diamond::Arpeggiator.new(175, opts) do |msgs|
-    data = msgs.map { |msg| msg.to_bytes }.flatten
-    output.puts(data) unless data.empty?
-  end
+opts = { 
+  :gate => 90, 
+  :steps => 4, 
+  :interval => 7,
+  :midi => output,
+  :rate => 8,
+  :resolution => 64
+}
 
-  notes = [
-    MIDIMessage::NoteOn["C4"].new(0, 100),
-    MIDIMessage::NoteOn["E4"].new(0, 100),
-    MIDIMessage::NoteOn["G4"].new(0, 100)
-  ]
+arp = Diamond::Arpeggiator.new(175, opts)
 
-  arp.add(notes)
+notes = [
+  NoteOn["C4"].new(0, 100),
+  NoteOn["E4"].new(0, 100),
+  NoteOn["G4"].new(0, 100)
+]
+
+arp.add(notes)
    
-  arp.start(:background => true)
-
-end
+arp.start(:background => true)
