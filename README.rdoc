@@ -20,26 +20,37 @@ these will install automatically with the gem
 
   require "diamond"
 
+the arpeggiator has a number of options that you can control. click here for a more in-depth explanation of those options.
+ 
   opts = { 
     :gate => 90, 
     :range => 4, 
     :interval => 7,
     :midi => UniMIDI::Output.first.open,
-    :rate => 8,
-    :resolution => 64
+    :rate => 8
   }
 
   arp = Diamond::Arpeggiator.new(175, opts)
 
-  notes = [
+  chord = [
     MIDIMessage::NoteOn["C4"].new(0, 100),
     MIDIMessage::NoteOn["E4"].new(0, 100),
     MIDIMessage::NoteOn["G4"].new(0, 100)
   ]
 
-  arp.add(notes)
+You can use Arpeggiator#add and Arpeggiator#remove to control the input notes and chords.
+
+  arp.add(chord)
+  
+If you are using this example in irb, you can start the arpeggiator in a background thread.  That will allow you to change its parameters on the fly or sync it to another arpeggiator. 
    
   arp.start(:background => true)
+  
+Read more about live coding with diamond {here}[blog post].
+  
+You can also start the arpeggiator in the foreground simply by calling
+
+  arp.start  
     
 == Documentation
 
