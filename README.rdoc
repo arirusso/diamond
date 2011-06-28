@@ -2,6 +2,15 @@
 
 {MIDI arpeggiator}[http://en.wikipedia.org/wiki/Arpeggiator#Arpeggiator] in Ruby
 
+== Features
+
+* Features all classic arpeggiator functions
+* Uses {unimidi}[http://github.com/arirusso/unimidi] for cross-platform compatibility
+* Run as a background thread for {live coding}[http://en.wikipedia.org/wiki/Live_coding]
+* Sync to and from MIDI clock
+* Sync between multiple instances as well as other {Topaz Tempo}[http://github.com/arirusso/topaz] objects
+* User-definable patterns
+
 == Installation
 
   gem install diamond
@@ -58,7 +67,7 @@ You can then control all of the {arpeggiator options}[http://tx81z.blogspot.com]
   
 {This blog post}[http://tx81z.blogspot.com] and the following screencast go more in-depth with live coding Diamond, including how to sync multiple Arpeggiators and {Topaz tempo generators}[http://github.com/arirusso/topaz]
 
-{Here is another blog post} about syncing to and sending out MIDI clock
+{Here is another blog post} about syncing to and sending out MIDI clock with Diamond
     
 == Other Documentation
 
