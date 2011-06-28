@@ -19,7 +19,7 @@ these will install automatically with the gem
 
   require "diamond"
 
-The Arpeggiator has a number of options that you can control. {Click here}[options] for a more in-depth explanation of these options.
+The Arpeggiator has a number of options that you can control. {Click here}[http://tx81z.blogspot.com/] for a more in-depth explanation of these options.
  
   opts = { 
     :gate => 90, 
@@ -58,7 +58,7 @@ To start the arpeggiator in the foreground instead use
   
 Read more about {live coding with Diamond}[blogpost]
   
-Read about {syncing}[blogpost] multiple Arpeggiators and {Topaz tempo generators}[http://github.com/arirusso/topaz] {here}[blogpost]
+Read about {syncing}[http://tx81z.blogspot.com/] multiple Arpeggiators and {Topaz tempo generators}[http://github.com/arirusso/topaz] {http://tx81z.blogspot.com/}[blogpost]
     
 == Other Documentation
 
