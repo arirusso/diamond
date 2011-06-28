@@ -8,6 +8,7 @@ module Diamond
                 :pattern,
                 :range,
                 :rate,
+                :offset,
                 :pointer,
                 :resolution
     
@@ -15,6 +16,7 @@ module Diamond
       @resolution = resolution
       @interval = options[:interval] || 12
       @range = options[:range] || 3
+      @offset = options[:offset] || 0
       @pattern = options[:pattern] || Pattern.all.first
       @input_note_messages = []
       @rate = options[:rate] || 4
@@ -65,6 +67,11 @@ module Diamond
 
     def interval=(num)
       @interval = num
+      mark_changed
+    end
+    
+    def offset=(num)
+      @offset = num
       mark_changed
     end
     
@@ -121,7 +128,8 @@ module Diamond
       sequence_length_in_ticks = notes.length * note_length
       @sequence = Array.new(sequence_length_in_ticks, [])
       unless notes.empty?
-        notes.each_with_index do |note_msg, i|
+        @offset.times { notes.push(notes.shift) }
+        notes.each_with_index do |note_msg, i| 
           index = i * note_length
           @sequence[index] = [NoteEvent.new(note_msg, @gate)] unless @sequence[index].nil?
         end
