@@ -13,8 +13,8 @@ require "unimidi"
 require "diamond/arpeggiator"
 require "diamond/note_event"
 require "diamond/pattern"
+require "diamond/patterns"
 require "diamond/sequencer"
-
 
 module Diamond
   
