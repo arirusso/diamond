@@ -49,14 +49,16 @@ You can use Arpeggiator#add and Arpeggiator#remove to control the input notes an
 If you are using this example in irb, you can start the arpeggiator in a background thread.  That will allow you to {live code}[http://en.wikipedia.org/wiki/Live_coding] its parameters or sync it to another arpeggiator. 
    
   arp.start(:background => true)
-  
-Read more about {live coding}[http://en.wikipedia.org/wiki/Live_coding] with diamond {here}[blogpost].
-  
+
 To start the arpeggiator in the foreground instead use
 
-  arp.start  
+  arp.start
+  
+Read more about {live coding with Diamond}[blogpost]
+  
+Read about {syncing}[blogpost] multiple Arpeggiators and {Topaz tempo generators}[http://github.com/arirusso/topaz] {here}[blogpost]
     
-== Documentation
+== Other Documentation
 
 * {examples}[http://github.com/arirusso/diamond/tree/master/examples]
 * {rdoc}[http://rdoc.info/gems/diamond] 
