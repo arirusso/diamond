@@ -2,8 +2,6 @@
 
 {MIDI arpeggiator}[http://en.wikipedia.org/wiki/Arpeggiator#Arpeggiator] in Ruby
 
-== Background
-
 == Installation
 
   gem install diamond
@@ -27,6 +25,7 @@ The Arpeggiator has a number of options that you can control. {Click here}[optio
     :gate => 90, 
     :range => 4, 
     :interval => 7,
+    :offset => 1,
     :midi => UniMIDI::Output.first.open,
     :rate => 8
   }
@@ -53,7 +52,7 @@ If you are using this example in irb, you can start the arpeggiator in a backgro
   
 Read more about {live coding}[http://en.wikipedia.org/wiki/Live_coding] with diamond {here}[blogpost].
   
-To start the arpeggiator in the foreground simply call
+To start the arpeggiator in the foreground instead use
 
   arp.start  
     
