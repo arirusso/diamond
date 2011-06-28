@@ -36,10 +36,12 @@ Then instantiate the Arpeggiator, passing in a tempo value. In this case 138 BPM
   
 Of course, the Arpeggiator needs input notes
 
+  include MIDIMessage
+
   chord = [
-    MIDIMessage::NoteOn["C4"].new(0, 100),
-    MIDIMessage::NoteOn["E4"].new(0, 100),
-    MIDIMessage::NoteOn["G4"].new(0, 100)
+    NoteOn["C4"].new(0, 100),
+    NoteOn["E4"].new(0, 100),
+    NoteOn["G4"].new(0, 100)
   ]
 
 You can use Arpeggiator#add and Arpeggiator#remove to control the input notes and chords.
