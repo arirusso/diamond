@@ -23,7 +23,7 @@ module Diamond
     
     # find a pattern by its name
     def self.find(name)
-      all.find { |p| p.name == name }
+      all.find { |p| p.name.downcase == name.downcase }
     end
     class << self 
       alias_method :[], :find

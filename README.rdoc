@@ -34,8 +34,9 @@ The Arpeggiator has a number of options to control which you can read about more
     :gate => 90, 
     :range => 4, 
     :interval => 7,
-    :offset => 1,
     :midi => UniMIDI::Output.first.open,
+    :offset => 1,
+    :pattern => Diamond::Pattern["UpDown"],    
     :rate => 8
   }
   
