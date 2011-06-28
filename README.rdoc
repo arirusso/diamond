@@ -48,17 +48,13 @@ You can use Arpeggiator#add and Arpeggiator#remove to control the input notes an
 
   arp.add(chord)
   
-If you are using this example in irb, you can start the arpeggiator in a background thread.  That will allow you to {live code}[http://en.wikipedia.org/wiki/Live_coding], sync it to another arpeggiator, or just run another foreground process. 
+If you are using this example in irb, you can start the arpeggiator in a background thread by passing :background => true to Arpeggiator#start.  That will allow you to {live code}[http://en.wikipedia.org/wiki/Live_coding], sync it to another arpeggiator, or just run another foreground process. 
    
   arp.start(:background => true)
   
 You can then control all of the {arpeggiator options}[http://tx81z.blogspot.com] on the fly
 
   arp.rate = 16
-
-To join the arpeggiator's thread and move it to the foreground, use
-
-  arp.join
   
 {This blog post}[http://tx81z.blogspot.com] and the following screencast go more in-depth with live coding Diamond, including how to sync multiple Arpeggiators and {Topaz tempo generators}[http://github.com/arirusso/topaz]
     
