@@ -60,7 +60,7 @@ To join the arpeggiator's thread and move it to the foreground, use
 
   arp.join
   
-{This blog post}[blogpost] and the following screencast go more in-depth with live coding Diamond, including how to sync multiple Arpeggiators and {Topaz tempo generators}[http://github.com/arirusso/topaz]
+{This blog post}[http://tx81z.blogspot.com] and the following screencast go more in-depth with live coding Diamond, including how to sync multiple Arpeggiators and {Topaz tempo generators}[http://github.com/arirusso/topaz]
     
 == Other Documentation
 
