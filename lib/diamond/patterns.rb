@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
 module Diamond
+  
+  # the Proc should return a set of scale degrees such as
+  # given (3, 7) the "Up" pattern will return [0, 7, 14, 21]
 
   Pattern.patterns << Pattern.new("Up") do |r, i|
     a = []
