@@ -10,6 +10,7 @@ module Diamond
                 :sequencer
     
     def_delegators :clock, 
+                     :join,
                      :start,
                      :sync_from,
                      :sync_to, 
@@ -47,7 +48,9 @@ module Diamond
     #
     def initialize(tempo, options = {}, &block)
       @mute = false
+      @midi_destinations = []
       @midi_sources = {}
+      
       resolution = options[:resolution] || 128
       quarter_note = resolution / 4
       
@@ -99,14 +102,15 @@ module Diamond
     def initialize_clock(tempo, resolution, options)
       sync_to = [options[:sync_to]].flatten.compact
       children = [options[:children]].flatten.compact
-      @clock = Topaz::Tempo.new(tempo, :sync_to => sync_to, :children => children)
+      @clock = Topaz::Tempo.new(tempo, :sync_to => sync_to, :children => children, :midi => (@midi_destinations + @midi_sources.keys))
       dif = resolution / @clock.interval  
       @clock.interval = @clock.interval * dif
     end
     
     def initialize_midi_io(devices)
       devices = [devices].flatten
-      @midi_destinations = devices.find_all { |d| d.type == :output }
+      @midi_destinations += devices.find_all { |d| d.type == :output }.compact
+      @midi_destinations.each { |d| @clock.add_destination(d) } unless @clock.nil?
       sources = devices.find_all { |d| d.type == :input }   
       sources.each { |source| initialize_midi_source(source) }
     end

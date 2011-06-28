@@ -57,6 +57,8 @@ You can then control all of the {arpeggiator options}[http://tx81z.blogspot.com]
   arp.rate = 16
   
 {This blog post}[http://tx81z.blogspot.com] and the following screencast go more in-depth with live coding Diamond, including how to sync multiple Arpeggiators and {Topaz tempo generators}[http://github.com/arirusso/topaz]
+
+{Here is another blog post} about syncing to and sending out MIDI clock
     
 == Other Documentation
 
