@@ -6,6 +6,7 @@ module Diamond
     extend Forwardable
     
     attr_reader :clock,
+                :midi_sources,
                 :sequencer
     
     def_delegators :clock, 
@@ -20,6 +21,8 @@ module Diamond
                      :gate=, 
                      :interval, 
                      :interval=,
+                     :offset,
+                     :offset=,
                      :pattern,
                      :pattern=,
                      :pointer,
@@ -31,6 +34,7 @@ module Diamond
                 
     def initialize(tempo, options = {}, &block)
       @mute = false
+      @midi_sources = {}
       resolution = options[:resolution] || 128
       quarter_note = resolution / 4
       
@@ -68,6 +72,15 @@ module Diamond
       @midi_destinations.each { |o| o.puts(data) } unless data.empty?      
     end
     
+    def add_midi_source(source)
+      initialize_midi_source(source)
+    end
+    
+    def remove_midi_source(source)
+      @midi_sources[source].stop
+      @midi_sources.delete(source)
+    end
+    
     private
     
     def initialize_clock(tempo, resolution, options)
@@ -81,7 +94,16 @@ module Diamond
     def initialize_midi_io(devices)
       devices = [devices].flatten
       @midi_destinations = devices.find_all { |d| d.type == :output }
-      @midi_sources = devices.find_all { |d| d.type == :input }   
+      sources = devices.find_all { |d| d.type == :input }   
+      sources.each { |source| initialize_midi_source(source) }
+    end
+    
+    def initialize_midi_source(source)
+      listener = MIDIEye::Listener.new(source)
+      listener.listen_for(:class => MIDIMessage::NoteOn) { |event| add(event[:message]) }
+      listener.listen_for(:class => MIDIMessage::NoteOff) { |event| remove(event[:message]) }
+      listener.start(:background => true)
+      @midi_sources[source] = listener
     end
     
     def bind_events(&block)
