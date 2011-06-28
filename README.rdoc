@@ -19,7 +19,7 @@ these will install automatically with the gem
 
   require "diamond"
 
-The Arpeggiator has a number of options that you can control. {Click here}[http://tx81z.blogspot.com/] for a more in-depth explanation of these options.
+The Arpeggiator has a number of options to control. {Click here}[http://tx81z.blogspot.com/] for a more in-depth explanation of these options.
  
   opts = { 
     :gate => 90, 
@@ -30,7 +30,7 @@ The Arpeggiator has a number of options that you can control. {Click here}[http:
     :rate => 8
   }
   
-Then instantiate the Arpeggiator, passing in a tempo value. In this case 138 BPM
+Instantiate the Arpeggiator, passing in a tempo value and the options. In this case 138 BPM
 
   arp = Diamond::Arpeggiator.new(138, opts)
   
@@ -51,14 +51,16 @@ You can use Arpeggiator#add and Arpeggiator#remove to control the input notes an
 If you are using this example in irb, you can start the arpeggiator in a background thread.  That will allow you to {live code}[http://en.wikipedia.org/wiki/Live_coding], sync it to another arpeggiator, or just run another foreground process. 
    
   arp.start(:background => true)
-
-To start the arpeggiator in the foreground instead use
-
-  arp.start
   
-Read more about {live coding with Diamond}[blogpost]
+You can then control all of the options on the fly
+
+  arp.rate = 16
+
+To join the arpeggiator's thread and move it to the foreground, use
+
+  arp.join
   
-Read about {syncing}[http://tx81z.blogspot.com/] multiple Arpeggiators and {Topaz tempo generators}[http://github.com/arirusso/topaz] {http://tx81z.blogspot.com/}[blogpost]
+{This blog post}[blogpost] and the following screencast go more in-depth with live coding Diamond, including how to sync multiple Arpeggiators and {Topaz tempo generators}[http://github.com/arirusso/topaz]
     
 == Other Documentation
 
