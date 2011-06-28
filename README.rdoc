@@ -2,6 +2,8 @@
 
 {MIDI arpeggiator}[http://en.wikipedia.org/wiki/Arpeggiator#Arpeggiator] in Ruby
 
+{pic}[http://images.treetrouble.net/images/diamond.jpg]
+
 == Features
 
 * Features all classic arpeggiator functions
