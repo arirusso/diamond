@@ -15,12 +15,12 @@ module Diamond
     def initialize(resolution, options = {})
       @resolution = resolution
       @interval = options[:interval] || 12
-      @range = options[:range] || 3
+      @range = constrain((options[:range] || 3), :min => 0)
       @offset = options[:offset] || 0
       @pattern = options[:pattern] || Pattern.all.first
       @input_note_messages = []
-      @rate = options[:rate] || 4
-      @gate = options[:gate] || 75
+      @rate = constrain((options[:rate] || 8), :min => 0, :max => @resolution)
+      @gate = constrain((options[:gate] || 75), :min => 1, :max => 500)
       
       # realtime
       @changed = false
@@ -61,7 +61,7 @@ module Diamond
     end
         
     def gate=(num)
-      @gate = num
+      @gate = constrain(num, :min => 1, :max => 500)
       mark_changed
     end
 
@@ -76,12 +76,12 @@ module Diamond
     end
     
     def range=(num)
-      @range = num
+      @range = constrain(num, :min => 0)
       mark_changed
     end
     
     def rate=(num)
-      @rate = num
+      @rate = constrain(num, :min => 0, :max => @resolution)
       mark_changed
     end
     
@@ -98,6 +98,13 @@ module Diamond
     end
         
     private
+    
+    def constrain(value, options = {})
+      new_val = value
+      new_val = [value, options[:min]].max unless options[:min].nil?
+      new_val = [value, options[:max]].min unless options[:max].nil?
+      new_val
+    end
     
     def queue_next
       @pointer = (@pointer >= (@sequence.length - 1)) ? 0 : @pointer + 1

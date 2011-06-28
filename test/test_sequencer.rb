@@ -17,13 +17,18 @@ class PatternTest < Test::Unit::TestCase
     ]
     seq.add(notes)
     llseq = seq.send(:update_sequence)
-    assert_equal(48, llseq.length)
+    assert_equal(24, llseq.length)
     assert_equal(NoteEvent, llseq[0][0].class)
     assert_equal(NoteEvent, llseq[4][0].class)
     assert_equal(NoteEvent, llseq[8][0].class)
     assert_equal([], llseq[1])
     assert_equal([], llseq[5])
     assert_equal([], llseq[9])
+  end
+  
+  def test_constrain
+    seq = Sequencer.new(128, :rate => 500)
+    assert_equal(seq.rate, 128)
   end
   
 end
