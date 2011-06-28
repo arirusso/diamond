@@ -28,7 +28,7 @@ these will install automatically with the gem
 
   require "diamond"
 
-The Arpeggiator has a number of options to control which you can read about more in-depth {here}[http://tx81z.blogspot.com/]. 
+The Arpeggiator has a number of options to control which you can read about more in-depth {here}[http://tx81z.blogspot.com/].  Here is a pretty basic setup: 
  
   opts = { 
     :gate => 90, 
@@ -65,9 +65,7 @@ You can then control all of the {arpeggiator options}[http://tx81z.blogspot.com]
 
   arp.rate = 16
   
-{This blog post}[http://tx81z.blogspot.com] and the following screencast go more in-depth with live coding Diamond, including how to sync multiple Arpeggiators and {Topaz tempo generators}[http://github.com/arirusso/topaz]
-
-{Here is another blog post} about syncing to and sending out MIDI clock with Diamond
+{This blog post}[http://tx81z.blogspot.com] and the following screencast go more in-depth on Diamond usage, especially with live coding and the various kinds of sync available.
     
 == Other Documentation
 
