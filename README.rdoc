@@ -11,7 +11,7 @@
 * Run as a background thread for {live coding}[http://en.wikipedia.org/wiki/Live_coding]
 * Sync to and from MIDI clock
 * Sync between multiple instances as well as other {Topaz Tempo}[http://github.com/arirusso/topaz] objects
-* Preset and user-definable pattern algorithms 
+* {Preset}[http://github.com/arirusso/diamond/blob/master/lib/diamond/patterns.rb] and {user-definable}[http://github.com/arirusso/diamond/blob/master/examples/live_coding.rb] pattern algorithms 
 
 == Installation
 
