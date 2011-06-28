@@ -1,8 +1,8 @@
 = diamond
 
-MIDI arpeggiator in Ruby
+{MIDI arpeggiator}[http://en.wikipedia.org/wiki/Arpeggiator#Arpeggiator] in Ruby
 
-An arpeggiator is a type of music sequencer that derives melodies from inputted notes and/or chords.
+== Background
 
 == Installation
 
@@ -10,6 +10,7 @@ An arpeggiator is a type of music sequencer that derives melodies from inputted 
   
 == Gem dependencies
 
+* {midi-eye}[http://github.com/arirusso/midi-eye]
 * {midi-message}[http://github.com/arirusso/midi-message]
 * {topaz}[http://github.com/arirusso/topaz]
 * {unimidi}[http://github.com/arirusso/unimidi]
@@ -20,7 +21,7 @@ these will install automatically with the gem
 
   require "diamond"
 
-The Arpeggiator has a number of options that you can control. {Click here}[options] for a more in-depth explanation of those options.
+The Arpeggiator has a number of options that you can control. {Click here}[options] for a more in-depth explanation of these options.
  
   opts = { 
     :gate => 90, 
@@ -34,7 +35,7 @@ Then instantiate the Arpeggiator, passing in a tempo value. In this case 138 BPM
 
   arp = Diamond::Arpeggiator.new(138, opts)
   
-And of course, the Arpeggiator needs input notes
+Of course, the Arpeggiator needs input notes
 
   chord = [
     MIDIMessage::NoteOn["C4"].new(0, 100),
@@ -46,11 +47,11 @@ You can use Arpeggiator#add and Arpeggiator#remove to control the input notes an
 
   arp.add(chord)
   
-If you are using this example in irb, you can start the arpeggiator in a background thread.  That will allow you to change its parameters on the fly or sync it to another arpeggiator. 
+If you are using this example in irb, you can start the arpeggiator in a background thread.  That will allow you to {live code}[http://en.wikipedia.org/wiki/Live_coding] its parameters or sync it to another arpeggiator. 
    
   arp.start(:background => true)
   
-Read more about live coding with diamond {here}[blogpost].
+Read more about {live coding}[http://en.wikipedia.org/wiki/Live_coding] with diamond {here}[blogpost].
   
 To start the arpeggiator in the foreground simply call
 
