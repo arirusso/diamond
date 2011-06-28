@@ -6,12 +6,12 @@
 
 == Features
 
-* Features all classic arpeggiator functions
+* Classic arpeggiator functions
 * Uses {unimidi}[http://github.com/arirusso/unimidi] for cross-platform compatibility
 * Run as a background thread for {live coding}[http://en.wikipedia.org/wiki/Live_coding]
 * Sync to and from MIDI clock
 * Sync between multiple instances as well as other {Topaz Tempo}[http://github.com/arirusso/topaz] objects
-* User-definable patterns
+* Preset and user-definable pattern algorithms 
 
 == Installation
 
