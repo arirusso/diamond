@@ -19,7 +19,7 @@ these will install automatically with the gem
 
   require "diamond"
 
-The Arpeggiator has a number of options to control. {Click here}[http://tx81z.blogspot.com/] for a more in-depth explanation of these options.
+The Arpeggiator has a number of options to control which you can read about more in-depth {here}[http://tx81z.blogspot.com/]. 
  
   opts = { 
     :gate => 90, 
@@ -52,7 +52,7 @@ If you are using this example in irb, you can start the arpeggiator in a backgro
    
   arp.start(:background => true)
   
-You can then control all of the options on the fly
+You can then control all of the {arpeggiator options}[http://tx81z.blogspot.com] on the fly
 
   arp.rate = 16
 
