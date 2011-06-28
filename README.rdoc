@@ -58,7 +58,7 @@ You can use Arpeggiator#add and Arpeggiator#remove to control the input notes an
 
   arp.add(chord)
   
-If you are using this example in irb, you can start the arpeggiator in a background thread by passing an option :background => true to Arpeggiator#start.  That will allow you to {live code}[http://en.wikipedia.org/wiki/Live_coding], sync it to another arpeggiator, or just run another foreground process. 
+If you are using this example in irb, you can start the arpeggiator in a background thread by passing an option :background => true to Arpeggiator#start.  That will allow you to {live code}[http://en.wikipedia.org/wiki/Live_coding], sync it other arpeggiators, or just run another foreground process. 
    
   arp.start(:background => true)
   
