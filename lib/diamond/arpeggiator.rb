@@ -29,7 +29,8 @@ module Diamond
                      :range=, 
                      :rate, 
                      :rate=,
-                     :reset
+                     :reset,
+                     :transpose
                      
     #
     # a numeric tempo rate (BPM), or unimidi input is required by the constructor.  in the case that you use a MIDI input, it will be used as a clock source
@@ -58,6 +59,7 @@ module Diamond
       @mute = false
       @midi_destinations = []
       @midi_sources = {}
+      @transpose = 0
       @channel = options[:channel]
       
       resolution = options[:resolution] || 128
@@ -102,12 +104,13 @@ module Diamond
     
     # toggle mute on this arpeggiator
     def toggle_mute
-      @mute = !@mute
+      muted? ? unmute : mute
     end
     
     # mute this arpeggiator
     def mute
       @mute = true
+      send_pending_note_offs
     end
     
     # unmute this arpeggiator
@@ -123,8 +126,13 @@ module Diamond
     # stops the clock and sends any remaining MIDI note-off messages that are in the queue
     def stop
       @clock.stop
+      send_pending_note_offs 
+    end
+    
+    # send all of the note off messages in the queue
+    def send_pending_note_offs
       data = @sequencer.pending_note_offs.map { |msg| msg.to_bytes }
-      @midi_destinations.each { |o| o.puts(data) } unless data.empty?      
+      @midi_destinations.each { |o| o.puts(data) } unless data.empty?
     end
     
     # add a midi input to use as a source for arpeggiator notes
@@ -172,9 +180,11 @@ module Diamond
     def bind_events(&block)
       @clock.on_tick do 
         @sequencer.with_next do |msgs|
-          data = msgs.map { |msg| msg.to_bytes }.flatten
-          @midi_destinations.each { |o| o.puts(data) } unless data.empty?
-          yield(msgs) unless block.nil? || muted?
+          unless muted?
+            data = msgs.map { |msg| msg.to_bytes }.flatten
+            @midi_destinations.each { |o| o.puts(data) } unless data.empty?
+            yield(msgs) unless block.nil?
+          end
         end
       end 
     end

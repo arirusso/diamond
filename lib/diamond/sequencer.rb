@@ -95,10 +95,15 @@ module Diamond
       mark_changed
     end
     
+    # transpose everything by <em>num</em> scale degrees
+    def transpose(num)
+      @transpose = num
+    end
+    
     # returns an array containing all NoteOff messages in the queue
     def pending_note_offs
       @queue.map do |slot|
-        slot.find { |m| m.class == MIDIMessage::NoteOff }
+        slot.find { |m| m.class == MIDIMessage::NoteOff } unless slot.nil?
       end.flatten.compact
     end
         

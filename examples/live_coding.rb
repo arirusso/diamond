@@ -26,9 +26,10 @@ arp = Diamond::Arpeggiator.new(175, opts)
 include MIDIMessage
 
 notes = [
-  NoteOn["C4"].new(0, 100),
-  NoteOn["E4"].new(0, 100),
-  NoteOn["G4"].new(0, 100)
+  NoteOn["C3"].new(0, 100),
+  NoteOn["G3"].new(0, 100),
+  NoteOn["Bb3"].new(0, 100),
+  NoteOn["A4"].new(0, 100)
 ]
 
 arp.add(notes)

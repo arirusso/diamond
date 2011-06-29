@@ -72,7 +72,7 @@ All of the {arpeggiator options}[] can be controlled on the on the fly
   arp.gate = 20
   arp.remove(chord.last)
 
-The video above shows Diamond being live coded in this way  
+The screencast video above shows Diamond being live coded in this way  
 
 Also, {Here is a blog post}[] that walks through that process
 
