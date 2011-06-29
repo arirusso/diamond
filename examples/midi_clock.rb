@@ -7,6 +7,8 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 #
 # we just set up an arpeggiator and let it run in the foreground
 #
+# clock is always sent from Diamond to any MIDI outputs that are passed in
+#
 
 require "diamond"
 
