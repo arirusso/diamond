@@ -62,7 +62,7 @@ Of course, the Arpeggiator needs notes to work with.  As you might expect, it is
     NoteOn["G4"].new(0, 100)
   ]
 
-Use Arpeggiator#add and Arpeggiator#remove to give or take them away
+Use Arpeggiator#add and Arpeggiator#remove to adjust what notes the arpeggiator sees
 
   arp.add(chord)
 
@@ -70,7 +70,7 @@ If you are working in irb, you can start the arpeggiator in a background thread 
 
   arp.start(:background =&gt; true)
 
-All of the [arpeggiator options] can be controlled on the on the fly
+All of the {arpeggiator options}[] can be controlled on the on the fly
 
   arp.rate = 16
   arp.gate = 20
