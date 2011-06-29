@@ -30,7 +30,7 @@ these will install automatically with the gem
 
   require "diamond"
 
-First, select a MIDI output using {unimidi}[http://github.com/arirusso/unimidi].  ({read more about that here}[http://github.com/arirusso/unimidi/blob/master/examples/select_a_device.rb])
+First, select a MIDI output using {unimidi}[http://github.com/arirusso/unimidi].  ({More...}[http://github.com/arirusso/unimidi/blob/master/examples/select_a_device.rb])
 
   @output = UniMIDI::Output.first.open
 
