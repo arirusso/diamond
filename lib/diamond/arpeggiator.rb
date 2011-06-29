@@ -143,7 +143,7 @@ module Diamond
     
     # send all of the note off messages in the queue
     def send_pending_note_offs
-      data = @sequencer.pending_note_offs.map { |msg| msg.to_bytes }
+      data = @sequencer.pending_note_offs.map { |msg| msg.to_bytes }.flatten.compact
       @midi_destinations.each { |o| o.puts(data) } unless data.empty?
     end
     

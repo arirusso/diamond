@@ -99,8 +99,10 @@ module Diamond
     # transpose everything by <em>num</em> scale degrees
     def transpose(num = nil)
       @transpose = num unless num.nil?
-      @transpose
+      mark_changed
+      @transpose      
     end
+    alias_method :transpose=, :transpose
     
     # returns an array containing all NoteOff messages in the queue
     def pending_note_offs
@@ -130,11 +132,9 @@ module Diamond
         
     def add_to_queue(events)
       events.each do |event|
-        event.start.note += @transpose
         @queue[0] ||= []
         @queue[0] << event.start        
         length = ((event.length.to_f / 100) * note_length.to_f).to_i
-        event.finish.note += @transpose
         @queue[length] ||= []
         @queue[length] << event.finish
       end
@@ -166,7 +166,7 @@ module Diamond
       notes = []
       computed_pattern.each do |degree|
         notes += @input_note_messages.map do |msg| 
-          note = msg.note + degree
+          note = msg.note + degree + @transpose
           MIDIMessage::NoteOn.new(msg.channel, note, msg.velocity)
         end
       end
