@@ -6,23 +6,22 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 # we just set up an arpeggiator and let it run in the foreground
 # the messages produced will be printed to the screen
 #
+# there's no MIDI output
+#
 
 require "diamond"
 require "pp"
 
-@output = UniMIDI::Output.first.open
-
 opts = { 
   :gate => 90,   
   :interval => 7,
-  :midi => @output,
   :pattern => Diamond::Pattern["UpDown"],
   :range => 4, 
   :rate => 8
 }
 
 arp = Diamond::Arpeggiator.new(175, opts) do |msgs|
-  pp msgs
+  pp msgs unless msgs.empty?
 end
 
 include MIDIMessage
