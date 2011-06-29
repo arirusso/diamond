@@ -11,10 +11,12 @@ require "topaz"
 require "unimidi"
 
 require "diamond/arpeggiator"
+require "diamond/clock_stack"
 require "diamond/note_event"
 require "diamond/pattern"
-require "diamond/patterns"
 require "diamond/sequencer"
+
+require "pattern_presets"
 
 module Diamond
   

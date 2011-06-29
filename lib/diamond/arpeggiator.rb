@@ -11,7 +11,7 @@ module Diamond
                 
     attr_accessor :channel
     
-    def_delegators :clock, :join
+    def_delegators :clock, :join, :start
     
     def_delegators :sequencer, 
                      :gate, 
@@ -55,24 +55,25 @@ module Diamond
     # * resolution: the resolution of the arpeggiator (numeric notation)    
     #    
     def initialize(tempo_or_input, options = {}, &block)
-      @unused_clock = nil
       @mute = false
       @midi_destinations = []
       @midi_sources = {}
-      @running = false
       
       @channel = options[:channel]
       
       resolution = options[:resolution] || 128
       quarter_note = resolution / 4
       
+      @clock = ClockStack.new(tempo_or_input, options)
+      
       initialize_midi_io(options[:midi]) unless options[:midi].nil?
       
       @sequencer = Sequencer.new(resolution, options)
-      initialize_clock(tempo_or_input, resolution, options)
+      
+      #initialize_native_clock(tempo_or_input, resolution, options)
       bind_events(&block)
     end
-    
+        
     # sync to another arpeggiator
     def sync_to(arp)
       arp.sync(self)
@@ -80,13 +81,14 @@ module Diamond
         
     # accept sync another arpeggiator to this one
     def sync(arp)
-      @unused_clock = @clock
-      @clock = arp.clock
+      @clock << arp.clock
+      mark_clock_changed
     end
     alias_method :<<, :sync
     
     def unsync(arp)
-      @clock = @unused_clock
+      @clock.remove(arp.clock)
+      mark_clock_changed
     end
     
     # add input notes. takes a single note or an array of notes
@@ -124,21 +126,10 @@ module Diamond
       @mute
     end
     
-    # start the clock
-    def start(*a)
-      if @unused_clock.nil?
-        @clock.start(*a)
-        @running = true
-      end
-    end
-    
     # stops the clock and sends any remaining MIDI note-off messages that are in the queue
     def stop
-      if @unused_clock.nil?
-        @clock.stop
-        @running = false
-        send_pending_note_offs
-      end             
+      @clock.stop
+      send_pending_note_offs             
     end
     
     # send all of the note off messages in the queue
@@ -160,23 +151,18 @@ module Diamond
     
     private
     
+    def mark_clock_changed
+      @clock.update_destinations(@midi_destinations)
+    end
+    
     def channel_filter(notes)
       notes.map { |n| n if n.channel == @channel }.flatten.compact
     end
-    
-    def initialize_clock(tempo_or_input, resolution, options)
-      sync_to = [options[:sync_to]].flatten.compact
-      children = [options[:children]].flatten.compact
-      child_clocks = children.map { |arp| arp.clock }
-      @clock = Topaz::Tempo.new(tempo_or_input, :sync_to => sync_to, :children => child_clocks, :midi => @midi_destinations)
-      dif = resolution / @clock.interval  
-      @clock.interval = @clock.interval * dif
-    end
-    
+        
     def initialize_midi_io(devices)
       devices = [devices].flatten
       @midi_destinations += devices.find_all { |d| d.type == :output }.compact
-      @midi_destinations.each { |d| @clock.add_destination(d) } unless @clock.nil?
+      @clock.update_destinations(@midi_destinations)
       sources = devices.find_all { |d| d.type == :input }   
       sources.each { |source| initialize_midi_source(source) }
     end
@@ -189,8 +175,8 @@ module Diamond
       @midi_sources[source] = listener
     end
     
-    def bind_events(&block)
-      @clock.on_tick do 
+    def tick_action(&block)
+      Proc.new do
         @sequencer.with_next do |msgs|
           unless muted?
             data = msgs.map { |msg| msg.to_bytes }.flatten
@@ -198,7 +184,11 @@ module Diamond
             yield(msgs) unless block.nil?
           end
         end
-      end 
+      end
+    end
+    
+    def bind_events(&block)
+      @clock.add_tick_action(self, &tick_action(&block)) 
     end
   
   end
