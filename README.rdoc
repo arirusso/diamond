@@ -50,9 +50,9 @@ Create an Arpeggiator object, passing in a tempo value and the options above. In
 
   arp = Diamond::Arpeggiator.new(138, opts)
  
-If you'd like to sync to MIDI clock instead of internally generating tempo, pass in a unimidi input instead of a numeric tempo ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_sync.rb]).  MIDI Clock will always be sent from Diamond to any outputs that are passed in
+If you'd like to sync to MIDI clock instead of internally generating tempo, pass in a unimidi input instead of a numeric tempo ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_sync.rb]). 
 
-Of course, the Arpeggiator needs notes to work with.  As you might expect, it is easy to use a MIDI input for that. ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]).  However, for the sake of simplicity here is a three note chord created with Ruby code
+Of course, an Arpeggiator always needs notes to work with.  As you might expect, it is easy to use a MIDI input for that. ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]).  However, for the sake of simplicity here is a three note chord created with Ruby code
 
   include MIDIMessage
 
@@ -78,7 +78,7 @@ All of the {arpeggiator options}[] can be controlled on the on the fly
 
 The video above shows Diamond being live coded in this way  
 
-{Here is a blog post}[] that walks through the process
+Also, {Here is a blog post}[] that walks through that process
 
 == Other Documentation
 
