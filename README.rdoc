@@ -34,7 +34,7 @@ First, select a MIDI output using {unimidi}[http://github.com/arirusso/unimidi].
 
   @output = UniMIDI::Output.first.open
 
-The Arpeggiator has a number of {optional parameters}[http://tx81z.blogspot.com/].  Here is a very straightforward setup
+The Arpeggiator has a number of {optional parameters}[http://tx81z.blogspot.com/].  For this example, here is a very straightforward setup
 
   opts = { 
     :gate => 90, 
