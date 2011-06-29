@@ -11,9 +11,8 @@ module Diamond
                 
     attr_accessor :channel
     
-    def_delegators :clock, 
-                     :join,
-                     :start
+    def_delegators :clock, :join
+    
     def_delegators :sequencer, 
                      :gate, 
                      :gate=, 
@@ -56,6 +55,7 @@ module Diamond
     # * resolution: the resolution of the arpeggiator (numeric notation)    
     #    
     def initialize(tempo_or_input, options = {}, &block)
+      @unused_clock = nil
       @mute = false
       @midi_destinations = []
       @midi_sources = {}
@@ -80,13 +80,13 @@ module Diamond
         
     # accept sync another arpeggiator to this one
     def sync(arp)
-      @clock << arp.clock
+      @unused_clock = @clock
+      @clock = arp.clock
     end
     alias_method :<<, :sync
     
     def unsync(arp)
-      @clock.unsync(arp.clock)
-      arp.clock.unsync(@clock)
+      @clock = @unused_clock
     end
     
     # add input notes. takes a single note or an array of notes
@@ -124,10 +124,21 @@ module Diamond
       @mute
     end
     
+    # start the clock
+    def start(*a)
+      if @unused_clock.nil?
+        @clock.start(*a)
+        @running = true
+      end
+    end
+    
     # stops the clock and sends any remaining MIDI note-off messages that are in the queue
     def stop
-      @clock.stop rescue true # i dunno about this...
-      send_pending_note_offs 
+      if @unused_clock.nil?
+        @clock.stop
+        @running = false
+        send_pending_note_offs
+      end             
     end
     
     # send all of the note off messages in the queue
