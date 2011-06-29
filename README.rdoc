@@ -30,23 +30,31 @@ these will install automatically with the gem
 
   require "diamond"
 
-The Arpeggiator has a number of options to control which you can read about more in-depth {here}[http://tx81z.blogspot.com/].  Here is a pretty basic setup: 
- 
+First, I'll select my computer's first MIDI output using {unimidi}[http://github.com/arirusso/unimidi].  ({here is an example that explains how to find a device}[http://github.com/arirusso/unimidi/blob/master/examples/select_a_device.rb])
+
+@output = UniMIDI::Output.first.open
+
+The Arpeggiator has a number of optional parameters and you can read about what they do {here}[http://tx81z.blogspot.com/].  For this example, I'll just use a straightforward setup:
+
   opts = { 
     :gate => 90, 
     :range => 4, 
     :interval => 7,
-    :midi => UniMIDI::Output.first.open,
+    :midi => @output,
     :offset => 1,
     :pattern => Diamond::Pattern["UpDown"],    
     :rate => 8
   }
-  
-Instantiate the Arpeggiator, passing in a tempo value and the options. In this case 138 BPM
+
+Now I can create an Arpeggiator object, passing in a tempo value and the options I chose. In this case the tempo will be 138 BPM
 
   arp = Diamond::Arpeggiator.new(138, opts)
-  
-Of course, the Arpeggiator needs input notes
+ 
+If you'd like to sync to MIDI clock instead of internally generating tempo, [pass in a unimidi input instead of a numeric tempo]
+
+Of course, the Arpeggiator needs an input chord to play off of.  For the sake of simplicity, I'm just going to enter that chord with Ruby code.  However, as you might expect [it is also possible to use a MIDI input]. (read more about that here)
+
+I'll create a chord of three note objects...
 
   include MIDIMessage
 
@@ -56,20 +64,24 @@ Of course, the Arpeggiator needs input notes
     NoteOn["G4"].new(0, 100)
   ]
 
-You can use Arpeggiator#add and Arpeggiator#remove to control the input notes and chords.
+And use Arpeggiator#add and Arpeggiator#remove to give or take them away
 
   arp.add(chord)
-  
-If you are using this example in irb, you can start the arpeggiator in a background thread by passing an option :background => true to Arpeggiator#start.  That will allow you to {live code}[http://en.wikipedia.org/wiki/Live_coding], sync it other arpeggiators, or just run another foreground process. 
-   
-  arp.start(:background => true)
-  
-You can then control all of the {arpeggiator options}[http://tx81z.blogspot.com] on the fly
+
+If you are using this example in irb, you can start the arpeggiator in a background thread by passing an option :background =&gt; true to Arpeggiator#start.  That will allow you to {live code}[http://en.wikipedia.org/wiki/Live_coding], sync it other arpeggiators, or just run another foreground process. 
+
+  arp.start(:background =&gt; true)
+
+At that point, I start hearing some sounds.  All of the [arpeggiator options] can be controlled on the on the fly
 
   arp.rate = 16
-  
-{This blog post}[http://tx81z.blogspot.com] and the following screencast go more in-depth on Diamond usage, especially with live coding and the various kinds of sync available.
-    
+  arp.gate = 20
+  arp.remove(chord.last)
+
+Here is a screencast of Diamond being live coded.  
+
+Click here to see a blog post that goes further in-depth with live coding
+
 == Other Documentation
 
 * {examples}[http://github.com/arirusso/diamond/tree/master/examples]

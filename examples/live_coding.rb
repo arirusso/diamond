@@ -10,8 +10,8 @@ opts = {
   :range => 4, 
   :interval => 7,
   :midi => UniMIDI::Output.first.open,
-  :rate => 8,
-  :resolution => 64
+  :pattern => Diamond::Pattern["UpDown"],
+  :rate => 8
 }
 
 arp = Diamond::Arpeggiator.new(175, opts)
