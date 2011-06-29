@@ -59,7 +59,8 @@ module Diamond
       @mute = false
       @midi_destinations = []
       @midi_sources = {}
-      @transpose = 0
+      @running = false
+      
       @channel = options[:channel]
       
       resolution = options[:resolution] || 128
@@ -125,7 +126,7 @@ module Diamond
     
     # stops the clock and sends any remaining MIDI note-off messages that are in the queue
     def stop
-      @clock.stop
+      @clock.stop rescue true # i dunno about this...
       send_pending_note_offs 
     end
     

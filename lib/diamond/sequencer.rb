@@ -14,6 +14,7 @@ module Diamond
     
     def initialize(resolution, options = {})
       @resolution = resolution
+      @transpose = 0
       @interval = options[:interval] || 12
       @range = constrain((options[:range] || 3), :min => 0)
       @offset = options[:offset] || 0
@@ -130,9 +131,11 @@ module Diamond
       events.each do |event|
         @queue[0] ||= []
         @queue[0] << event.start
+        @queue[0].note += @transpose
         length = ((event.length.to_f / 100) * note_length.to_f).to_i
         @queue[length] ||= []
         @queue[length] << event.finish
+        @queue[length].note += @transpose
       end
     end
     
