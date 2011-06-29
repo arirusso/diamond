@@ -37,7 +37,6 @@ The Arpeggiator has a number of {optional parameters}[http://tx81z.blogspot.com/
     :gate => 90, 
     :interval => 7,
     :midi => @output,
-    :offset => 1,
     :pattern => Diamond::Pattern["UpDown"],
     :range => 4,     
     :rate => 8

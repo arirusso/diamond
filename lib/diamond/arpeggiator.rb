@@ -22,8 +22,8 @@ module Diamond
                      :gate=, 
                      :interval, 
                      :interval=,
-                     :offset,
-                     :offset=,
+                     :pattern_offset,
+                     :pattern_offset=,
                      :pattern,
                      :pattern=,
                      :pointer,
@@ -47,7 +47,7 @@ module Diamond
     #  
     # * midi: this can be a unimidi input or output. will accept a single device or an array
     #
-    # * offset: <em>offset</em> n means that the arpeggiator will begin on the nth note of the sequence (but not omit any notes). the default <em>offset</em> is 0.
+    # * pattern_offset: <em>pattern_offset</em> n means that the arpeggiator will begin on the nth note of the sequence (but not omit any notes). the default <em>pattern_offset</em> is 0.
     # 
     # * pattern: A Pattern object that computes the contour of the arpeggiated melody
     #    
