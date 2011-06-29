@@ -1,15 +1,21 @@
 #!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
+#
+# this is the most basic setup possible
+# we just set up an arpeggiator and let it run in the foreground
+#
+
 require "diamond"
 
 @output = UniMIDI::Output.first.open
 
 opts = { 
-  :gate => 90, 
-  :range => 4, 
+  :gate => 90,   
   :interval => 7,
   :midi => @output,
+  :pattern => Diamond::Pattern["UpDown"],
+  :range => 4, 
   :rate => 8
 }
 
@@ -24,15 +30,5 @@ notes = [
 ]
 
 arp.add(notes)
-
-#
-# the Pattern Proc should return a set of scale degrees.
-#  for example, given (3, 7) the "Up" pattern will return [0, 7, 14, 21]
-#
-arp.pattern = Diamond::Pattern.new("Up") do |r, i|
-  a = []
-  0.upto(r) { |n| a << (n * i) }
-  a
-end
    
 arp.start

@@ -2,14 +2,15 @@
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 #
-# this example shows a basic live coding setup
-# you would normally enter this code in to irb or some kind of live coding text editor setup
+# this example is the same as the "simple.rb" one, except that it syncs to MIDI clock
+# from a unimidi input
 #
-# if you run this as a script, it will exit before doing anything
+# we just set up an arpeggiator and let it run in the foreground
 #
 
 require "diamond"
 
+@input = UniMIDI::Input.first.open
 @output = UniMIDI::Output.first.open
 
 opts = { 
@@ -21,7 +22,7 @@ opts = {
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(175, opts)
+arp = Diamond::Arpeggiator.new(@input, opts)
 
 include MIDIMessage
 
@@ -33,4 +34,6 @@ notes = [
 
 arp.add(notes)
    
-arp.start(:background => true)
+arp.start
+
+# the arpeggiator will actually start when it begins receiving clock messages
