@@ -2,8 +2,8 @@
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 #
-# this is the most basic setup possible
-# we just set up an arpeggiator and let it run in the foreground
+# this a very basic setup, again. set up an arpeggiator and let it run in the foreground
+#
 # the messages produced will be printed to the screen
 #
 # there's no MIDI output
