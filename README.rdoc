@@ -38,11 +38,11 @@ The Arpeggiator has a number of {optional parameters}[http://tx81z.blogspot.com/
 
   opts = { 
     :gate => 90, 
-    :range => 4, 
     :interval => 7,
     :midi => @output,
     :offset => 1,
-    :pattern => Diamond::Pattern["UpDown"],    
+    :pattern => Diamond::Pattern["UpDown"],
+    :range => 4,     
     :rate => 8
   }
 
@@ -66,7 +66,7 @@ Use Arpeggiator#add and Arpeggiator#remove to adjust what notes the arpeggiator 
 
   arp.add(chord)
 
-If you are working in irb, you can start the arpeggiator in a background thread by passing an option :background =&gt; true to Arpeggiator#start.  That will allow you to live code, sync it other arpeggiators, or just run another foreground process. 
+If you are working in irb, you can start the arpeggiator in a background thread by passing an option :background => true to Arpeggiator#start.  That will allow you to live code, sync it other arpeggiators, or just run another foreground process. 
 
   arp.start(:background =&gt; true)
 
