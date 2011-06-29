@@ -97,8 +97,9 @@ module Diamond
     end
     
     # transpose everything by <em>num</em> scale degrees
-    def transpose(num)
-      @transpose = num
+    def transpose(num = nil)
+      @transpose = num unless num.nil?
+      @transpose
     end
     
     # returns an array containing all NoteOff messages in the queue
@@ -129,13 +130,13 @@ module Diamond
         
     def add_to_queue(events)
       events.each do |event|
+        event.start.note += @transpose
         @queue[0] ||= []
-        @queue[0] << event.start
-        @queue[0].note += @transpose
+        @queue[0] << event.start        
         length = ((event.length.to_f / 100) * note_length.to_f).to_i
+        event.finish.note += @transpose
         @queue[length] ||= []
         @queue[length] << event.finish
-        @queue[length].note += @transpose
       end
     end
     
