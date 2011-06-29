@@ -52,9 +52,7 @@ Create an Arpeggiator object, passing in a tempo value and the options above. In
  
 If you'd like to sync to MIDI clock instead of internally generating tempo, pass in a unimidi input instead of a numeric tempo ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_sync.rb])
 
-Of course, the Arpeggiator needs notes to work with.  For the sake of simplicity, I'm just going to enter a chord with Ruby code.  However, as you might expect, it is also possible to use a MIDI input. ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb])
-
-I'll create a chord of three note objects...
+Of course, the Arpeggiator needs notes to work with.  As you might expect, it is easy to use a MIDI input for that. ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]).  However, for the sake of simplicity here is a three note chord created with Ruby code
 
   include MIDIMessage
 
@@ -64,7 +62,7 @@ I'll create a chord of three note objects...
     NoteOn["G4"].new(0, 100)
   ]
 
-And use Arpeggiator#add and Arpeggiator#remove to give or take them away
+Use Arpeggiator#add and Arpeggiator#remove to give or take them away
 
   arp.add(chord)
 
