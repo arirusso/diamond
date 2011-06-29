@@ -18,7 +18,8 @@ module Diamond
         :tick => {}
       }
             
-      initialize_native_clock(tempo_or_input, resolution, options)      
+      initialize_native_clock(tempo_or_input, resolution)
+            
       bind_actions
     end
     
@@ -72,11 +73,8 @@ module Diamond
       @clocks[@clocks.length-2]
     end
         
-    def initialize_native_clock(tempo_or_input, resolution, options)
-      sync_to = [options[:sync_to]].flatten.compact
-      children = [options[:children]].flatten.compact
-      child_clocks = children.map { |arp| arp.clock }
-      @clocks << Topaz::Tempo.new(tempo_or_input, :sync_to => sync_to, :children => child_clocks, :midi => @midi_destinations)
+    def initialize_native_clock(tempo_or_input, resolution)
+      @clocks << Topaz::Tempo.new(tempo_or_input, :midi => @midi_destinations)
       dif = resolution / clock.interval  
       clock.interval = clock.interval * dif
     end

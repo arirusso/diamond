@@ -66,6 +66,7 @@ module Diamond
       @clock = ClockStack.new(tempo_or_input, resolution, options)
       
       initialize_midi_io(options[:midi]) unless options[:midi].nil?
+      initialize_sync(options)
       
       @sequencer = Sequencer.new(resolution, options)
 
@@ -160,6 +161,13 @@ module Diamond
     end
     
     private
+    
+    def initialize_sync(options = {})
+      sync_to = [options[:sync_to]].flatten.compact      
+      sync_to.each { |arp| sync_to(arp) }
+      slaves = [options[:slave]].flatten.compact
+      slaves.each { |arp| sync(arp) }
+    end
     
     def update_clock
       @clock.update_destinations(@midi_destinations)
