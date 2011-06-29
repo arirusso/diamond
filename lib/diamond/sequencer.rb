@@ -30,6 +30,11 @@ module Diamond
       update_sequence
     end
     
+    # return to the beginning of the sequence
+    def reset
+      @pointer = 0
+    end
+    
     # yields to <em>block</em>, passing in the next messages in the queue
     # also returns the next messages
     def with_next(&block)
