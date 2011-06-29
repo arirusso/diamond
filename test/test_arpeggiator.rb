@@ -30,4 +30,10 @@ class ApeggiatorTest < Test::Unit::TestCase
     assert_equal(nil, arp.midi_sources.keys.first)       
   end
   
+  def test_add_destination
+  end
+  
+  def test_add_remove_destination    
+  end
+  
 end

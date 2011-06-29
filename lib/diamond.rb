@@ -5,8 +5,8 @@
 # 
 require "forwardable"
 
-require "midi-message"
 require "midi-eye"
+require "midi-message"
 require "topaz"
 require "unimidi"
 

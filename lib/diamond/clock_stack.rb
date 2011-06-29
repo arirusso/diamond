@@ -12,21 +12,17 @@ module Diamond
     
     def_delegators :clock, :join
     
-    def initialize(tempo_or_input, options = {})
+    def initialize(tempo_or_input, resolution, options = {})
       @clocks = []
       @actions = {
         :tick => {}
       }
-      
-      resolution = options[:resolution] || 128
-      quarter_note = resolution / 4
-      
-      initialize_native_clock(tempo_or_input, resolution, options)
-      
+            
+      initialize_native_clock(tempo_or_input, resolution, options)      
       bind_actions
     end
     
-    def add_tick_action(arp, &block)
+    def ensure_tick_action(arp, &block)
       @actions[:tick][arp] = block
     end
     

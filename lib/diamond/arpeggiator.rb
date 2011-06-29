@@ -58,19 +58,17 @@ module Diamond
       @mute = false
       @midi_destinations = []
       @midi_sources = {}
+      @actions = { :tick => nil }
       
-      @channel = options[:channel]
-      
+      @channel = options[:channel]      
       resolution = options[:resolution] || 128
-      quarter_note = resolution / 4
       
-      @clock = ClockStack.new(tempo_or_input, options)
+      @clock = ClockStack.new(tempo_or_input, resolution, options)
       
       initialize_midi_io(options[:midi]) unless options[:midi].nil?
       
       @sequencer = Sequencer.new(resolution, options)
-      
-      #initialize_native_clock(tempo_or_input, resolution, options)
+
       bind_events(&block)
     end
         
@@ -82,13 +80,13 @@ module Diamond
     # accept sync another arpeggiator to this one
     def sync(arp)
       @clock << arp.clock
-      mark_clock_changed
+      update_clock
     end
     alias_method :<<, :sync
     
     def unsync(arp)
       @clock.remove(arp.clock)
-      mark_clock_changed
+      update_clock
     end
     
     # add input notes. takes a single note or an array of notes
@@ -149,10 +147,23 @@ module Diamond
       @midi_sources.delete(source)
     end
     
+    def add_midi_destinations(destinations)
+      destinations = [destinations].flatten.compact
+      @midi_destinations += destinations
+      update_clock
+    end
+    
+    def remove_midi_destinations(destinations)
+      destinations = [destinations].flatten.compact
+      @midi_destinations.delete_if { |d| destinations.include?(d) }
+      update_clock
+    end
+    
     private
     
-    def mark_clock_changed
+    def update_clock
       @clock.update_destinations(@midi_destinations)
+      @clock.ensure_tick_action(self, &@actions[:tick]) unless @actions[:tick].nil?
     end
     
     def channel_filter(notes)
@@ -161,8 +172,7 @@ module Diamond
         
     def initialize_midi_io(devices)
       devices = [devices].flatten
-      @midi_destinations += devices.find_all { |d| d.type == :output }.compact
-      @clock.update_destinations(@midi_destinations)
+      add_midi_destinations(devices.find_all { |d| d.type == :output }.compact)
       sources = devices.find_all { |d| d.type == :input }   
       sources.each { |source| initialize_midi_source(source) }
     end
@@ -175,8 +185,8 @@ module Diamond
       @midi_sources[source] = listener
     end
     
-    def tick_action(&block)
-      Proc.new do
+    def bind_events(&block)
+      @actions[:tick] = Proc.new do
         @sequencer.with_next do |msgs|
           unless muted?
             data = msgs.map { |msg| msg.to_bytes }.flatten
@@ -185,10 +195,7 @@ module Diamond
           end
         end
       end
-    end
-    
-    def bind_events(&block)
-      @clock.add_tick_action(self, &tick_action(&block)) 
+      update_clock       
     end
   
   end
