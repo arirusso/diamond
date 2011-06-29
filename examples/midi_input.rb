@@ -22,6 +22,17 @@ opts = {
 }
 
 arp = Diamond::Arpeggiator.new(175, opts)
+
+# normally by the fault the arpeggiator will be in "omni mode" or in other words, accept notes
+# from all MIDI channels
+
+# to tell the arpeggiator to only look at a single channel, just set a channel
+
+arp.channel = 0 
+
+# you can also call arp.channel = nil to return it to omni mode
+
+# (Diamond does not respond to MIDI Omni On/Off messages)
    
 arp.start
 

@@ -8,6 +8,8 @@ module Diamond
     attr_reader :clock,
                 :midi_sources,
                 :sequencer
+                
+    attr_accessor :channel
     
     def_delegators :clock, 
                      :join,
