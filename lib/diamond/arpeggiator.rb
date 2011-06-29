@@ -13,10 +13,7 @@ module Diamond
     
     def_delegators :clock, 
                      :join,
-                     :start,
-                     :sync_from,
-                     :sync_to, 
-                     :<<
+                     :start
     def_delegators :sequencer, 
                      :gate, 
                      :gate=, 
@@ -71,6 +68,22 @@ module Diamond
       @sequencer = Sequencer.new(resolution, options)
       initialize_clock(tempo_or_input, resolution, options)
       bind_events(&block)
+    end
+    
+    # sync to another arpeggiator
+    def sync_to(arp)
+      arp.sync(self)
+    end
+        
+    # accept sync another arpeggiator to this one
+    def sync(arp)
+      @clock << arp.clock
+    end
+    alias_method :<<, :sync
+    
+    def unsync(arp)
+      @clock.unsync(arp.clock)
+      arp.clock.unsync(@clock)
     end
     
     # add input notes. takes a single note or an array of notes
@@ -134,7 +147,8 @@ module Diamond
     def initialize_clock(tempo_or_input, resolution, options)
       sync_to = [options[:sync_to]].flatten.compact
       children = [options[:children]].flatten.compact
-      @clock = Topaz::Tempo.new(tempo_or_input, :sync_to => sync_to, :children => children, :midi => @midi_destinations)
+      child_clocks = children.map { |arp| arp.clock }
+      @clock = Topaz::Tempo.new(tempo_or_input, :sync_to => sync_to, :children => child_clocks, :midi => @midi_destinations)
       dif = resolution / @clock.interval  
       @clock.interval = @clock.interval * dif
     end
