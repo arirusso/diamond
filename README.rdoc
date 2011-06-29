@@ -17,7 +17,11 @@
 
   gem install diamond
   
-== Gem dependencies
+== Requirements
+
+Ruby 1.9.2 or JRuby in 1.9 mode
+
+Gem Dependencies:
 
 {midi-eye}[http://github.com/arirusso/midi-eye], {midi-message}[http://github.com/arirusso/midi-message], {topaz}[http://github.com/arirusso/topaz], and {unimidi}[http://github.com/arirusso/unimidi]
 
@@ -31,7 +35,7 @@ First, select a MIDI output using unimidi.  ({More...}[http://github.com/ariruss
 
   @output = UniMIDI::Output.first.open
 
-The Arpeggiator has a number of {optional parameters}[http://tx81z.blogspot.com/].  For this example, here is a very straightforward setup
+The Arpeggiator has a number of {optional parameters}[].  For this example, here's a straightforward setup
 
   opts = { 
     :gate => 90, 
@@ -44,23 +48,15 @@ The Arpeggiator has a number of {optional parameters}[http://tx81z.blogspot.com/
 
 Create an Arpeggiator object, passing in a tempo value and the options above. In this case the tempo will be 138 BPM
 
-  arp = Diamond::Arpeggiator.new(138, opts)
- 
-If you'd like to sync to MIDI clock instead of internally generating tempo, pass in a unimidi input instead of a numeric tempo ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_sync.rb]). 
+  arp = Diamond::Arpeggiator.new(138, opts) 
 
-Of course, an Arpeggiator always needs notes to work with.  As you might expect, it is easy to use a MIDI input for that. ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]).  However, for the sake of simplicity here is a three note chord created with Ruby code
+Of course, an Arpeggiator needs notes to work with. As you might expect, it is easy to use a MIDI input for that. (see example). However, again for the sake of simplicity here is a chord in Ruby
 
-  include MIDIMessage
+chord = ["C3", "G3", "Bb3", "A4"]
 
-  chord = [
-    NoteOn["C4"].new(0, 100),
-    NoteOn["E4"].new(0, 100),
-    NoteOn["G4"].new(0, 100)
-  ]
+Use Arpeggiator#add and Arpeggiator#remove to change the notes that the arpeggiator sees. (more...)
 
-Use Arpeggiator#add and Arpeggiator#remove to adjust what notes the arpeggiator sees
-
-  arp.add(chord)
+arp.add(chord)
 
 If you are working in {irb}[http://en.wikipedia.org/wiki/Interactive_Ruby_Shell], you can start the arpeggiator in a background thread by passing an option :background => true to Arpeggiator#start.  That will allow you to live code, sync it other arpeggiators, or just run another foreground process. 
 
@@ -72,9 +68,14 @@ All of the {arpeggiator options}[] can be controlled on the on the fly
   arp.gate = 20
   arp.remove(chord.last)
 
-The screencast video above shows Diamond being live coded in this way  
+The screencast video above shows Diamond being live coded in this way. ({Read how this is done}[])
 
-Also, {Here is a blog post}[] that walks through that process
+==== Links:
+
+* {Example of syncing Diamond to external MIDI clock}[http://github.com/arirusso/diamond/blob/master/examples/midi_sync.rb]
+* Feeding notes to Diamond using a MIDI controller
+* Feeding notes to Diamond using midi-message objects 
+* Live coding Diamond and chaining multiple arpeggiators 
 
 == Other Documentation
 
