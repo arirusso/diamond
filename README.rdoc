@@ -50,7 +50,7 @@ Create an Arpeggiator object, passing in a tempo value and the options above. In
 
   arp = Diamond::Arpeggiator.new(138, opts) 
 
-Of course, an Arpeggiator needs notes to work with. As you might expect, it is easy to use a MIDI input for that. (see example). However, again for the sake of simplicity here is a chord in Ruby
+Of course, an Arpeggiator needs notes to work with. As you might expect, it is easy to use a MIDI input for that. ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]). However, again for the sake of simplicity here is a chord in Ruby
 
   chord = ["C3", "G3", "Bb3", "A4"]
 
@@ -70,14 +70,14 @@ All of the {arpeggiator options}[] can be controlled on the on the fly
   arp.gate = 20  
   arp.remove(["C5", "A4"])
 
-The screencast video above shows Diamond being live coded in this way. ({Read how this is done}[])
+The screencast video above shows Diamond being live coded in this way. ({Read how this is done}[blog link])
 
 ==== Links:
 
 * {Example of syncing Diamond to external MIDI clock}[http://github.com/arirusso/diamond/blob/master/examples/midi_clock.rb]
 * {Example of feeding notes to Diamond using a MIDI controller or other input}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]
 * {Example of feeding notes to Diamond using MIDI message objects}[http://github.com/arirusso/diamond/blob/master/examples/midi_message.rb]
-* {Live coding Diamond and chaining multiple arpeggiators} 
+* {Live coding Diamond and chaining multiple arpeggiators}[blog link] 
 
 == Other Documentation
 
