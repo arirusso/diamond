@@ -52,11 +52,11 @@ Create an Arpeggiator object, passing in a tempo value and the options above. In
 
 Of course, an Arpeggiator needs notes to work with. As you might expect, it is easy to use a MIDI input for that. (see example). However, again for the sake of simplicity here is a chord in Ruby
 
-chord = ["C3", "G3", "Bb3", "A4"]
+  chord = ["C3", "G3", "Bb3", "A4"]
 
 Use Arpeggiator#add and Arpeggiator#remove to change the notes that the arpeggiator sees. (more...)
 
-arp.add(chord)
+  arp.add(chord)
 
 If you are working in {irb}[http://en.wikipedia.org/wiki/Interactive_Ruby_Shell], you can start the arpeggiator in a background thread by passing an option :background => true to Arpeggiator#start.  That will allow you to live code, sync it other arpeggiators, or just run another foreground process. 
 
