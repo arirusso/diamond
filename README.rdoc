@@ -50,7 +50,7 @@ Create an Arpeggiator object, passing in a tempo value and the options above. In
 
   arp = Diamond::Arpeggiator.new(138, opts) 
 
-Of course, an Arpeggiator needs notes to work with. As you might expect, it is easy to use a MIDI input for that. ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]). However, again for the sake of simplicity here is a chord in Ruby
+Of course, an Arpeggiator needs notes to work with. As you might expect, it's easy to use a MIDI input for that. ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]). However, again for the sake of simplicity here's a chord in Ruby
 
   chord = ["C3", "G3", "Bb3", "A4"]
 
