@@ -52,7 +52,7 @@ module Diamond
       @clock = ClockStack.new(tempo_or_input, resolution, options)
       
       initialize_midi_io(options[:midi]) unless options[:midi].nil?
-      initialize_sync(options)
+      initialize_syncable(options)
       
       @sequence = ArpeggiatorSequence.new(resolution, options)
 
@@ -85,7 +85,7 @@ module Diamond
     # mute this arpeggiator
     def mute
       @mute = true
-      send_pending_note_offs
+      emit_pending_note_offs
     end
     
     # unmute this arpeggiator
@@ -101,13 +101,7 @@ module Diamond
     # stops the clock and sends any remaining MIDI note-off messages that are in the queue
     def stop
       @clock.stop
-      send_pending_note_offs             
-    end
-    
-    # send all of the note off messages in the queue
-    def send_pending_note_offs
-      data = @sequence.pending_note_offs.map { |msg| msg.to_bytes }.flatten.compact
-      @midi_destinations.each { |o| o.puts(data) } unless data.empty?
+      emit_pending_note_offs             
     end
     
     private
@@ -119,13 +113,6 @@ module Diamond
         note = note.kind_of?(String) ? klass[note].new(channel, velocity) : note
         (@channel.nil? || note.channel == @channel) ? note : nil 
       end.compact
-    end
-    
-    def initialize_sync(options = {})
-      sync_to = [options[:sync_to]].flatten.compact      
-      sync_to.each { |arp| sync_to(arp) }
-      slaves = [options[:slave]].flatten.compact
-      slaves.each { |arp| sync(arp) }
     end
     
     def update_clock

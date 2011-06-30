@@ -23,6 +23,12 @@ module Diamond
       @midi_destinations.each { |o| o.puts(data) }
     end
     
+    # send all of the note off messages in the queue
+    def emit_pending_note_offs
+      data = @sequence.pending_note_offs.map { |msg| msg.to_bytes }.flatten.compact
+      @midi_destinations.each { |o| o.puts(data) } unless data.empty?
+    end
+    
     private
     
     def emit_midi?
