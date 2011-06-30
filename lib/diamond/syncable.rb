@@ -10,10 +10,7 @@ module Diamond
         
     # sync another syncable to this one
     def sync(syncable, options = {})
-      quantize = options[:quantize] || -1
-      index = quantize + 1
-      @sync_queue[index] ||= []
-      @sync_queue[index] << syncable.clock      
+      @sync_queue << syncable.clock      
     end
     
     def unsync(syncable)
@@ -23,17 +20,20 @@ module Diamond
     
     private
     
-    def initialize_syncable(options = {})
-      @sync_queue ||= {}
-      sync_to = [options[:sync_to]].flatten.compact      
-      sync_to.each { |syncable| sync_to(syncable) }
-      slaves = [options[:slave]].flatten.compact
-      slaves.each { |syncable| sync(syncable) }
+    def initialize_syncable(sync_to, slave)
+      @sync_queue ||= []
+      unless sync_to.nil?
+        sync_to = [sync_to].flatten.compact      
+        sync_to.each { |syncable| sync_to(syncable) }
+      end
+      unless slave.nil?
+        slaves = [slave].flatten.compact
+        slaves.each { |syncable| sync(syncable) }
+      end
     end
     
     def activate_sync_queue
-      nxt = @sync_queue.shift
-      nxt.each { |clock| @clock << clock }
+      @sync_queue.each { |clock| @clock << clock }
       on_sync_updated if respond_to?(:on_sync_updated)
     end
           

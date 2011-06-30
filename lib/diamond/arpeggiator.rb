@@ -46,13 +46,15 @@ module Diamond
       @mute = false      
       @actions = { :tick => nil }
       
-      @channel = options[:channel]      
-      resolution = options[:resolution] || 128
+      @channel = options[:channel]
       
-      @clock = ClockStack.new(tempo_or_input, resolution, options)
+      midi_devices = options[:midi]      
+      resolution = options[:resolution] || 128      
       
-      initialize_midi_io(options[:midi]) unless options[:midi].nil?
-      initialize_syncable(options)
+      @clock = ClockStack.new(tempo_or_input, resolution)
+      
+      initialize_midi_io(midi_devices) unless midi_devices.nil?
+      initialize_syncable(options[:sync_to], options[:slave])
       
       @sequence = ArpeggiatorSequence.new(resolution, options)
 
@@ -141,7 +143,10 @@ module Diamond
         @sequence.with_next do |msgs|
           unless muted?
             data = msgs.map { |msg| msg.to_bytes }.flatten
-            emit_midi(data) if emit_midi? && !data.empty?
+            unless data.empty?
+              emit_midi(data) if emit_midi?
+              activate_sync_queue
+            end
             yield(msgs) unless block.nil?
           end
         end
