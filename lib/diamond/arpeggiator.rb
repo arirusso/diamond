@@ -7,13 +7,13 @@ module Diamond
     
     attr_reader :clock,
                 :midi_sources,
-                :sequencer
+                :sequence
                 
     attr_accessor :channel
     
     def_delegators :clock, :join, :start
     
-    def_delegators :sequencer, 
+    def_delegators :sequence, 
                      :gate, 
                      :gate=, 
                      :interval, 
@@ -68,7 +68,7 @@ module Diamond
       initialize_midi_io(options[:midi]) unless options[:midi].nil?
       initialize_sync(options)
       
-      @sequencer = Sequencer.new(resolution, options)
+      @sequence = ArpeggiatorSequence.new(resolution, options)
 
       bind_events(&block)
     end
@@ -79,13 +79,17 @@ module Diamond
     end
         
     # accept sync another arpeggiator to this one
+    # TO DO **** this needs to happen on a reasonable downbeat always
     def sync(arp)
       @clock << arp.clock
       update_clock
     end
     alias_method :<<, :sync
     
-    def unsync(arp)
+    def unsync(arp, options = {})
+      if options[:quantize]
+        # TO DO
+      end
       @clock.remove(arp.clock)
       update_clock
     end
@@ -94,14 +98,14 @@ module Diamond
     def add(notes)
       notes = [notes].flatten
       notes = channel_filter(notes) unless @channel.nil?
-      @sequencer.add(notes)
+      @sequence.add(notes)
     end
     
     # remove input notes. takes a single note or an array of notes
     def remove(notes)
       notes = [notes].flatten
       notes = channel_filter(notes) unless @channel.nil?
-      @sequencer.remove(notes)
+      @sequence.remove(notes)
     end
     
     # toggle mute on this arpeggiator
@@ -133,7 +137,7 @@ module Diamond
     
     # send all of the note off messages in the queue
     def send_pending_note_offs
-      data = @sequencer.pending_note_offs.map { |msg| msg.to_bytes }.flatten.compact
+      data = @sequence.pending_note_offs.map { |msg| msg.to_bytes }.flatten.compact
       @midi_destinations.each { |o| o.puts(data) } unless data.empty?
     end
     
@@ -195,7 +199,7 @@ module Diamond
     
     def bind_events(&block)
       @actions[:tick] = Proc.new do
-        @sequencer.with_next do |msgs|
+        @sequence.with_next do |msgs|
           unless muted?
             data = msgs.map { |msg| msg.to_bytes }.flatten
             @midi_destinations.each { |o| o.puts(data) } unless data.empty?

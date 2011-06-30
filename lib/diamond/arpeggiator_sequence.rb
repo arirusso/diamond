@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 module Diamond
   
-  class Sequencer
+  class ArpeggiatorSequence
     
     attr_reader :gate,
                 :interval,

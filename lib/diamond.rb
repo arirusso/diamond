@@ -14,7 +14,7 @@ require "diamond/arpeggiator"
 require "diamond/clock_stack"
 require "diamond/note_event"
 require "diamond/pattern"
-require "diamond/sequencer"
+require "diamond/arpeggiator_sequence"
 
 require "pattern_presets"
 
