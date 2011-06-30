@@ -17,7 +17,7 @@ module Diamond
                 
     attr_accessor :channel
     
-    def_delegators :clock, :join, :start
+    def_delegators :clock, :join, :start, :stop
                          
     #
     # a numeric tempo rate (BPM), or unimidi input is required by the constructor.  in the case that you use a MIDI input, it will be used as a clock source
@@ -50,11 +50,10 @@ module Diamond
       
       midi_devices = options[:midi]      
       resolution = options[:resolution] || 128      
-      
-      @clock = ClockStack.new(tempo_or_input, resolution)
-      
-      initialize_midi_io(midi_devices) unless midi_devices.nil?
-      initialize_syncable(options[:sync_to], options[:slave])
+
+      initialize_midi_io(midi_devices) unless midi_devices.nil?            
+      initialize_syncable(options[:sync_to], options[:slave])      
+      initialize_clock(tempo_or_input, resolution)
       
       @sequence = ArpeggiatorSequence.new(resolution, options)
 
@@ -117,12 +116,26 @@ module Diamond
       end.compact
     end
     
-    def update_clock
-      @clock.update_destinations(@midi_destinations)
-      @clock.ensure_tick_action(self, &@actions[:tick]) unless @actions[:tick].nil?
+    #def update_clock
+      #@clock.update_midi_clock_destinations(@midi_destinations)
+      #@clock.ensure_tick_action(self, &@actions[:tick]) unless @actions[:tick].nil?
+    #end
+    #alias_method :on_midi_destinations_updated, :update_clock
+    #alias_method :on_sync_updated, :update_clock
+    
+    def initialize_clock(tempo_or_input, resolution)
+      @clock = Topaz::Tempo.new(tempo_or_input, :midi => @midi_destinations)
+      dif = resolution / clock.interval  
+      clock.interval = clock.interval * dif
+      clock.on_tick do
+        tick
+        @sync_set.each { |syncable| syncable.tick } 
+      end
     end
-    alias_method :on_midi_destinations_updated, :update_clock
-    alias_method :on_sync_updated, :update_clock
+    
+    def tick
+      @actions[:tick].call
+    end
             
     def initialize_midi_io(devices)
       devices = [devices].flatten
@@ -151,7 +164,7 @@ module Diamond
           end
         end
       end
-      update_clock       
+      #update_clock       
     end
   
   end

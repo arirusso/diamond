@@ -15,7 +15,6 @@ require "diamond/midi_receiver"
 require "diamond/syncable"
 
 require "diamond/arpeggiator"
-require "diamond/clock_stack"
 require "diamond/note_event"
 require "diamond/pattern"
 require "diamond/arpeggiator_sequence"
