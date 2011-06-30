@@ -9,7 +9,7 @@ class ArpeggiatorSequenceTest < Test::Unit::TestCase
   include TestHelper
   
   def test_sequence
-    seq = Sequencer.new(16)
+    seq = ArpeggiatorSequence.new(16)
     notes = [
       NoteOn["C4"].new(0, 100),
       NoteOn["E4"].new(0, 100),
@@ -27,7 +27,7 @@ class ArpeggiatorSequenceTest < Test::Unit::TestCase
   end
   
   def test_constrain
-    seq = Sequencer.new(128, :rate => 500)
+    seq = ArpeggiatorSequence.new(128, :rate => 500)
     assert_equal(seq.rate, 128)
   end
   
