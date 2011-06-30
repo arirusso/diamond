@@ -10,13 +10,13 @@ module Diamond
     def add_midi_destinations(destinations)
       destinations = [destinations].flatten.compact
       @midi_destinations += destinations
-      on_midi_destinations_updated
+      on_midi_destinations_updated if respond_to?(:on_midi_destinations_updated)
     end
     
     def remove_midi_destinations(destinations)
       destinations = [destinations].flatten.compact
       @midi_destinations.delete_if { |d| destinations.include?(d) }
-      on_midi_destinations_updated
+      on_midi_destinations_updated if respond_to?(:on_midi_destinations_updated)
     end
     
     def emit_midi(data)

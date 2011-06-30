@@ -3,25 +3,25 @@ module Diamond
   
   module Syncable
     
-     # sync to another arpeggiator
-    def sync_to(arp)
-      arp.sync(self)
+    # sync to another syncable
+    def sync_to(syncable)
+      syncable.sync(self)
     end
         
-    # accept sync another arpeggiator to this one
+    # sync another syncable to this one
     # TO DO **** this needs to happen on a reasonable downbeat always
-    def sync(arp)
-      @clock << arp.clock
-      update_clock
+    def sync(syncable)
+      @clock << syncable.clock
+      on_sync_updated if respond_to?(:on_sync_updated)
     end
     alias_method :<<, :sync
     
-    def unsync(arp, options = {})
+    def unsync(syncable, options = {})
       if options[:quantize]
         # TO DO
       end
-      @clock.remove(arp.clock)
-      update_clock
+      @clock.remove(syncable.clock)
+      on_sync_updated if respond_to?(:on_sync_updated)
     end
           
   end

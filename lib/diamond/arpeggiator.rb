@@ -24,23 +24,23 @@ module Diamond
     #
     # the constructor also accepts a number of options
     #       
-    # * channel: restrict input messages to the given MIDI channel. will operate on all input sources
+    # * <b>channel</b>: restrict input messages to the given MIDI channel. will operate on all input sources
     #
-    # * gate: <em>gate</em> refers to how long the arpeggiated notes will be held out. the <em>gate</em> value is a percentage based on the rate.  if the rate is 4, then a gate of 100 is equal to a quarter note. the default <em>gate</em> is 75. <em>Gate</em> must be positive and less than 500
+    # * <b>gate</b>: <em>gate</em> refers to how long the arpeggiated notes will be held out. the <em>gate</em> value is a percentage based on the rate.  if the rate is 4, then a gate of 100 is equal to a quarter note. the default <em>gate</em> is 75. <em>Gate</em> must be positive and less than 500
     #
-    # * interval: the arpeggiator increments the <em>pattern</em> over <em>interval</em> scale degrees <em>range</em> times.  the default <em>interval</em> is 12, meaning one octave above the current note. <em>interval</em> may be any positive or negative number
+    # * <b>interval</b>: the arpeggiator increments the <em>pattern</em> over <em>interval</em> scale degrees <em>range</em> times.  the default <em>interval</em> is 12, meaning one octave above the current note. <em>interval</em> may be any positive or negative number
     #  
-    # * midi: this can be a unimidi input or output. will accept a single device or an array
+    # * <b>midi</b>: this can be a unimidi input or output. will accept a single device or an array
     #
-    # * pattern_offset: <em>pattern_offset</em> n means that the arpeggiator will begin on the nth note of the sequence (but not omit any notes). the default <em>pattern_offset</em> is 0.
+    # * <b>pattern_offset</b>: <em>pattern_offset</em> n means that the arpeggiator will begin on the nth note of the sequence (but not omit any notes). the default <em>pattern_offset</em> is 0.
     # 
-    # * pattern: A Pattern object that computes the contour of the arpeggiated melody
+    # * <b>pattern</b>: A Pattern object that computes the contour of the arpeggiated melody
     #    
-    # * range: the arpeggiator increments the <em>pattern</em> over <em>interval</em> scale degrees <em>range</em> times. <em>range</em> must be 0 or greater. the default <em>range</em> is 3
+    # * <b>range</b>: the arpeggiator increments the <em>pattern</em> over <em>interval</em> scale degrees <em>range</em> times. <em>range</em> must be 0 or greater. the default <em>range</em> is 3
     #
-    # * rate: <em>rate</em> is how fast the arpeggios will be played. the default is 8, which is an eighth note. rate may be 0 (whole note) or greater but must be equal to or less than <em>resolution</em>
+    # * <b>rate</b>: <em>rate</em> is how fast the arpeggios will be played. the default is 8, which is an eighth note. rate may be 0 (whole note) or greater but must be equal to or less than <em>resolution</em>
     #  
-    # * resolution: the resolution of the arpeggiator (numeric notation)    
+    # * <b>resolution</b>: the resolution of the arpeggiator (numeric notation)    
     #    
     def initialize(tempo_or_input, options = {}, &block)
       @mute = false      
@@ -133,6 +133,7 @@ module Diamond
       @clock.ensure_tick_action(self, &@actions[:tick]) unless @actions[:tick].nil?
     end
     alias_method :on_midi_destinations_updated, :update_clock
+    alias_method :on_sync_updated, :update_clock
             
     def initialize_midi_io(devices)
       devices = [devices].flatten
