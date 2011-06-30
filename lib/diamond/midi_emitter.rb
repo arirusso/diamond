@@ -2,17 +2,21 @@
 module Diamond
   
   module MIDIEmitter
+    
+    def self.included(base)
+      base.send(:attr_reader, :midi_destinations)
+    end
             
     def add_midi_destinations(destinations)
       destinations = [destinations].flatten.compact
       @midi_destinations += destinations
-      after_midi_destinations_updated
+      on_midi_destinations_updated
     end
     
     def remove_midi_destinations(destinations)
       destinations = [destinations].flatten.compact
       @midi_destinations.delete_if { |d| destinations.include?(d) }
-      after_midi_destinations_updated
+      on_midi_destinations_updated
     end
     
     def emit_midi(data)
@@ -20,8 +24,12 @@ module Diamond
     end
     
     private
+    
+    def emit_midi?
+      !@midi_destinations.nil? && !@midi_destinations.empty?
+    end
             
-    def initialize_midi_emitter(output_devices)
+    def emit_midi_to(output_devices)
       @midi_destinations ||= []
       add_midi_destinations(output_devices)
     end

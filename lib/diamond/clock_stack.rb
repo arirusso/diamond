@@ -63,8 +63,9 @@ module Diamond
     end
     
     def update_destinations(destinations)
-      clock.add_destination(destinations)
-      last_clock.remove_destination(destinations) unless last_clock.nil?
+      clock.destinations.clear
+      last_clock.destinations.clear unless last_clock.nil?
+      clock.add_destination(destinations) 
     end
         
     private

@@ -4,10 +4,12 @@ module Diamond
   class Arpeggiator
     
     include MIDIEmitter
+    include MIDIReceiver
+    include Syncable
+    
     extend Forwardable
     
     attr_reader :clock,
-                :midi_sources,
                 :sequence
                 
     attr_accessor :channel
@@ -56,8 +58,7 @@ module Diamond
     # * resolution: the resolution of the arpeggiator (numeric notation)    
     #    
     def initialize(tempo_or_input, options = {}, &block)
-      @mute = false
-      @midi_sources = {}
+      @mute = false      
       @actions = { :tick => nil }
       
       @channel = options[:channel]      
@@ -71,27 +72,6 @@ module Diamond
       @sequence = ArpeggiatorSequence.new(resolution, options)
 
       bind_events(&block)
-    end
-        
-    # sync to another arpeggiator
-    def sync_to(arp)
-      arp.sync(self)
-    end
-        
-    # accept sync another arpeggiator to this one
-    # TO DO **** this needs to happen on a reasonable downbeat always
-    def sync(arp)
-      @clock << arp.clock
-      update_clock
-    end
-    alias_method :<<, :sync
-    
-    def unsync(arp, options = {})
-      if options[:quantize]
-        # TO DO
-      end
-      @clock.remove(arp.clock)
-      update_clock
     end
     
     # add input notes. takes a single note or an array of notes
@@ -141,17 +121,6 @@ module Diamond
       @midi_destinations.each { |o| o.puts(data) } unless data.empty?
     end
     
-    # add a midi input to use as a source for arpeggiator notes
-    def add_midi_source(source)
-      initialize_midi_source(source)
-    end
-    
-    # remove a midi input that was being used as a source for arpeggiator notes
-    def remove_midi_source(source)
-      @midi_sources[source].stop
-      @midi_sources.delete(source)
-    end
-    
     private
     
     def initialize_sync(options = {})
@@ -165,7 +134,7 @@ module Diamond
       @clock.update_destinations(@midi_destinations)
       @clock.ensure_tick_action(self, &@actions[:tick]) unless @actions[:tick].nil?
     end
-    alias_method :after_midi_destinations_updated, :update_clock
+    alias_method :on_midi_destinations_updated, :update_clock
     
     def channel_filter(notes)
       notes.map { |n| n if n.channel == @channel }.flatten.compact
@@ -173,17 +142,16 @@ module Diamond
         
     def initialize_midi_io(devices)
       devices = [devices].flatten
-      initialize_midi_emitter(devices.find_all { |d| d.type == :output }.compact)
-      sources = devices.find_all { |d| d.type == :input }   
-      sources.each { |source| initialize_midi_source(source) }
+      emit_midi_to(devices.find_all { |d| d.type == :output }.compact)
+      receive_midi_from(devices.find_all { |d| d.type == :input }.compact)      
     end
     
-    def initialize_midi_source(source)
+    def initialize_midi_source_listener(source)
       listener = MIDIEye::Listener.new(source)
       listener.listen_for(:class => MIDIMessage::NoteOn) { |event| add(event[:message]) }
       listener.listen_for(:class => MIDIMessage::NoteOff) { |event| remove(event[:message]) }
       listener.start(:background => true)
-      @midi_sources[source] = listener
+      listener
     end
     
     def bind_events(&block)
@@ -191,7 +159,7 @@ module Diamond
         @sequence.with_next do |msgs|
           unless muted?
             data = msgs.map { |msg| msg.to_bytes }.flatten
-            emit_midi(data) unless data.empty?
+            emit_midi(data) if emit_midi? && !data.empty?
             yield(msgs) unless block.nil?
           end
         end
