@@ -15,25 +15,7 @@ module Diamond
     attr_accessor :channel
     
     def_delegators :clock, :join, :start
-    
-    def_delegators :sequence, 
-                     :gate, 
-                     :gate=, 
-                     :interval, 
-                     :interval=,
-                     :pattern_offset,
-                     :pattern_offset=,
-                     :pattern,
-                     :pattern=,
-                     :pointer,
-                     :resolution,
-                     :range,
-                     :range=, 
-                     :rate, 
-                     :rate=,
-                     :reset,
-                     :transpose
-                     
+                         
     #
     # a numeric tempo rate (BPM), or unimidi input is required by the constructor.  in the case that you use a MIDI input, it will be used as a clock source
     #
@@ -72,6 +54,10 @@ module Diamond
       @sequence = ArpeggiatorSequence.new(resolution, options)
 
       bind_events(&block)
+    end
+    
+    def method_missing(method, *args, &block)
+      @sequence.respond_to?(method) ? @sequence.send(method, *args, &block) : super
     end
     
     # add input notes. takes a single note or an array of notes
