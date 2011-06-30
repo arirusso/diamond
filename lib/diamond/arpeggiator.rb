@@ -3,6 +3,7 @@ module Diamond
   
   class Arpeggiator
     
+    include MIDIEmitter
     extend Forwardable
     
     attr_reader :clock,
@@ -56,7 +57,6 @@ module Diamond
     #    
     def initialize(tempo_or_input, options = {}, &block)
       @mute = false
-      @midi_destinations = []
       @midi_sources = {}
       @actions = { :tick => nil }
       
@@ -152,18 +152,6 @@ module Diamond
       @midi_sources.delete(source)
     end
     
-    def add_midi_destinations(destinations)
-      destinations = [destinations].flatten.compact
-      @midi_destinations += destinations
-      update_clock
-    end
-    
-    def remove_midi_destinations(destinations)
-      destinations = [destinations].flatten.compact
-      @midi_destinations.delete_if { |d| destinations.include?(d) }
-      update_clock
-    end
-    
     private
     
     def initialize_sync(options = {})
@@ -177,6 +165,7 @@ module Diamond
       @clock.update_destinations(@midi_destinations)
       @clock.ensure_tick_action(self, &@actions[:tick]) unless @actions[:tick].nil?
     end
+    alias_method :after_midi_destinations_updated, :update_clock
     
     def channel_filter(notes)
       notes.map { |n| n if n.channel == @channel }.flatten.compact
@@ -184,7 +173,7 @@ module Diamond
         
     def initialize_midi_io(devices)
       devices = [devices].flatten
-      add_midi_destinations(devices.find_all { |d| d.type == :output }.compact)
+      initialize_midi_emitter(devices.find_all { |d| d.type == :output }.compact)
       sources = devices.find_all { |d| d.type == :input }   
       sources.each { |source| initialize_midi_source(source) }
     end
@@ -202,7 +191,7 @@ module Diamond
         @sequence.with_next do |msgs|
           unless muted?
             data = msgs.map { |msg| msg.to_bytes }.flatten
-            @midi_destinations.each { |o| o.puts(data) } unless data.empty?
+            emit_midi(data) unless data.empty?
             yield(msgs) unless block.nil?
           end
         end
