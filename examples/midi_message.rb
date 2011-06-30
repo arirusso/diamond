@@ -21,7 +21,7 @@ opts = {
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(175, opts)
+arp = Diamond::Arpeggiator.new(138, opts)
 
 include MIDIMessage
 
