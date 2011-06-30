@@ -54,12 +54,10 @@ Of course, an Arpeggiator needs notes to work with. As you might expect, it is e
 
   chord = ["C3", "G3", "Bb3", "A4"]
 
-Use Arpeggiator#add and Arpeggiator#remove to change the notes that the arpeggiator sees.  Here are some possibilities 
+Use Arpeggiator#add and Arpeggiator#remove to change the notes that the arpeggiator sees.  
 
   arp.add(chord)
   arp.add("C5")
-  arp.remove(["C5", "A4"])
-  arp.add(MIDIMessage::NoteOn["A4"].new(0, 64))
   # etc
 
 If you are working in {irb}[http://en.wikipedia.org/wiki/Interactive_Ruby_Shell], you can start the arpeggiator in a background thread by passing an option :background => true to Arpeggiator#start.  That will allow you to live code, sync it other arpeggiators, or just run another foreground process. 
@@ -69,16 +67,16 @@ If you are working in {irb}[http://en.wikipedia.org/wiki/Interactive_Ruby_Shell]
 All of the {arpeggiator options}[] can be controlled on the on the fly
 
   arp.rate = 16
-  arp.gate = 20
-  arp.remove(chord.last)
+  arp.gate = 20  
+  arp.remove(["C5", "A4"])
 
 The screencast video above shows Diamond being live coded in this way. ({Read how this is done}[])
 
 ==== Links:
 
 * {Example of syncing Diamond to external MIDI clock}[http://github.com/arirusso/diamond/blob/master/examples/midi_sync.rb]
-* {Example of feeding notes to Diamond using a MIDI controller}
-* {Example of feeding notes to Diamond using midi-message objects} 
+* {Example of feeding notes to Diamond using a MIDI controller or other input}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]
+* {Example of feeding notes to Diamond using MIDI message objects}[http://github.com/arirusso/diamond/blob/master/examples/midi_message.rb]
 * {Live coding Diamond and chaining multiple arpeggiators} 
 
 == Other Documentation

@@ -9,7 +9,14 @@ require "diamond"
 
 include MIDIMessage
 
+#
+# you will want to select the MIDI input that your controller or other device is connected to
+#
+# here is an example that explains a bit more about selecting devices with unimidi:
+# http://github.com/arirusso/unimidi/blob/master/examples/select_a_device.rb
+#
 @input = UniMIDI::Input.first.open
+
 @output = UniMIDI::Output.first.open
 
 opts = { 
@@ -21,9 +28,9 @@ opts = {
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(175, opts)
+arp = Diamond::Arpeggiator.new(140, opts)
 
-# normally by the fault the arpeggiator will be in "omni mode" or in other words, accept notes
+# normally by default the arpeggiator will be in "omni mode" or in other words, accept notes
 # from all MIDI channels
 
 # to tell the arpeggiator to only look at a single channel, just set a channel
