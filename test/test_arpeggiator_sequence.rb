@@ -2,7 +2,7 @@
 
 require 'helper'
 
-class PatternTest < Test::Unit::TestCase
+class ArpeggiatorSequenceTest < Test::Unit::TestCase
 
   include Diamond
   include MIDIMessage
