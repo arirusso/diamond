@@ -24,14 +24,8 @@ arp = Diamond::Arpeggiator.new(175, opts) do |msgs|
   pp msgs unless msgs.empty?
 end
 
-include MIDIMessage
+chord = ["C4", "E4", "G4"]
 
-notes = [
-  NoteOn["C4"].new(0, 100),
-  NoteOn["E4"].new(0, 100),
-  NoteOn["G4"].new(0, 100)
-]
-
-arp.add(notes)
+arp.add(chord)
    
 arp.start

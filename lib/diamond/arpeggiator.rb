@@ -9,6 +9,9 @@ module Diamond
     
     extend Forwardable
     
+    DefaultChannel = 0
+    DefaultVelocity = 100
+    
     attr_reader :clock,
                 :sequence
                 
@@ -61,16 +64,16 @@ module Diamond
     end
     
     # add input notes. takes a single note or an array of notes
-    def add(notes)
+    def add(notes, options = {})
       notes = [notes].flatten
-      notes = channel_filter(notes) unless @channel.nil?
+      notes = sanitize_input_notes(notes, MIDIMessage::NoteOn, options)
       @sequence.add(notes)
     end
     
     # remove input notes. takes a single note or an array of notes
-    def remove(notes)
+    def remove(notes, options = {})
       notes = [notes].flatten
-      notes = channel_filter(notes) unless @channel.nil?
+      notes = sanitize_input_notes(notes, MIDIMessage::NoteOff, options)
       @sequence.remove(notes)
     end
     
@@ -109,6 +112,15 @@ module Diamond
     
     private
     
+    def sanitize_input_notes(notes, klass, options)
+      channel = options[:channel] || DefaultChannel
+      velocity = options[:velocity] || DefaultVelocity
+      notes.map do |note|
+        note = note.kind_of?(String) ? klass[note].new(channel, velocity) : note
+        (@channel.nil? || note.channel == @channel) ? note : nil 
+      end.compact
+    end
+    
     def initialize_sync(options = {})
       sync_to = [options[:sync_to]].flatten.compact      
       sync_to.each { |arp| sync_to(arp) }
@@ -121,11 +133,7 @@ module Diamond
       @clock.ensure_tick_action(self, &@actions[:tick]) unless @actions[:tick].nil?
     end
     alias_method :on_midi_destinations_updated, :update_clock
-    
-    def channel_filter(notes)
-      notes.map { |n| n if n.channel == @channel }.flatten.compact
-    end
-        
+            
     def initialize_midi_io(devices)
       devices = [devices].flatten
       emit_midi_to(devices.find_all { |d| d.type == :output }.compact)

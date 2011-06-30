@@ -2,8 +2,10 @@
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 #
-# this is the most basic setup possible
-# we just set up an arpeggiator and let it run in the foreground
+# this example shows how to create and pass in messages using midi-message
+#
+# http://github.com/arirusso/midi-message
+#
 #
 
 require "diamond"
@@ -21,8 +23,17 @@ opts = {
 
 arp = Diamond::Arpeggiator.new(175, opts)
 
-chord = ["C3", "G3", "Bb3", "A4"]
+include MIDIMessage
 
-arp.add(chord)
+with(:channel => 0, :velocity => 120) do |midi|
+  notes = [
+    midi.note_on("C3"),
+    midi.note_on("G3"),
+    midi.note_on("Bb3"),
+    midi.note_on("A4")
+  ]  
+end
+
+arp.add(notes)
    
 arp.start

@@ -23,15 +23,8 @@ opts = {
 
 arp = Diamond::Arpeggiator.new(175, opts)
 
-include MIDIMessage
+chord = ["C3", "G3", "Bb3", "A4"]
 
-notes = [
-  NoteOn["C3"].new(0, 100),
-  NoteOn["G3"].new(0, 100),
-  NoteOn["Bb3"].new(0, 100),
-  NoteOn["A4"].new(0, 100)
-]
-
-arp.add(notes)
+arp.add(chord)
    
 arp.start(:background => true)
