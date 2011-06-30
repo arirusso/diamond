@@ -73,13 +73,13 @@ The screencast video above shows Diamond being live coded in this way. ({Read ho
 ==== Links:
 
 * {Example of syncing Diamond to external MIDI clock}[http://github.com/arirusso/diamond/blob/master/examples/midi_sync.rb]
-* Feeding notes to Diamond using a MIDI controller
-* Feeding notes to Diamond using midi-message objects 
-* Live coding Diamond and chaining multiple arpeggiators 
+* {Example of feeding notes to Diamond using a MIDI controller}
+* {Example of feeding notes to Diamond using midi-message objects} 
+* {Live coding Diamond and chaining multiple arpeggiators} 
 
 == Other Documentation
 
-* {examples}[http://github.com/arirusso/diamond/tree/master/examples]
+* {all examples}[http://github.com/arirusso/diamond/tree/master/examples]
 * {rdoc}[http://rdoc.info/gems/diamond] 
 
 == Author
