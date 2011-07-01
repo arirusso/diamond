@@ -25,15 +25,12 @@ arp = Diamond::Arpeggiator.new(138, opts)
 
 include MIDIMessage
 
+notes = ["C3", "E3", "A3", "Bb4"]
+
 with(:channel => 0, :velocity => 120) do |midi|
-  notes = [
-    midi.note_on("C3"),
-    midi.note_on("G3"),
-    midi.note_on("Bb3"),
-    midi.note_on("A4")
-  ]  
+  notes.each do |note|
+    arp.add(midi.note_on(note))
+  end 
 end
 
-arp.add(notes)
-   
 arp.start
