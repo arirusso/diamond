@@ -17,7 +17,7 @@ module Diamond
                 
     attr_accessor :channel
     
-    def_delegators :clock, :join, :start, :stop
+    def_delegators :clock, :join, :start, :stop, :tempo, :tempo=
                          
     #
     # a numeric tempo rate (BPM), or unimidi input is required by the constructor.  in the case that you use a MIDI input, it will be used as a clock source
