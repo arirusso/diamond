@@ -128,7 +128,6 @@ module Diamond
         @clock.remove_destination(dest)
         @clock.add_destination(dest)
       end
-      #@clock.update_midi_clock_destinations(@midi_destinations)
     end
     alias_method :on_midi_destinations_updated, :update_clock
     alias_method :on_sync_updated, :update_clock
@@ -170,8 +169,7 @@ module Diamond
             yield(msgs) unless block.nil?
           end
         end
-      end
-      #update_clock       
+      end       
     end
   
   end
