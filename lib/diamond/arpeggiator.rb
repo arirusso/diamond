@@ -108,7 +108,7 @@ module Diamond
     def stop
       @clock.stop
       emit_pending_note_offs
-      self             
+      true            
     end
     
     private
