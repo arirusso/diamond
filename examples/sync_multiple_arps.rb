@@ -14,18 +14,25 @@ opts = {
   :interval => 7,
   :midi => @output,
   :pattern => Diamond::Pattern["UpDown"],
-  :range => 4, 
+  :range => 2, 
   :rate => 8
 }
 
 # I gave these different tempos but once they are synced it won't matter
 
-arp = Diamond::Arpeggiator.new(138, opts)
-arp2 = Diamond::Arpeggiator.new(150, opts)
-arp3 = Diamond::Arpeggiator.new(160, opts)
+arps = [
+  Diamond::Arpeggiator.new(138, opts),
+  Diamond::Arpeggiator.new(150, opts),
+  Diamond::Arpeggiator.new(160, opts)
+]
 
 chord = ["C3", "G3", "Bb3", "A4"]
 
-arp.add(chord)
-   
-arp.start(:background => true)
+arps.each_with_index do |arp, i|
+  arp.add(chord)
+  arp.transpose(i * 12)
+  arp.range += i
+  arps.first.sync(arp) unless arps.first == arp
+  arp.start(:background => true)
+  arp.join if arps.last == arp
+end   

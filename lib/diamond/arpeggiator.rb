@@ -52,7 +52,7 @@ module Diamond
       resolution = options[:resolution] || 128      
 
       initialize_midi_io(midi_devices) unless midi_devices.nil?            
-      initialize_syncable(options[:sync_to], options[:slave])      
+      initialize_syncable(options[:sync_to], options[:sync])      
       initialize_clock(tempo_or_input, resolution)
       
       @sequence = ArpeggiatorSequence.new(resolution, options)
@@ -69,6 +69,7 @@ module Diamond
       notes = [notes].flatten
       notes = sanitize_input_notes(notes, MIDIMessage::NoteOn, options)
       @sequence.add(notes)
+      self
     end
     
     # remove input notes. takes a single note or an array of notes
@@ -76,6 +77,7 @@ module Diamond
       notes = [notes].flatten
       notes = sanitize_input_notes(notes, MIDIMessage::NoteOff, options)
       @sequence.remove(notes)
+      self
     end
     
     # toggle mute on this arpeggiator
@@ -87,6 +89,7 @@ module Diamond
     def mute
       @mute = true
       emit_pending_note_offs
+      @mute
     end
     
     # unmute this arpeggiator
@@ -102,7 +105,8 @@ module Diamond
     # stops the clock and sends any remaining MIDI note-off messages that are in the queue
     def stop
       @clock.stop
-      emit_pending_note_offs             
+      emit_pending_note_offs
+      self             
     end
     
     private
@@ -116,25 +120,24 @@ module Diamond
       end.compact
     end
     
-    #def update_clock
+    def update_clock
+      @midi_destinations.each do |dest|
+        @clock.remove_destination(dest)
+        @clock.add_destination(dest)
+      end
       #@clock.update_midi_clock_destinations(@midi_destinations)
-      #@clock.ensure_tick_action(self, &@actions[:tick]) unless @actions[:tick].nil?
-    #end
-    #alias_method :on_midi_destinations_updated, :update_clock
-    #alias_method :on_sync_updated, :update_clock
+    end
+    alias_method :on_midi_destinations_updated, :update_clock
+    alias_method :on_sync_updated, :update_clock
     
     def initialize_clock(tempo_or_input, resolution)
       @clock = Topaz::Tempo.new(tempo_or_input, :midi => @midi_destinations)
       dif = resolution / clock.interval  
       clock.interval = clock.interval * dif
       clock.on_tick do
-        tick
-        @sync_set.each { |syncable| syncable.tick } 
+        @actions[:tick].call
+        @sync_set.each { |syncable| syncable.sync_tick } 
       end
-    end
-    
-    def tick
-      @actions[:tick].call
     end
             
     def initialize_midi_io(devices)

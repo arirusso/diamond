@@ -12,7 +12,7 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 require "diamond"
 
-@input = UniMIDI::Input.first.open
+@input = UniMIDI::Input.all[1].open
 @output = UniMIDI::Output.first.open
 
 opts = { 
