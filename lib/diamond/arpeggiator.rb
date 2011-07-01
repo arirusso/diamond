@@ -49,12 +49,11 @@ module Diamond
       @actions = { :tick => nil }
       
       @channel = options[:channel]
-      
-      midi_devices = options[:midi]      
+        
       midi_clock_output = options[:midi_clock_output] || false
       resolution = options[:resolution] || 128      
 
-      initialize_midi_io(midi_devices) unless midi_devices.nil?            
+      initialize_midi_io(options[:midi])       
       initialize_syncable(options[:sync_to], options[:sync])      
       initialize_clock(tempo_or_input, resolution, midi_clock_output)
       
@@ -144,7 +143,7 @@ module Diamond
     end
             
     def initialize_midi_io(devices)
-      devices = [devices].flatten
+      devices = [devices].flatten.compact
       emit_midi_to(devices.find_all { |d| d.type == :output }.compact)
       receive_midi_from(devices.find_all { |d| d.type == :input }.compact)      
     end

@@ -30,16 +30,15 @@ class ApeggiatorTest < Test::Unit::TestCase
     assert_equal(nil, arp.midi_sources.keys.first)       
   end
   
-  def test_add_destination
-    input = Config::TestInput
-    arp = Diamond::Arpeggiator.new(175)
-    arp.add_midi_source(input)
-    assert_equal(Config::TestOutput, arp.midi_destinations.first)
-    arp.remove_midi_source(input)
-    assert_equal(nil, arp.midi_sources.keys.first)           
-  end
-  
-  def test_add_remove_destination    
+  def test_mute
+    arp = Diamond::Arpeggiator.new(175)    
+    assert_equal(false, arp.muted?)       
+    arp.mute
+    assert_equal(true, arp.muted?)
+    arp.unmute
+    assert_equal(false, arp.muted?)
+    arp.toggle_mute
+    assert_equal(true, arp.muted?)
   end
   
 end
