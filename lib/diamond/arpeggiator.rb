@@ -24,23 +24,25 @@ module Diamond
     #
     # the constructor also accepts a number of options
     #       
-    # * <b>channel</b>: restrict input messages to the given MIDI channel. will operate on all input sources
+    # * channel - restrict input messages to the given MIDI channel. will operate on all input sources
     #
-    # * <b>gate</b>: <em>gate</em> refers to how long the arpeggiated notes will be held out. the <em>gate</em> value is a percentage based on the rate.  if the rate is 4, then a gate of 100 is equal to a quarter note. the default <em>gate</em> is 75. <em>Gate</em> must be positive and less than 500
+    # * gate - <tt>gate</tt> refers to how long the arpeggiated notes will be held out. the <tt>gate</tt> value is a percentage based on the rate.  if the rate is 4, then a gate of 100 is equal to a quarter note. the default <tt>gate</tt> is 75. <tt>Gate</tt> must be positive and less than 500
     #
-    # * <b>interval</b>: the arpeggiator increments the <em>pattern</em> over <em>interval</em> scale degrees <em>range</em> times.  the default <em>interval</em> is 12, meaning one octave above the current note. <em>interval</em> may be any positive or negative number
+    # * interval - the arpeggiator increments the <tt>pattern</tt> over <tt>interval</tt> scale degrees <tt>range</tt> times.  the default <tt>interval</tt> is 12, meaning one octave above the current note. <tt>interval</tt> may be any positive or negative number
     #  
-    # * <b>midi</b>: this can be a unimidi input or output. will accept a single device or an array
+    # * midi - this can be a unimidi input or output. will accept a single device or an array
     #
-    # * <b>pattern_offset</b>: <em>pattern_offset</em> n means that the arpeggiator will begin on the nth note of the sequence (but not omit any notes). the default <em>pattern_offset</em> is 0.
+    # * midi_clock_output - should this Arpeggiator output midi clock? defaults to false
+    #
+    # * pattern_offset - <tt>pattern_offset</tt> n means that the arpeggiator will begin on the nth note of the sequence (but not omit any notes). the default <tt>pattern_offset</tt> is 0.
     # 
-    # * <b>pattern</b>: A Pattern object that computes the contour of the arpeggiated melody
+    # * pattern - A Pattern object that computes the contour of the arpeggiated melody
     #    
-    # * <b>range</b>: the arpeggiator increments the <em>pattern</em> over <em>interval</em> scale degrees <em>range</em> times. <em>range</em> must be 0 or greater. the default <em>range</em> is 3
+    # * range - the arpeggiator increments the <tt>pattern</tt> over <tt>interval</tt> scale degrees <tt>range</tt> times. <tt>range</tt> must be 0 or greater. the default <tt>range</tt> is 3
     #
-    # * <b>rate</b>: <em>rate</em> is how fast the arpeggios will be played. the default is 8, which is an eighth note. rate may be 0 (whole note) or greater but must be equal to or less than <em>resolution</em>
+    # * rate - <tt>rate</tt> is how fast the arpeggios will be played. the default is 8, which is an eighth note. rate may be 0 (whole note) or greater but must be equal to or less than <tt>resolution</tt>
     #  
-    # * <b>resolution</b>: the resolution of the arpeggiator (numeric notation)    
+    # * resolution - the resolution of the arpeggiator (numeric notation)    
     #    
     def initialize(tempo_or_input, options = {}, &block)
       @mute = false      
@@ -49,11 +51,12 @@ module Diamond
       @channel = options[:channel]
       
       midi_devices = options[:midi]      
+      midi_clock_output = options[:midi_clock_output] || false
       resolution = options[:resolution] || 128      
 
       initialize_midi_io(midi_devices) unless midi_devices.nil?            
       initialize_syncable(options[:sync_to], options[:sync])      
-      initialize_clock(tempo_or_input, resolution)
+      initialize_clock(tempo_or_input, resolution, midi_clock_output)
       
       @sequence = ArpeggiatorSequence.new(resolution, options)
 
@@ -130,8 +133,9 @@ module Diamond
     alias_method :on_midi_destinations_updated, :update_clock
     alias_method :on_sync_updated, :update_clock
     
-    def initialize_clock(tempo_or_input, resolution)
-      @clock = Topaz::Tempo.new(tempo_or_input, :midi => @midi_destinations)
+    def initialize_clock(tempo_or_input, resolution, use_midi_clock_output)
+      outputs = use_midi_clock_output ? @midi_destinations : nil
+      @clock = Topaz::Tempo.new(tempo_or_input, :midi => outputs)
       dif = resolution / clock.interval  
       clock.interval = clock.interval * dif
       clock.on_tick do
