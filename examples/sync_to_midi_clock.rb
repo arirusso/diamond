@@ -12,7 +12,7 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 require "diamond"
 
-@input = UniMIDI::Input.all[1].open
+@input = UniMIDI::Input.first.open
 @output = UniMIDI::Output.first.open
 
 opts = { 
@@ -25,8 +25,6 @@ opts = {
 }
 
 arp = Diamond::Arpeggiator.new(@input, opts)
-
-include MIDIMessage
 
 chord = ["C3", "G3", "Bb3", "A4"]
 
