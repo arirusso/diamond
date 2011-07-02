@@ -11,7 +11,7 @@
 * Run as a background thread for {live coding}[http://en.wikipedia.org/wiki/Live_coding]
 * Sync to and from MIDI clock
 * Sync between multiple Diamond instances
-* {Preset}[http://github.com/arirusso/diamond/blob/master/lib/diamond/pattern_presets.rb] and {user-definable}[http://github.com/arirusso/diamond/blob/master/examples/define_pattern.rb] pattern algorithms 
+* {Preset}[http://github.com/arirusso/diamond/blob/master/lib/pattern_presets.rb] and {user-definable}[http://github.com/arirusso/diamond/blob/master/examples/define_pattern.rb] pattern algorithms 
 
 == Installation
 
