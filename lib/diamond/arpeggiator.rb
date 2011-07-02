@@ -118,8 +118,9 @@ module Diamond
     
     # stops the clock and sends any remaining MIDI note-off messages that are in the queue
     def stop
-      @clock.stop
+      @clock.stop rescue false
       emit_pending_note_offs
+      @sync_set.each { |syncable| syncable.stop }
       true            
     end
     
