@@ -65,6 +65,12 @@ module Diamond
       end
       mark_changed
     end
+    
+    # remove all input note messages
+    def remove_all
+      @input_note_messages.clear
+      mark_changed
+    end
         
     def gate=(num)
       @gate = constrain(num, :min => 1, :max => 500)

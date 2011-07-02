@@ -67,6 +67,7 @@ module Diamond
     def start(options = {})
       opts = { :background => true } unless options[:focus] or options[:foreground]
       @clock.start(opts)
+      true
     end
     
     def method_missing(method, *args, &block)
@@ -78,7 +79,6 @@ module Diamond
       notes = [notes].flatten
       notes = sanitize_input_notes(notes, MIDIMessage::NoteOn, options)
       @sequence.add(notes)
-      self
     end
     alias_method :<<, :add
     
@@ -87,7 +87,11 @@ module Diamond
       notes = [notes].flatten
       notes = sanitize_input_notes(notes, MIDIMessage::NoteOff, options)
       @sequence.remove(notes)
-      self
+    end
+    
+    # remove all input notes
+    def remove_all
+      @sequence.remove_all
     end
     
     # toggle mute on this arpeggiator
