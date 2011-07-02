@@ -70,9 +70,9 @@ All of the {arpeggiator options}[] can be controlled on the on the fly
   arp.gate = 20  
   arp.remove(["C5", "A4"])
   
-This screencast video above shows Diamond being live coded in this way. ({Read how this is done}[http://tx81z.blogspot.com])
+This screencast video shows Diamond being live coded in this way. ({Read how this is done}[http://tx81z.blogspot.com])
 
-Here are some posts and examples of more functionality...
+Check out these posts and examples for more...
  
 ==== Posts:
 
