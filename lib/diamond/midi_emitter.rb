@@ -13,7 +13,7 @@ module Diamond
       @midi_destinations.each do |output|
         (0..127).each do |note| 
           (0..15).each do |channel|
-            msg = MIDIMessage::NoteOff(channel, note, 0) 
+            msg = MIDIMessage::NoteOff.new(channel, note, 0) 
             output.puts(msg.to_bytes)
           end
         end
