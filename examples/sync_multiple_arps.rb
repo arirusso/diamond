@@ -29,7 +29,7 @@ arps = [
 chord = ["C3", "G3", "Bb3", "A4"]
 
 arps.each_with_index do |arp, i|
-  arp.add(chord)
+  arp << chord
   arp.transpose(i * 12)
   arp.range += i
   arps.first.sync(arp) unless arps.first == arp

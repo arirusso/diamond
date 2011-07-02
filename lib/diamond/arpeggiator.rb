@@ -73,6 +73,7 @@ module Diamond
       @sequence.add(notes)
       self
     end
+    alias_method :<<, :add
     
     # remove input notes. takes a single note or an array of notes
     def remove(notes, options = {})

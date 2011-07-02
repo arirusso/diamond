@@ -69,14 +69,10 @@ All of the {arpeggiator options}[] can be controlled on the on the fly
   arp.rate = 16
   arp.gate = 20  
   arp.remove(["C5", "A4"])
+  
+This screencast video above shows Diamond being live coded in this way. ({Read how this is done}[http://tx81z.blogspot.com])
 
-The screencast video above shows Diamond being live coded in this way. ({Read how this is done}[http://tx81z.blogspot.com])
-
-You can also sync multiple arpeggiators together
-
-  arp2 = Diamond::Arpeggiator.new(140, opts)
-  arp2 << chord
-  arp2.sync_to(arp)
+And check out the following links and examples to learn about more functionality
 
 ==== Links:
 
@@ -87,6 +83,7 @@ You can also sync multiple arpeggiators together
 * {Define a Pattern}[http://github.com/arirusso/diamond/blob/master/examples/define_pattern.rb]
 * {Feed notes to Diamond using a MIDI controller or other input}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]
 * {Feed notes to Diamond using MIDI message objects}[http://github.com/arirusso/diamond/blob/master/examples/midi_message_objects.rb]
+* {Sync multiple Arpeggiator instances to each other}[http://github.com/arirusso/diamond/blob/master/examples/sync_multiple_arps.rb]
 * {Sync Diamond to external MIDI clock}[http://github.com/arirusso/diamond/blob/master/examples/sync_to_midi_clock.rb]
 * {Use Diamond as a master MIDI clock}[http://github.com/arirusso/diamond/blob/master/examples/output_midi_clock.rb]
 
