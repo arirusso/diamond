@@ -50,7 +50,7 @@ Create an Arpeggiator object, passing in a tempo value and the options above. In
 
   arp = Diamond::Arpeggiator.new(138, opts) 
 
-Of course, an Arpeggiator needs notes to work with. As you might expect, it's easy to use a MIDI input for that. ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]). However, again for the sake of simplicity here's a chord in Ruby
+Of course, an arpeggiator needs notes to work with. As you might expect, it's easy to use a MIDI input for that. ({see example}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]). However, again for the sake of simplicity here's a chord in Ruby
 
   chord = ["C3", "G3", "Bb3", "A4"]
 
@@ -60,9 +60,9 @@ Use Arpeggiator#add and Arpeggiator#remove to change the notes that the arpeggia
   arp << "C5"
   # etc
 
-If you are working in {irb}[http://en.wikipedia.org/wiki/Interactive_Ruby_Shell], you can start the arpeggiator in a background thread by passing an option :background => true to Arpeggiator#start.  That will allow you to live code, sync it other arpeggiators, or just run another foreground process. 
+Now start the arpeggiator.  By default, the arpeggiator will run in a background thread so if you are working in {irb}[http://en.wikipedia.org/wiki/Interactive_Ruby_Shell] this will allow you to live code, sync it other arpeggiators, or just run another foreground process. (To start in the foreground, just pass :focus => true to Arpeggiator#start) 
 
-  arp.start(:background => true)
+  arp.start
 
 All of the {arpeggiator options}[] can be controlled on the on the fly
 

@@ -33,4 +33,4 @@ with(:channel => 0, :velocity => 120) do |midi|
   end 
 end
 
-arp.start
+arp.start(:focus => true)

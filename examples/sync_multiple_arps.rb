@@ -33,6 +33,6 @@ arps.each_with_index do |arp, i|
   arp.transpose(i * 12)
   arp.range += i
   arps.first.sync(arp) unless arps.first == arp
-  arp.start(:background => true)
+  arp.start
   arp.join if arps.last == arp
 end   

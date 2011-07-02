@@ -29,4 +29,4 @@ arp.pattern = Diamond::Pattern.new("Up") do |r, i|
   a
 end
    
-arp.start
+arp.start(:focus => true)

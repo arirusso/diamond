@@ -41,7 +41,7 @@ arp.channel = 0
 
 # (Diamond does not respond to MIDI Omni On/Off messages)
    
-arp.start
+arp.start(:focus => true)
 
 # now when you play notes in to the input, they will be sent to the arpeggiator the same way
 # we used arp.add(chord in the simple example)

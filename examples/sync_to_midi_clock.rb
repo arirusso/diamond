@@ -29,6 +29,6 @@ chord = ["C3", "G3", "Bb3", "A4"]
 
 arp.add(chord)
    
-arp.start
+arp.start(:focus => true)
 
 # the arpeggiator will actually start when it begins receiving clock messages

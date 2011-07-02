@@ -25,4 +25,4 @@ chord = ["C3", "G3", "Bb3", "A4"]
 
 arp.add(chord)
    
-arp.start
+arp.start(:focus => true)

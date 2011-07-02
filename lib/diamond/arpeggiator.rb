@@ -17,7 +17,9 @@ module Diamond
                 
     attr_accessor :channel
     
-    def_delegators :clock, :join, :start, :stop, :tempo, :tempo=
+    def_delegators :clock, :join, :stop, :tempo, :tempo=
+    
+    alias_method :focus, :join
                          
     #
     # a numeric tempo rate (BPM), or unimidi input is required by the constructor.  in the case that you use a MIDI input, it will be used as a clock source
@@ -60,6 +62,11 @@ module Diamond
       @sequence = ArpeggiatorSequence.new(resolution, options)
 
       bind_events(&block)
+    end
+    
+    def start(options = {})
+      opts = { :background => true } unless options[:focus] or options[:foreground]
+      @clock.start(opts)
     end
     
     def method_missing(method, *args, &block)
