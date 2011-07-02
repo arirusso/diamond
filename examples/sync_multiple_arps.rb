@@ -34,5 +34,5 @@ arps.each_with_index do |arp, i|
   arp.range += i
   arps.first.sync(arp) unless arps.first == arp
   arp.start
-  arp.join if arps.last == arp
+  arp.join if arps.last == arp # have the last arp run in a foreground thread
 end   
