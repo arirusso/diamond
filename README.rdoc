@@ -74,14 +74,20 @@ The screencast video above shows Diamond being live coded in this way. ({Read ho
 
 ==== Links:
 
-* {Example of syncing Diamond to external MIDI clock}[http://github.com/arirusso/diamond/blob/master/examples/sync_to_midi_clock.rb]
-* {Example of feeding notes to Diamond using a MIDI controller or other input}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]
-* {Example of feeding notes to Diamond using MIDI message objects}[http://github.com/arirusso/diamond/blob/master/examples/midi_message_objects.rb]
-* {Live coding Diamond and syncing multiple arpeggiators to each other}[http://tx81z.blogspot.com] 
+* {Live coding Diamond and syncing multiple arpeggiators to each other}[http://tx81z.blogspot.com]
 
+==== Examples:
+
+* {Define a Pattern}[http://github.com/arirusso/diamond/blob/master/examples/define_pattern.rb]
+* {Feed notes to Diamond using a MIDI controller or other input}[http://github.com/arirusso/diamond/blob/master/examples/midi_input.rb]
+* {Feed notes to Diamond using MIDI message objects}[http://github.com/arirusso/diamond/blob/master/examples/midi_message_objects.rb]
+* {Sync Diamond to external MIDI clock}[http://github.com/arirusso/diamond/blob/master/examples/sync_to_midi_clock.rb]
+* {Use Diamond as a master MIDI clock}[http://github.com/arirusso/diamond/blob/master/examples/output_midi_clock.rb]
+
+({more...}[http://github.com/arirusso/diamond/blob/master/examples])
+ 
 == Other Documentation
 
-* {all examples}[http://github.com/arirusso/diamond/tree/master/examples]
 * {rdoc}[http://rdoc.info/gems/diamond] 
 
 == Author
