@@ -7,22 +7,24 @@ module Diamond
       base.send(:attr_reader, :sync_set)
     end
     
-    # sync to another syncable
+    # sync another <em>syncable</em> to self
     def sync(syncable)
       @sync_queue << syncable                 
     end
         
-    # sync another syncable to this one
+    # receive sync from <em>syncable</em>
     def sync_to(syncable)
       syncable.sync(self)
     end
     
+    # stop sending sync to <em>syncable</em>
     def unsync(syncable)
       @sync_set.delete(syncable)
       syncable.unpause_clock
       on_sync_updated
     end
     
+    # stop receiving sync from <em>syncable</em>
     def unsync_from(syncable)
       syncable.unsync(self)
     end
@@ -31,10 +33,12 @@ module Diamond
       @actions[:tick].call
     end
     
+    # disable internal clock
     def pause_clock
       @clock.pause
     end
     
+    # enable internal clock
     def unpause_clock
       @clock.unpause
     end

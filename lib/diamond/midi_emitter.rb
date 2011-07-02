@@ -6,19 +6,22 @@ module Diamond
     def self.included(base)
       base.send(:attr_reader, :midi_destinations)
     end
-            
+    
+    # add an output where MIDI data will be sent
     def add_midi_destinations(destinations)
       destinations = [destinations].flatten.compact
       @midi_destinations += destinations
       on_midi_destinations_updated if respond_to?(:on_midi_destinations_updated)
     end
     
+    # remove a destination
     def remove_midi_destinations(destinations)
       destinations = [destinations].flatten.compact
       @midi_destinations.delete_if { |d| destinations.include?(d) }
       on_midi_destinations_updated if respond_to?(:on_midi_destinations_updated)
     end
     
+    # send MIDI data
     def emit_midi(data)
       @midi_destinations.each { |o| o.puts(data) }
     end
