@@ -72,9 +72,9 @@ All of the {arpeggiator options}[] can be controlled on the on the fly
   
 This screencast video above shows Diamond being live coded in this way. ({Read how this is done}[http://tx81z.blogspot.com])
 
-And check out the following links and examples to learn about more functionality
-
-==== Links:
+Here are some posts and examples of more functionality...
+ 
+==== Posts:
 
 * {Live coding Diamond and syncing multiple arpeggiators to each other}[http://tx81z.blogspot.com]
 
