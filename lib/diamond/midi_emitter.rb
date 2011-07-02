@@ -7,6 +7,19 @@ module Diamond
       base.send(:attr_reader, :midi_destinations)
     end
     
+    # stop and send note-offs to all destinations for all notes and channels
+    def quiet!
+      stop
+      @midi_destinations.each do |output|
+        (0..127).each do |note| 
+          (0..15).each do |channel|
+            msg = MIDIMessage::NoteOff(channel, note, 0) 
+            output.puts(msg.to_bytes)
+          end
+        end
+      end
+    end
+    
     # add an output where MIDI data will be sent
     def add_midi_destinations(destinations)
       destinations = [destinations].flatten.compact
