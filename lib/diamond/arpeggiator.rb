@@ -64,8 +64,8 @@ module Diamond
       initialize_event_sequencer            
       initialize_clock(tempo_or_input, resolution, midi_clock_output)
             
-      transpose(options[:transpose]) unless options[:transpose].nil?      
       @sequence = ArpeggiatorSequence.new(resolution, options)
+      @sequence.transpose(options[:transpose]) unless options[:transpose].nil?      
 
       bind_events(&block)
     end
