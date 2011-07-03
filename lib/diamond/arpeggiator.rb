@@ -5,6 +5,7 @@ module Diamond
     
     include MIDIEmitter
     include MIDIReceiver
+    include EventSequencer
     include Syncable
     
     extend Forwardable
@@ -48,7 +49,7 @@ module Diamond
     #    
     def initialize(tempo_or_input, options = {}, &block)
       @mute = false      
-      @actions = { :tick => nil }
+      @actions = { :tick => nil }      
       
       @channel = options[:channel]
         
@@ -56,7 +57,8 @@ module Diamond
       resolution = options[:resolution] || 128      
 
       initialize_midi_io(options[:midi])       
-      initialize_syncable(options[:sync_to], options[:sync])      
+      initialize_syncable(options[:sync_to], options[:sync])
+      initialize_event_sequencer      
       initialize_clock(tempo_or_input, resolution, midi_clock_output)
       
       @sequence = ArpeggiatorSequence.new(resolution, options)
@@ -65,7 +67,8 @@ module Diamond
     end
     
     def start(options = {})
-      opts = { :background => true } unless options[:focus] or options[:foreground]
+      opts = {}
+      opts[:background] = true unless options[:focus] || options[:foreground]
       @clock.start(opts)
       true
     end
@@ -168,11 +171,11 @@ module Diamond
       listener.start(:background => true)
       listener
     end
-    
+        
     def bind_events(&block)
       @actions[:tick] = Proc.new do
         @sequence.with_next do |msgs|
-          unless muted?
+          unless muted? || rest?
             data = msgs.map { |msg| msg.to_bytes }.flatten
             unless data.empty?
               emit_midi(data) if emit_midi?

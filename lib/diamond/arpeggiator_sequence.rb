@@ -11,6 +11,8 @@ module Diamond
                 :offset,
                 :pointer,
                 :resolution
+                
+    alias :step :pointer
     
     def initialize(resolution, options = {})
       @resolution = resolution
@@ -25,7 +27,7 @@ module Diamond
       
       # realtime
       @changed = false
-      @pointer = -1
+      @pointer = 0 #-1
       @queue = []
       
       update_sequence
@@ -39,7 +41,7 @@ module Diamond
     # yields to <em>block</em>, passing in the next messages in the queue
     # also returns the next messages
     def with_next(&block)
-      if @changed && (@pointer % @rate == 0)
+      if @changed && (step % @rate == 0)
         update_sequence
         @changed = false
       end

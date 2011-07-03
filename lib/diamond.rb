@@ -10,6 +10,7 @@ require "midi-message"
 require "topaz"
 require "unimidi"
 
+require "diamond/event_sequencer"
 require "diamond/midi_emitter"
 require "diamond/midi_receiver"
 require "diamond/syncable"
