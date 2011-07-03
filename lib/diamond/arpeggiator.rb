@@ -20,6 +20,8 @@ module Diamond
     
     def_delegators :clock, :join, :stop, :tempo, :tempo=
     
+    def_delegators :sequence, :reset
+    
     alias_method :focus, :join
                          
     #
@@ -182,6 +184,7 @@ module Diamond
               activate_sync_queue
             end
             yield(msgs) unless block.nil?
+            reset if reset?
           end
         end
       end       
