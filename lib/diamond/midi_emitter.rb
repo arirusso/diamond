@@ -18,6 +18,7 @@ module Diamond
           end
         end
       end
+      true
     end
     
     # add an output where MIDI data will be sent
