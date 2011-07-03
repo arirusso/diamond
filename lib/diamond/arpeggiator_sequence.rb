@@ -56,58 +56,67 @@ module Diamond
     def add(note_messages)
       @input_note_messages += [note_messages].flatten
       mark_changed
+      true
     end
     
     # remove input note messages with the same note value
     # takes a single message or an array
-    def remove(note_messages)
+    def remove(note_messages) 
       @input_note_messages.delete_if do |msg|
         deletion_queue = [note_messages].flatten.map { |note_message| note_message.note }
         deletion_queue.include?(msg.note)
       end
       mark_changed
+      true
     end
     
     # remove all input note messages
     def remove_all
       @input_note_messages.clear
       mark_changed
+      true
     end
         
     # set the gate property
     def gate=(num)
       @gate = constrain(num, :min => 1, :max => 500)
       mark_changed
+      @gate
     end
 
     # set the interval property
     def interval=(num)
       @interval = num
       mark_changed
+      @interval
     end
     
     # set the pattern pattern_offset property
     def pattern_offset=(num)
       @pattern_offset = num
       mark_changed
+      @pattern_offset
     end
     
     # set the range property
     def range=(num)
       @range = constrain(num, :min => 0)
       mark_changed
+      @range
     end
     
     # set the rate property
     def rate=(num)
       @rate = constrain(num, :min => 0, :max => @resolution)
       mark_changed
+      @rate
     end
     
     # set the pattern property
     def pattern=(pattern)
       @pattern = pattern
       mark_changed
+      @pattern
     end
     
     # transpose everything by <em>num</em> scale degrees
