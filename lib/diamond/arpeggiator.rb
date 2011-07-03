@@ -3,9 +3,10 @@ module Diamond
   
   class Arpeggiator
     
+    include MIDIChannelFilter
     include MIDIEmitter
     include MIDIReceiver
-    include EventSequencer
+    include EventSequencer    
     include Syncable
     
     extend Forwardable
@@ -15,8 +16,6 @@ module Diamond
     
     attr_reader :clock,
                 :sequence
-                
-    attr_accessor :channel
     
     def_delegators :clock, :join, :stop, :tempo, :tempo=
     
@@ -28,8 +27,8 @@ module Diamond
     # a numeric tempo rate (BPM), or unimidi input is required by the constructor.  in the case that you use a MIDI input, it will be used as a clock source
     #
     # the constructor also accepts a number of options
-    #       
-    # * channel - restrict input messages to the given MIDI channel. will operate on all input sources
+    #
+    # * channel (or input_channel) - only respond to input messages to the given MIDI channel. will operate on all input sources
     #
     # * gate - <tt>gate</tt> refers to how long the arpeggiated notes will be held out. the <tt>gate</tt> value is a percentage based on the rate.  if the rate is 4, then a gate of 100 is equal to a quarter note. the default <tt>gate</tt> is 75. <tt>Gate</tt> must be positive and less than 500
     #
@@ -38,6 +37,8 @@ module Diamond
     # * midi - this can be a unimidi input or output. will accept a single device or an array
     #
     # * midi_clock_output - should this Arpeggiator output midi clock? defaults to false
+    #
+    # * output_channel - send output messages to the given MIDI channel despite what channel the input notes were intended for.
     #
     # * pattern_offset - <tt>pattern_offset</tt> n means that the arpeggiator will begin on the nth note of the sequence (but not omit any notes). the default <tt>pattern_offset</tt> is 0.
     # 
@@ -53,11 +54,11 @@ module Diamond
       @mute = false      
       @actions = { :tick => nil }      
       
-      @channel = options[:channel]
-        
       midi_clock_output = options[:midi_clock_output] || false
       resolution = options[:resolution] || 128      
-
+      input_channel = options[:input_channel] || options[:channel]
+      
+      initialize_midi_channel_filter(input_channel, options[:output_channel])
       initialize_midi_io(options[:midi])       
       initialize_syncable(options[:sync_to], options[:sync])
       initialize_event_sequencer      
@@ -136,7 +137,7 @@ module Diamond
       velocity = options[:velocity] || DefaultVelocity
       notes.map do |note|
         note = note.kind_of?(String) ? klass[note].new(channel, velocity) : note
-        (@channel.nil? || note.channel == @channel) ? note : nil 
+        note = input_channel_filter(note) 
       end.compact
     end
     
@@ -178,6 +179,7 @@ module Diamond
       @actions[:tick] = Proc.new do
         @sequence.with_next do |msgs|
           unless muted? || rest?
+            msgs = output_channel_filter(msgs)
             data = msgs.map { |msg| msg.to_bytes }.flatten
             unless data.empty?
               emit_midi(data) if emit_midi?
