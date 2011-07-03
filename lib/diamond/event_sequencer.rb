@@ -14,6 +14,11 @@ module Diamond
     def rest?
       @events[:rest_when].nil? ? false : @events[:rest_when].call(@sequence) 
     end
+    
+    # remove all note-on messages
+    def rest_event_filter(msgs)
+      msgs.delete_if { |m| m.class == MIDIMessage::NoteOn }
+    end
 
     # if it evaluates to true, the sequence will go back to step 0
     # Arpeggiator#sequence is passed to the block  

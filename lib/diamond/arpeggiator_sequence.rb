@@ -8,7 +8,7 @@ module Diamond
                 :pattern,
                 :range,
                 :rate,
-                :offset,
+                :pattern_offset,
                 :pointer,
                 :resolution
                 
@@ -19,7 +19,7 @@ module Diamond
       @transpose = 0
       @interval = options[:interval] || 12
       @range = constrain((options[:range] || 3), :min => 0)
-      @offset = options[:offset] || 0
+      @pattern_offset = options[:pattern_offset] || 0
       @pattern = options[:pattern] || Pattern.all.first
       @input_note_messages = []
       @rate = constrain((options[:rate] || 8), :min => 0, :max => @resolution)
@@ -74,31 +74,37 @@ module Diamond
       mark_changed
     end
         
+    # set the gate property
     def gate=(num)
       @gate = constrain(num, :min => 1, :max => 500)
       mark_changed
     end
 
+    # set the interval property
     def interval=(num)
       @interval = num
       mark_changed
     end
     
-    def offset=(num)
-      @offset = num
+    # set the pattern pattern_offset property
+    def pattern_offset=(num)
+      @pattern_offset = num
       mark_changed
     end
     
+    # set the range property
     def range=(num)
       @range = constrain(num, :min => 0)
       mark_changed
     end
     
+    # set the rate property
     def rate=(num)
       @rate = constrain(num, :min => 0, :max => @resolution)
       mark_changed
     end
     
+    # set the pattern property
     def pattern=(pattern)
       @pattern = pattern
       mark_changed
@@ -157,7 +163,7 @@ module Diamond
       sequence_length_in_ticks = notes.length * note_length
       @sequence = Array.new(sequence_length_in_ticks, [])
       unless notes.empty?
-        @offset.times { notes.push(notes.shift) }
+        @pattern_offset.times { notes.push(notes.shift) }
         notes.each_with_index do |note_msg, i| 
           index = i * note_length
           @sequence[index] = [NoteEvent.new(note_msg, @gate)] unless @sequence[index].nil?

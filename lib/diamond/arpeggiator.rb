@@ -61,9 +61,10 @@ module Diamond
       initialize_midi_channel_filter(input_channel, options[:output_channel])
       initialize_midi_io(options[:midi])       
       initialize_syncable(options[:sync_to], options[:sync])
-      initialize_event_sequencer      
+      initialize_event_sequencer            
       initialize_clock(tempo_or_input, resolution, midi_clock_output)
-      
+            
+      transpose(options[:transpose]) unless options[:transpose].nil?      
       @sequence = ArpeggiatorSequence.new(resolution, options)
 
       bind_events(&block)
@@ -135,10 +136,10 @@ module Diamond
     def sanitize_input_notes(notes, klass, options)
       channel = options[:channel] || DefaultChannel
       velocity = options[:velocity] || DefaultVelocity
-      notes.map do |note|
-        note = note.kind_of?(String) ? klass[note].new(channel, velocity) : note
-        note = input_channel_filter(note) 
+      notes = notes.map do |note|
+        note.kind_of?(String) ? klass[note].new(channel, velocity) : note
       end.compact
+      input_channel_filter(notes)
     end
     
     def update_clock
@@ -178,8 +179,9 @@ module Diamond
     def bind_events(&block)
       @actions[:tick] = Proc.new do
         @sequence.with_next do |msgs|
-          unless muted? || rest?
+          unless muted?
             msgs = output_channel_filter(msgs)
+            msgs = rest_event_filter(msgs) if rest?
             data = msgs.map { |msg| msg.to_bytes }.flatten
             unless data.empty?
               emit_midi(data) if emit_midi?

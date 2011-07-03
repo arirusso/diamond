@@ -10,11 +10,14 @@ require "midi-message"
 require "topaz"
 require "unimidi"
 
+# modules
 require "diamond/event_sequencer"
+require "diamond/midi_channel_filter"
 require "diamond/midi_emitter"
 require "diamond/midi_receiver"
 require "diamond/syncable"
 
+# classes
 require "diamond/arpeggiator"
 require "diamond/note_event"
 require "diamond/pattern"

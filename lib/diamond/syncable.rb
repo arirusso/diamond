@@ -9,7 +9,9 @@ module Diamond
     
     # sync another <em>syncable</em> to self
     def sync(syncable)
-      @sync_queue << syncable                 
+      return false if @sync_set.include?(syncable) || syncable.sync_set.include?(self)
+      @sync_queue << syncable
+      true               
     end
         
     # receive sync from <em>syncable</em>
@@ -19,9 +21,11 @@ module Diamond
     
     # stop sending sync to <em>syncable</em>
     def unsync(syncable)
+      return false unless @sync_set.include?(syncable)
       @sync_set.delete(syncable)
       syncable.unpause_clock
       on_sync_updated
+      true
     end
     
     # stop receiving sync from <em>syncable</em>
