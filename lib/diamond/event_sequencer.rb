@@ -15,11 +15,18 @@ module Diamond
       @events[:rest_when].nil? ? false : @events[:rest_when].call(@sequence) 
     end
     
-    # bind an event where the arpeggiator plays a rest on every <em>num<em> beat 
+    # bind an event where the arpeggiator plays a rest on every <em>num<em> beat
+    # passing in nil will cancel any rest events 
     def rest_every(num)
-      rest_when { |s| s.pointer % num == 0 }
+      num.nil? ? @events[:rest_when] : rest_when { |s| s.pointer % num == 0 }
     end
-    
+
+    # bind an event where the arpeggiator resets on every <em>num<em> beat
+    # passing in nil will cancel any reset events 
+    def reset_every(num)
+      num.nil? ? @events[:reset_when] : reset_when { |s| s.pointer % num == 0 }
+    end
+        
     # remove all note-on messages
     def rest_event_filter(msgs)
       msgs.delete_if { |m| m.class == MIDIMessage::NoteOn }
