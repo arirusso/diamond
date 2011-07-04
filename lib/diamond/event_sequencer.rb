@@ -18,13 +18,13 @@ module Diamond
     # bind an event where the arpeggiator plays a rest on every <em>num<em> beat
     # passing in nil will cancel any rest events 
     def rest_every(num)
-      num.nil? ? @events[:rest_when] : rest_when { |s| s.pointer % num == 0 }
+      num.nil? ? @events[:rest_when] = nil : rest_when { |s| s.pointer % num == 0 }
     end
 
     # bind an event where the arpeggiator resets on every <em>num<em> beat
     # passing in nil will cancel any reset events 
     def reset_every(num)
-      num.nil? ? @events[:reset_when] : reset_when { |s| s.pointer % num == 0 }
+      num.nil? ? @events[:reset_when] = nil : reset_when { |s| s.pointer % num == 0 }
     end
         
     # remove all note-on messages
