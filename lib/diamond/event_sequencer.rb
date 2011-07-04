@@ -3,7 +3,7 @@ module Diamond
 
   module EventSequencer
 
-    # if it evaluates to true, no messages will be outputted during that
+    # bind an event where if it evaluates to true, no messages will be outputted during that
     # step. (however, the tick event will still be fired)
     # Arpeggiator#sequence is passed to the block
     def rest_when(&block)
@@ -13,6 +13,11 @@ module Diamond
     # should the arpeggiator rest on the current step?
     def rest?
       @events[:rest_when].nil? ? false : @events[:rest_when].call(@sequence) 
+    end
+    
+    # bind an event where the arpeggiator plays a rest on every <em>num<em> beat 
+    def rest_every(num)
+      rest_when { |s| s.pointer % num == 0 }
     end
     
     # remove all note-on messages

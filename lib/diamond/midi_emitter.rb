@@ -27,6 +27,7 @@ module Diamond
       @midi_destinations += destinations
       on_midi_destinations_updated if respond_to?(:on_midi_destinations_updated)
     end
+    alias_method :add_midi_destination, :add_midi_destinations
     
     # remove a destination
     def remove_midi_destinations(destinations)
@@ -34,6 +35,7 @@ module Diamond
       @midi_destinations.delete_if { |d| destinations.include?(d) }
       on_midi_destinations_updated if respond_to?(:on_midi_destinations_updated)
     end
+    alias_method :remove_midi_destination, :remove_midi_destinations
     
     # send MIDI data
     def emit_midi(data)
