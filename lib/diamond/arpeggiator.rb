@@ -26,7 +26,7 @@ module Diamond
     #
     # a numeric tempo rate (BPM), or unimidi input is required by the constructor (<tt>tempo_or_input</tt>).  in the case that you use a MIDI input, it will be used as a clock source
     #
-    # the constructor also accepts a number of options -- these options are all editable after initialization by calling for example arpeggiator.gate= 
+    # the constructor also accepts a number of options -- these options are all editable after initialization by calling for example <em>arpeggiator.gate = 4</em>
     #
     # * <b>channel</b> (or <b>input_channel</b>) - only respond to input messages to the given MIDI channel. will operate on all input sources
     #

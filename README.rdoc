@@ -35,7 +35,7 @@ First, select a MIDI output using unimidi.  ({more about this...}[http://github.
 
   @output = UniMIDI::Output.first.open
 
-The Arpeggiator has a number of {optional parameters}[http://rdoc.info/gems/diamond/0.0.2/Diamond/Arpeggiator:initialize].  For this example, here's a straightforward setup
+The Arpeggiator has a number of {optional parameters}[http://rubydoc.info/github/arirusso/diamond/master/Diamond/Arpeggiator:initialize].  For this example, here's a straightforward setup
 
   opts = { 
     :gate => 90, 
@@ -56,15 +56,15 @@ Of course, an arpeggiator needs notes to work with. As you might expect, it's ea
 
 Use Arpeggiator#add and Arpeggiator#remove to change the notes that the arpeggiator sees.  
 
-  arp << chord
-  arp << "C5"
+  arp << chord # same as add
+  arp.add("C5")
   # etc
 
 Now start the arpeggiator.  By default, the arpeggiator will run in a background thread so if you are working in {irb}[http://en.wikipedia.org/wiki/Interactive_Ruby_Shell] this will allow you to live code, sync it other arpeggiators, or just run another foreground process. (To start in the foreground, just pass :focus => true to Arpeggiator#start) 
 
   arp.start
 
-All of the {arpeggiator options}[http://rdoc.info/gems/diamond/0.0.2/Diamond/Arpeggiator:initialize] can be controlled on the on the fly
+All of the {arpeggiator options}[http://rubydoc.info/github/arirusso/diamond/master/Diamond/Arpeggiator:initialize] can be controlled on the on the fly
 
   arp.rate = 16
   arp.gate = 20  
@@ -91,7 +91,7 @@ Check out these posts and examples for more...
  
 == Other Documentation
 
-* {rdoc}[http://rdoc.info/gems/diamond] 
+* {rdoc}[http://rubydoc.info/github/arirusso/diamond] 
 
 == Author
 
