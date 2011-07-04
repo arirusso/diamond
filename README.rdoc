@@ -31,7 +31,7 @@ these will install automatically with the gem
 
   require "diamond"
 
-First, select a MIDI output using unimidi.  ({more about this...}[http://github.com/arirusso/unimidi/blob/master/examples/select_a_device.rb])
+First, select a MIDI output using unimidi.  ({more...}[http://github.com/arirusso/unimidi/blob/master/examples/select_a_device.rb])
 
   @output = UniMIDI::Output.first.open
 
@@ -56,9 +56,8 @@ Of course, an arpeggiator needs notes to work with. As you might expect, it's ea
 
 Use Arpeggiator#add and Arpeggiator#remove to change the notes that the arpeggiator sees.  
 
-  arp << chord # same as add
-  arp.add("C5")
-  # etc
+  arp.add(chord) 
+  arp << "C5" # << is the same as add
 
 Now start the arpeggiator.  By default, the arpeggiator will run in a background thread so if you are working in {irb}[http://en.wikipedia.org/wiki/Interactive_Ruby_Shell] this will allow you to live code, sync it other arpeggiators, or just run another foreground process. (To start in the foreground, just pass :focus => true to Arpeggiator#start) 
 
@@ -70,7 +69,7 @@ All of the {arpeggiator options}[http://rubydoc.info/github/arirusso/diamond/mas
   arp.gate = 20  
   arp.remove(["C5", "A4"])
   
-{This screencast video}[http://vimeo.com/25948428] shows Diamond being live coded in this way. ({Read how this is done}[http://tx81z.blogspot.com/2011/07/live-coding-with-diamond.html])
+{This screencast video}[http://vimeo.com/25948428] shows Diamond being live coded in this way... {and this blog post explains}[http://tx81z.blogspot.com/2011/07/live-coding-with-diamond.html]
 
 Check out these posts and examples for more...
  
