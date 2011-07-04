@@ -24,31 +24,31 @@ module Diamond
     alias_method :focus, :join
                          
     #
-    # a numeric tempo rate (BPM), or unimidi input is required by the constructor.  in the case that you use a MIDI input, it will be used as a clock source
+    # a numeric tempo rate (BPM), or unimidi input is required by the constructor (<tt>tempo_or_input</tt>).  in the case that you use a MIDI input, it will be used as a clock source
     #
-    # the constructor also accepts a number of options
+    # the constructor also accepts a number of options -- these options are all editable after initialization by calling for example arpeggiator.gate= 
     #
-    # * channel (or input_channel) - only respond to input messages to the given MIDI channel. will operate on all input sources
+    # * <b>channel</b> (or <b>input_channel</b>) - only respond to input messages to the given MIDI channel. will operate on all input sources
     #
-    # * gate - <tt>gate</tt> refers to how long the arpeggiated notes will be held out. the <tt>gate</tt> value is a percentage based on the rate.  if the rate is 4, then a gate of 100 is equal to a quarter note. the default <tt>gate</tt> is 75. <tt>Gate</tt> must be positive and less than 500
+    # * <b>gate</b> - <tt>gate</tt> refers to how long the arpeggiated notes will be held out. the <tt>gate</tt> value is a percentage based on the rate.  if the rate is 4, then a gate of 100 is equal to a quarter note. the default <tt>gate</tt> is 75. <tt>Gate</tt> must be positive and less than 500
     #
-    # * interval - the arpeggiator increments the <tt>pattern</tt> over <tt>interval</tt> scale degrees <tt>range</tt> times.  the default <tt>interval</tt> is 12, meaning one octave above the current note. <tt>interval</tt> may be any positive or negative number
-    #  
-    # * midi - this can be a unimidi input or output. will accept a single device or an array
+    # * <b>interval</b> - the arpeggiator increments the <tt>pattern</tt> over <tt>interval</tt> scale degrees <tt>range</tt> times.  the default <tt>interval</tt> is 12, meaning one octave above the current note. <tt>interval</tt> may be any positive or negative number
     #
-    # * midi_clock_output - should this Arpeggiator output midi clock? defaults to false
+    # * <b>midi</b> - this can be a unimidi input or output. will accept a single device or an array
     #
-    # * output_channel - send output messages to the given MIDI channel despite what channel the input notes were intended for.
+    # * <b>midi_clock_output</b> - should this Arpeggiator output midi clock? defaults to false
     #
-    # * pattern_offset - <tt>pattern_offset</tt> n means that the arpeggiator will begin on the nth note of the sequence (but not omit any notes). the default <tt>pattern_offset</tt> is 0.
+    # * <b>output_channel</b> - send output messages to the given MIDI channel despite what channel the input notes were intended for.
+    #
+    # * <b>pattern_offset</b> - <tt>pattern_offset</tt> n means that the arpeggiator will begin on the nth note of the sequence (but not omit any notes). the default <tt>pattern_offset</tt> is 0.
     # 
-    # * pattern - A Pattern object that computes the contour of the arpeggiated melody
-    #    
-    # * range - the arpeggiator increments the <tt>pattern</tt> over <tt>interval</tt> scale degrees <tt>range</tt> times. <tt>range</tt> must be 0 or greater. the default <tt>range</tt> is 3
+    # * <b>pattern</b> - A Pattern object that computes the contour of the arpeggiated melody
     #
-    # * rate - <tt>rate</tt> is how fast the arpeggios will be played. the default is 8, which is an eighth note. rate may be 0 (whole note) or greater but must be equal to or less than <tt>resolution</tt>
-    #  
-    # * resolution - the resolution of the arpeggiator (numeric notation)    
+    # * <b>range</b> - the arpeggiator increments the <tt>pattern</tt> over <tt>interval</tt> scale degrees <tt>range</tt> times. <tt>range</tt> must be 0 or greater. the default <tt>range</tt> is 3
+    #
+    # * <b>rate</b> - <tt>rate</tt> is how fast the arpeggios will be played. the default is 8, which is an eighth note. rate may be 0 (whole note) or greater but must be equal to or less than <tt>resolution</tt>
+    #
+    # * <b>resolution</b> - the resolution of the arpeggiator (numeric notation)    
     #    
     def initialize(tempo_or_input, options = {}, &block)
       @mute = false      

@@ -35,7 +35,7 @@ First, select a MIDI output using unimidi.  ({more about this...}[http://github.
 
   @output = UniMIDI::Output.first.open
 
-The Arpeggiator has a number of {optional parameters}[].  For this example, here's a straightforward setup
+The Arpeggiator has a number of {optional parameters}[http://rdoc.info/gems/diamond/0.0.2/Diamond/Arpeggiator:initialize].  For this example, here's a straightforward setup
 
   opts = { 
     :gate => 90, 
@@ -64,7 +64,7 @@ Now start the arpeggiator.  By default, the arpeggiator will run in a background
 
   arp.start
 
-All of the {arpeggiator options}[] can be controlled on the on the fly
+All of the {arpeggiator options}[http://rdoc.info/gems/diamond/0.0.2/Diamond/Arpeggiator:initialize] can be controlled on the on the fly
 
   arp.rate = 16
   arp.gate = 20  
