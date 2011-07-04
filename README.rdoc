@@ -70,7 +70,7 @@ All of the {arpeggiator options}[http://rubydoc.info/github/arirusso/diamond/mas
   arp.gate = 20  
   arp.remove(["C5", "A4"])
   
-This screencast video shows Diamond being live coded in this way. ({Read how this is done}[http://tx81z.blogspot.com/2011/07/live-coding-with-diamond.html])
+{This screencast video}[http://vimeo.com/25948428] shows Diamond being live coded in this way. ({Read how this is done}[http://tx81z.blogspot.com/2011/07/live-coding-with-diamond.html])
 
 Check out these posts and examples for more...
  
