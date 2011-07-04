@@ -27,6 +27,6 @@ require "pattern_presets"
 
 module Diamond
   
-  VERSION = "0.0.1"
+  VERSION = "0.0.2"
   
 end

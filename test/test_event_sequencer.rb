@@ -11,7 +11,7 @@ class EventSequencerTest < Test::Unit::TestCase
   def test_rest_when
     output = Config::TestOutput
     arp = Diamond::Arpeggiator.new(175, :midi => output)
-    arp.rest_when { |state| state.step == 0 }
+    arp.rest_when { |state| state.pointer == 0 }
     assert_equal(true, arp.rest?)
   end
   
