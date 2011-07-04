@@ -178,6 +178,8 @@ module Diamond
         
     def bind_events(&block)
       @actions[:tick] = Proc.new do
+        sync = @sequence.step
+        activate_sync_queue(true) if sync
         @sequence.with_next do |msgs|
           unless muted?
             msgs = output_channel_filter(msgs)
@@ -185,7 +187,7 @@ module Diamond
             data = msgs.map { |msg| msg.to_bytes }.flatten
             unless data.empty?
               emit_midi(data) if emit_midi?
-              activate_sync_queue
+              activate_sync_queue(false)
             end
             yield(msgs) unless block.nil?
             reset if reset?

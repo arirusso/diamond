@@ -11,8 +11,6 @@ module Diamond
                 :pattern_offset,
                 :pointer,
                 :resolution
-                
-    alias :step :pointer
     
     def initialize(resolution, options = {})
       @resolution = resolution
@@ -38,14 +36,19 @@ module Diamond
       @pointer = 0
     end
     
-    # yields to <em>block</em>, passing in the next messages in the queue
-    # also returns the next messages
-    def with_next(&block)
-      if @changed && (step % @rate == 0)
+    def step
+      if @changed && (@pointer % @rate == 0)
         update_sequence
         @changed = false
       end
       queue_next
+      @pointer == 0
+    end
+    
+    # yields to <em>block</em>, passing in the next messages in the queue
+    # also returns the next messages
+    def with_next(&block)
+      
       messages = @queue.shift || []
       yield(messages) unless block.nil?
       messages

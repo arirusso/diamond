@@ -8,15 +8,17 @@ module Diamond
     end
     
     # sync another <em>syncable</em> to self
-    def sync(syncable)
-      return false if @sync_set.include?(syncable) || syncable.sync_set.include?(self)
-      @sync_queue << syncable
+    # pass :now => true to queue the sync to happen immediately
+    # otherwise the sync will happen at the beginning of self's next sequence
+    def sync(syncable, options = {})
+      return false if @sync_set.include?(syncable) || syncable.sync_set.include?(self)      
+      @sync_queue[syncable] = options[:now] || false
       true               
     end
         
     # receive sync from <em>syncable</em>
-    def sync_to(syncable)
-      syncable.sync(self)
+    def sync_to(syncable, options = {})
+      syncable.sync(self, options)
     end
     
     # stop sending sync to <em>syncable</em>
@@ -50,7 +52,7 @@ module Diamond
     private
     
     def initialize_syncable(sync_to, sync)
-      @sync_queue ||= []
+      @sync_queue ||= {}
       @sync_set ||= []
       unless sync_to.nil?
         sync_to = [sync_to].flatten.compact      
@@ -62,13 +64,15 @@ module Diamond
       end
     end
     
-    def activate_sync_queue
+    def activate_sync_queue(now)
       updated = false
-      @sync_queue.each do |syncable| 
-        @sync_set << syncable
-        syncable.pause_clock
-        @sync_queue.delete(syncable)
-        updated = true
+      @sync_queue.each do |syncable, sync_now|
+        if sync_now || now 
+          @sync_set << syncable
+          syncable.pause_clock
+          @sync_queue.delete(syncable)
+          updated = true
+        end
       end      
       on_sync_updated if updated
     end
