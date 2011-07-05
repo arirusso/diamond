@@ -19,12 +19,14 @@ module Diamond
     # passing in nil will cancel any rest events 
     def rest_every(num)
       num.nil? ? @events[:rest_when] = nil : rest_when { |s| s.pointer % num == 0 }
+      true
     end
 
     # bind an event where the arpeggiator resets on every <em>num<em> beat
     # passing in nil will cancel any reset events 
     def reset_every(num)
       num.nil? ? @events[:reset_when] = nil : reset_when { |s| s.pointer % num == 0 }
+      true
     end
         
     # remove all note-on messages
