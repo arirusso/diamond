@@ -4,6 +4,8 @@
 
 {pic}[http://images.treetrouble.net/images/diamond.jpg]
 
+{video}[http://www.youtube.com/embed/CXNe4fqKz5M]
+
 == Features
 
 * Classic arpeggiator functions
