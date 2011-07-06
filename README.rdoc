@@ -4,7 +4,7 @@
 
 {pic}[http://images.treetrouble.net/images/diamond.jpg]
 
-{video}[http://www.youtube.com/embed/CXNe4fqKz5M]
+<iframe width="425" height="349" src="http://www.youtube.com/embed/CXNe4fqKz5M" frameborder="0" allowfullscreen></iframe>
 
 == Features
 
