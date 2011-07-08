@@ -7,8 +7,6 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 require "diamond"
 
-include MIDIMessage
-
 #
 # you will want to select the MIDI input that your controller or other device is connected to
 #
@@ -16,7 +14,6 @@ include MIDIMessage
 # http://github.com/arirusso/unimidi/blob/master/examples/select_a_device.rb
 #
 @input = UniMIDI::Input.first.open
-
 @output = UniMIDI::Output.first.open
 
 opts = { 
