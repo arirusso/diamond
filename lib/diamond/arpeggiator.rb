@@ -74,10 +74,10 @@ module Diamond
       opts = {}
       opts[:background] = true unless options[:focus] || options[:foreground]
       @clock.start(opts)
-      trap "SIGINT", proc do 
+      trap "SIGINT", proc { 
         stop
         exit
-      end
+      }
       true
     end
     
