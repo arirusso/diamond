@@ -70,10 +70,14 @@ module Diamond
       bind_events(&block)
     end
     
-    def start(options = {})
+    def start(options = {})      
       opts = {}
       opts[:background] = true unless options[:focus] || options[:foreground]
       @clock.start(opts)
+      trap "SIGINT", proc do 
+        stop
+        exit
+      end
       true
     end
     
