@@ -32,7 +32,7 @@ arp = Diamond::Arpeggiator.new(140, opts)
 
 # to tell the arpeggiator to only look at a single channel, just set a channel
 
-arp.channel = 0 
+arp.input_channel = 0 
 
 # you can also call arp.channel = nil to return it to omni mode
 
