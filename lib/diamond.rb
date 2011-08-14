@@ -11,6 +11,9 @@ require "musicgrid"
 require "topaz"
 require "unimidi"
 
+# modules 
+require "diamond/midi_channel_filter"
+
 # classes
 require "diamond/arpeggiator"
 require "diamond/pattern"

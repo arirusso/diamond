@@ -3,7 +3,7 @@ module Diamond
   
   class Arpeggiator
     
-    include MusicGrid::MIDIChannelFilter
+    include MIDIChannelFilter
     include MusicGrid::MIDIEmitter
     include MusicGrid::MIDIReceiver
     include MusicGrid::EventSequencer    
