@@ -3,11 +3,11 @@ module Diamond
   
   class Arpeggiator
     
-    include MIDIChannelFilter
-    include MIDIEmitter
-    include MIDIReceiver
-    include EventSequencer    
-    include Syncable
+    include MusicGrid::MIDIChannelFilter
+    include MusicGrid::MIDIEmitter
+    include MusicGrid::MIDIReceiver
+    include MusicGrid::EventSequencer    
+    include MusicGrid::Syncable
     
     extend Forwardable
     

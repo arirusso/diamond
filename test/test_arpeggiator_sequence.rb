@@ -6,6 +6,7 @@ class ArpeggiatorSequenceTest < Test::Unit::TestCase
 
   include Diamond
   include MIDIMessage
+  include MusicGrid
   include TestHelper
   
   def test_sequence
@@ -18,9 +19,9 @@ class ArpeggiatorSequenceTest < Test::Unit::TestCase
     seq.add(notes)
     llseq = seq.send(:update_sequence)
     assert_equal(24, llseq.length)
-    assert_equal(NoteEvent, llseq[0][0].class)
-    assert_equal(NoteEvent, llseq[4][0].class)
-    assert_equal(NoteEvent, llseq[8][0].class)
+    assert_equal(MIDINoteEvent, llseq[0][0].class)
+    assert_equal(MIDINoteEvent, llseq[4][0].class)
+    assert_equal(MIDINoteEvent, llseq[8][0].class)
     assert_equal([], llseq[1])
     assert_equal([], llseq[5])
     assert_equal([], llseq[9])
