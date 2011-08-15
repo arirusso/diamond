@@ -23,7 +23,7 @@ Ruby 1.9.2+ or JRuby in 1.9 mode
 
 Gem Dependencies:
 
-{midi-eye}[http://github.com/arirusso/midi-eye], {midi-message}[http://github.com/arirusso/midi-message], {topaz}[http://github.com/arirusso/topaz], and {unimidi}[http://github.com/arirusso/unimidi]
+{inst}[http://github.com/arirusso/inst], {midi-eye}[http://github.com/arirusso/midi-eye], {midi-message}[http://github.com/arirusso/midi-message], {topaz}[http://github.com/arirusso/topaz], and {unimidi}[http://github.com/arirusso/unimidi]
 
 these will install automatically with the gem
 
