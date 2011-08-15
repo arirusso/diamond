@@ -4,10 +4,10 @@ module Diamond
   class Arpeggiator
     
     include MIDIChannelFilter
-    include MusicGrid::MIDIEmitter
-    include MusicGrid::MIDIReceiver
-    include MusicGrid::EventSequencer    
-    include MusicGrid::Syncable
+    include Inst::MIDIEmitter
+    include Inst::MIDIReceiver
+    include Inst::EventSequencer    
+    include Inst::Syncable
     
     extend Forwardable
     
@@ -67,7 +67,9 @@ module Diamond
       @sequence = ArpeggiatorSequence.new(resolution, options)
       @sequence.transpose(options[:transpose]) unless options[:transpose].nil?      
 
-      bind_events(&block)
+      bind_events
+      
+      self.instance_eval(&block) unless block.nil?
     end
     
     def start(options = {})      
@@ -79,6 +81,12 @@ module Diamond
         exit
       }
       true
+    end
+    
+    # send all of the note off messages in the queue
+    def emit_pending_note_offs
+      data = @sequence.pending_note_offs.map { |msg| msg.to_bytes }.flatten.compact
+      @midi_destinations.each { |o| o.puts(data) } unless data.empty?
     end
     
     def method_missing(method, *args, &block)
@@ -180,7 +188,7 @@ module Diamond
       listener
     end
         
-    def bind_events(&block)
+    def bind_events
       @actions[:tick] = Proc.new do
         sync = @sequence.step
         activate_sync_queue(true) if sync
@@ -193,7 +201,8 @@ module Diamond
               emit_midi(data) if emit_midi?
               activate_sync_queue(false)
             end
-            yield(msgs) unless block.nil?
+            @events[:tick].call(msgs) unless @events[:tick].nil? 
+            #yield(msgs) unless block.nil?
             reset if reset?
           end
         end

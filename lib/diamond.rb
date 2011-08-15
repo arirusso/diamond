@@ -5,9 +5,9 @@
 # 
 require "forwardable"
 
+require "inst"
 require "midi-eye"
 require "midi-message"
-require "musicgrid"
 require "topaz"
 require "unimidi"
 

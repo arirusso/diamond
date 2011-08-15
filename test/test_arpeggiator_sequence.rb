@@ -6,7 +6,7 @@ class ArpeggiatorSequenceTest < Test::Unit::TestCase
 
   include Diamond
   include MIDIMessage
-  include MusicGrid
+  include Inst
   include TestHelper
   
   def test_sequence
