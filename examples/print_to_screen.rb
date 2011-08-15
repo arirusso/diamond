@@ -20,7 +20,9 @@ opts = {
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(175, opts) do |msgs|
+arp = Diamond::Arpeggiator.new(175, opts)
+
+arp.on_tick do |msgs|
   pp msgs unless msgs.empty?
 end
 
