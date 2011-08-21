@@ -15,16 +15,13 @@ require "pp"
 opts = { 
   :gate => 90,   
   :interval => 7,
+  :midi => $stdout,
   :pattern => Diamond::Pattern["UpDown"],
   :range => 4, 
   :rate => 8
 }
 
 arp = Diamond::Arpeggiator.new(175, opts)
-
-arp.on_tick do |msgs|
-  pp msgs unless msgs.empty?
-end
 
 chord = ["C4", "E4", "G4"]
 
