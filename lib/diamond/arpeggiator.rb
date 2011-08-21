@@ -176,8 +176,8 @@ module Diamond
             
     def initialize_midi_io(devices)
       devices = [devices].flatten.compact
-      emit_midi_to(devices.find_all { |d| d.type == :output }.compact)
-      receive_midi_from(devices.find_all { |d| d.type == :input }.compact)      
+      emit_midi_to(devices.find_all { |d| d.respond_to?(:puts) }.compact)
+      receive_midi_from(devices.find_all { |d| d.respond_to?(:gets) }.compact)      
     end
     
     def initialize_midi_source_listener(source)
