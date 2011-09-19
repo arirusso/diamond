@@ -72,6 +72,7 @@ module Diamond
       self.instance_eval(&block) unless block.nil?
     end
     
+    # start the clock
     def start(options = {})      
       opts = {}
       opts[:background] = true unless options[:focus] || options[:foreground]
@@ -89,6 +90,7 @@ module Diamond
       @midi_destinations.each { |o| o.puts(data) } unless data.empty?
     end
     
+    # delegates some calls to the arpeggiator sequence
     def method_missing(method, *args, &block)
       @sequence.respond_to?(method) ? @sequence.send(method, *args, &block) : super
     end
