@@ -69,7 +69,12 @@ module Diamond
 
       bind_events
       
-      self.instance_eval(&block) unless block.nil?
+      edit(&block) unless block.nil?
+    end
+    
+    # open the arpeggiator for editing
+    def edit(&block)
+      self.instance_eval(&block)
     end
     
     # start the clock
