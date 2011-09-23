@@ -16,7 +16,7 @@ class SyncableTest < Test::Unit::TestCase
     arp.add("C3")
     arp.sync(arp2)
     sleep(1)
-    assert_equal(arp2, arp.sync_set.first)
+    assert_equal(true, arp.sync?(arp2))
   end
   
   def test_sync_and_unsync    
@@ -27,9 +27,9 @@ class SyncableTest < Test::Unit::TestCase
     arp.add("C3")
     arp.sync(arp2)
     sleep(1)
-    assert_equal(arp2, arp.sync_set.first) 
+    assert_equal(true, arp.sync?(arp2)) 
     arp.unsync(arp2)
-    assert_equal(nil, arp.sync_set.first)
+    assert_equal(false, arp.sync?(arp2))
   end    
   
 end

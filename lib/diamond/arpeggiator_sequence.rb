@@ -3,15 +3,18 @@ module Diamond
   
   class ArpeggiatorSequence
     
+    extend Forwardable
+    
     attr_reader :gate,
                 :interval,
                 :pattern,
                 :range,
                 :rate,
                 :pattern_offset,
-                :pointer,
                 :resolution
-    
+
+    def_delegators :@sequence, :length
+        
     def initialize(resolution, options = {})
       @resolution = resolution
       @transpose = 0
@@ -25,30 +28,19 @@ module Diamond
       
       # realtime
       @changed = false
-      @pointer = 0 #-1
       @queue = []
       
       update_sequence
     end
     
-    # return to the beginning of the sequence
-    def reset
-      @pointer = 0
-    end
-    
-    def step
-      if @changed && (@pointer % @rate == 0)
+    # yields to <em>block</em>, passing in the next messages in the queue
+    # also returns the next messages
+    def step(pointer, &block)
+      if @changed && (pointer % @rate == 0)
         update_sequence
         @changed = false
       end
-      queue_next
-      @pointer == 0
-    end
-    
-    # yields to <em>block</em>, passing in the next messages in the queue
-    # also returns the next messages
-    def with_next(&block)
-      
+      queue_next(pointer)
       messages = @queue.shift || []
       yield(messages) unless block.nil?
       messages
@@ -146,9 +138,8 @@ module Diamond
       new_val
     end
     
-    def queue_next
-      @pointer = (@pointer >= (@sequence.length - 1)) ? 0 : @pointer + 1
-      events = @sequence[@pointer]
+    def queue_next(pointer)
+      events = @sequence[pointer]
       add_to_queue(events) unless events.nil?
     end
     

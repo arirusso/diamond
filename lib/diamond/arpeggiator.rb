@@ -3,25 +3,59 @@ module Diamond
   
   class Arpeggiator
     
-    include MIDIChannelFilter
-    include Inst::MIDIEmitter
-    include Inst::MIDIReceiver
-    include Inst::EventSequencer    
-    include Inst::Syncable
-    
     extend Forwardable
     
+    attr_reader :channel,
+                :input_midi_channel_filter,
+                :midi_sources,
+                :sequence,
+                :sequencer
+    
+    def_delegators :sequence, 
+                   :gate,
+                   :gate=,
+                   :interval,
+                   :interval=,
+                   :pattern,
+                   :pattern=,
+                   :range,
+                   :range=,
+                   :rate,
+                   :rate=,
+                   :pattern_offset,
+                   :pattern_offset=,
+                   :resolution,
+                   :resolution=
+                   
+    def_delegators :sequencer,
+                   :add_midi_destinations,
+                   :add_midi_destination,
+                   :focus,
+                   :join,
+                   :midi_destinations,
+                   :mute,
+                   :muted?,
+                   :pause_clock,
+                   :remove_midi_destinations,
+                   :remove_midi_destination,
+                   :reset?,
+                   :reset,
+                   :reset_when,
+                   :rest?,
+                   :rest_when,
+                   :start,
+                   :start_when,
+                   :stop,
+                   :stop_when,
+                   :sync,
+                   :synced_with?,
+                   :toggle_mute,
+                   :unmute,
+                   :unsync,
+                   :unpause_clock
+                
     DefaultChannel = 0
     DefaultVelocity = 100
-    
-    attr_reader :clock,
-                :sequence
-    
-    def_delegators :clock, :join, :stop, :tempo, :tempo=
-    
-    def_delegators :sequence, :reset
-    
-    alias_method :focus, :join
                          
     #
     # a numeric tempo rate (BPM), or unimidi input is required by the constructor (<tt>tempo_or_input</tt>).  in the case that you use a MIDI input, it will be used as a clock source
@@ -51,53 +85,31 @@ module Diamond
     # * <b>resolution</b> - the resolution of the arpeggiator (numeric notation)    
     #    
     def initialize(tempo_or_input, options = {}, &block)
-      @mute = false      
-      @actions = { :tick => nil }      
+      devices = [(options[:midi] || [])].flatten
+      resolution = options[:resolution] || 128
+      @channel = options[:input_channel] || options[:channel]
+      output_channel = options[:output_channel]
       
-      midi_clock_output = options[:midi_clock_output] || false
-      resolution = options[:resolution] || 128      
-      input_channel = options[:input_channel] || options[:channel]
-      
-      initialize_midi_channel_filter(input_channel, options[:output_channel])
-      initialize_midi_io(options[:midi])       
-      initialize_syncable(options[:sync_to], options[:sync])
-      initialize_event_sequencer            
-      initialize_clock(tempo_or_input, resolution, midi_clock_output)
-            
-      @sequence = ArpeggiatorSequence.new(resolution, options)
-      @sequence.transpose(options[:transpose]) unless options[:transpose].nil?      
-
-      bind_events
+      initialize_input(devices)
+      initialize_sequence(resolution, options)  
+      initialize_sequencer(tempo_or_input, output_channel, options)
       
       edit(&block) unless block.nil?
+    end
+    
+    def output_midi_channel_filter
+      @sequencer.output_processors[:channel_filter]
+    end
+    
+    # set the midi channel to restrict input messages to 
+    def channel=(val)
+      @channel = val
+      @sequencer.output_processors[:channel_filter].channel = val
     end
     
     # open the arpeggiator for editing
     def edit(&block)
       self.instance_eval(&block)
-    end
-    
-    # start the clock
-    def start(options = {})      
-      opts = {}
-      opts[:background] = true unless options[:focus] || options[:foreground]
-      @clock.start(opts)
-      trap "SIGINT", proc { 
-        stop
-        exit
-      }
-      true
-    end
-    
-    # send all of the note off messages in the queue
-    def emit_pending_note_offs
-      data = @sequence.pending_note_offs.map { |msg| msg.to_bytes }.flatten.compact
-      @midi_destinations.each { |o| o.puts(data) } unless data.empty?
-    end
-    
-    # delegates some calls to the arpeggiator sequence
-    def method_missing(method, *args, &block)
-      @sequence.respond_to?(method) ? @sequence.send(method, *args, &block) : super
     end
     
     # add input notes. takes a single note or an array of notes
@@ -118,39 +130,48 @@ module Diamond
     # remove all input notes
     def remove_all
       @sequence.remove_all
+    end    
+    
+    # add a midi input to use as a source for arpeggiator notes
+    def add_midi_source(source)      
+      listener = midi_source_listener(source)
+      @midi_sources ||= {}
+      @midi_sources[source] = listener
     end
     
-    # toggle mute on this arpeggiator
-    def toggle_mute
-      muted? ? unmute : mute
+    # remove a midi input that was being used as a source for arpeggiator notes
+    def remove_midi_source(source)
+      @midi_sources[source].stop
+      @midi_sources.delete(source)
     end
-    
-    # mute this arpeggiator
-    def mute
-      @mute = true
-      emit_pending_note_offs
-      @mute
-    end
-    
-    # unmute this arpeggiator
-    def unmute
-      @mute = false
-    end
-    
-    # is this arpeggiator muted?
-    def muted?
-      @mute
-    end
-    
-    # stops the clock and sends any remaining MIDI note-off messages that are in the queue
-    def stop
-      @clock.stop rescue false
-      emit_pending_note_offs
-      @sync_set.each { |syncable| syncable.stop }
-      true            
-    end
-    
+         
     private
+    
+    # initialize the arpeggiator sequence
+    def initialize_sequence(resolution, options = {})
+      @sequence = ArpeggiatorSequence.new(resolution, options)
+      @sequence.transpose(options[:transpose]) unless options[:transpose].nil?    
+    end
+    
+    # initialize the MIDISequencer
+    def initialize_sequencer(tempo_or_input, output_channel, options = {})
+      @sequencer = Inst::MIDISequencer.new(tempo_or_input, options.merge({ :sequence => @sequence }))
+      @sequencer.output_processors[:channel_filter] = MIDIChannelFilter.new(output_channel) unless output_channel.nil?
+    end
+    
+    def initialize_input(devices)
+      @input_midi_channel_filter = MIDIChannelFilter.new(@channel) unless @channel.nil?
+      receive_midi_from(get_inputs(devices))
+    end
+    
+    # returns only valid inputs
+    def get_inputs(devices)
+      devices.find_all { |d| d.respond_to?(:type) && d.type == :input && d.respond_to?(:gets) }.compact
+    end
+    
+    def receive_midi_from(input_devices)
+      input_devices.each { |source| add_midi_source(source) }
+    end
     
     def sanitize_input_notes(notes, klass, options)
       channel = options[:channel] || DefaultChannel
@@ -158,62 +179,15 @@ module Diamond
       notes = notes.map do |note|
         note.kind_of?(String) ? klass[note].new(channel, velocity) : note
       end.compact
-      input_channel_filter(notes)
+      @input_midi_channel_filter.nil? ? notes : @input_midi_channel_filter.process(notes)
     end
-    
-    def update_clock
-      @midi_destinations.each do |dest|
-        @clock.remove_destination(dest)
-        @clock.add_destination(dest)
-      end
-    end
-    alias_method :on_midi_destinations_updated, :update_clock
-    alias_method :on_sync_updated, :update_clock
-    
-    def initialize_clock(tempo_or_input, resolution, use_midi_clock_output)
-      outputs = use_midi_clock_output ? @midi_destinations : nil
-      @clock = Topaz::Tempo.new(tempo_or_input, :midi => outputs)
-      dif = resolution / clock.interval  
-      clock.interval = clock.interval * dif
-      clock.on_tick do
-        @actions[:tick].call
-        @sync_set.each { |syncable| syncable.sync_tick } 
-      end
-    end
-            
-    def initialize_midi_io(devices)
-      devices = [devices].flatten.compact
-      emit_midi_to(devices.find_all { |d| d.respond_to?(:puts) }.compact)
-      receive_midi_from(devices.find_all { |d| d.respond_to?(:type) && d.type == :input && d.respond_to?(:gets) }.compact)      
-    end
-    
-    def initialize_midi_source_listener(source)
+        
+    def midi_source_listener(source)
       listener = MIDIEye::Listener.new(source)
       listener.listen_for(:class => MIDIMessage::NoteOn) { |event| add(event[:message]) }
       listener.listen_for(:class => MIDIMessage::NoteOff) { |event| remove(event[:message]) }
       listener.start(:background => true)
       listener
-    end
-        
-    def bind_events
-      @actions[:tick] = Proc.new do
-        sync = @sequence.step
-        activate_sync_queue(true) if sync
-        @sequence.with_next do |msgs|
-          unless muted?
-            msgs = output_channel_filter(msgs)
-            msgs = rest_event_filter(msgs) if rest?
-            data = msgs.map { |msg| msg.to_bytes }.flatten
-            unless data.empty?
-              emit_midi(data) if emit_midi?
-              activate_sync_queue(false)
-            end
-            @events[:tick].call(msgs) unless @events[:tick].nil? 
-            #yield(msgs) unless block.nil?
-            reset if reset?
-          end
-        end
-      end       
     end
   
   end

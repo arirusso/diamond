@@ -8,6 +8,36 @@ class ApeggiatorTest < Test::Unit::TestCase
   include MIDIMessage
   include TestHelper
   
+  def test_set_rate
+    a = Arpeggiator.new(175, :rate => 8)
+    a.rate = 16
+    assert_equal(16, a.rate)
+  end
+  
+  def test_set_range
+    a = Arpeggiator.new(175, :range => 4)
+    a.range += 1
+    assert_equal(5, a.range)    
+  end
+  
+  def test_set_interval
+    a = Arpeggiator.new(175, :interval => 7)
+    a.interval = 12
+    assert_equal(12, a.interval)    
+  end
+  
+  def test_set_gate
+    a = Arpeggiator.new(175, :gate => 75)
+    a.gate = 125
+    assert_equal(125, a.gate)    
+  end
+  
+  def test_set_pattern_offset
+    a = Arpeggiator.new(175, :pattern_offset => 1)
+    a.pattern_offset = 5
+    assert_equal(5, a.pattern_offset)    
+  end
+  
   def test_pass_in_source
     input = $test_device[:input]
     arp = Arpeggiator.new(175, :midi => input)

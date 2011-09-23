@@ -10,14 +10,16 @@ class MIDIChannelFilterTest < Test::Unit::TestCase
   
   def test_input_channel_filter
     arp = Diamond::Arpeggiator.new(175, :channel => 0)
-    results = arp.input_channel_filter([NoteOn["C4"].new(10, 100)])
+    results = arp.input_midi_channel_filter.process([NoteOn["C4"].new(10, 100)])
     assert_equal(nil, results.first)     
   end
   
   def test_output_channel_filter
-    arp = Diamond::Arpeggiator.new(175, :output_channel => 0)
-    results = arp.output_channel_filter([NoteOn["C4"].new(10, 100)])
-    assert_equal(0, results.first.channel)     
+    arp = Diamond::Arpeggiator.new(175, :output_channel => 10)
+    results = arp.output_midi_channel_filter.process([NoteOn["C4"].new(10, 100)])
+    assert_equal(10, results.first.channel)     
+    results = arp.output_midi_channel_filter.process([NoteOn["C4"].new(0, 100)])
+    assert_equal(0, results.size)
   end
   
 end

@@ -2,7 +2,7 @@
 
 require 'helper'
 
-class EventSequencerTest < Test::Unit::TestCase
+class SequencerCallbacksTest < Test::Unit::TestCase
 
   include Inst
   include MIDIMessage
