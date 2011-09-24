@@ -1,15 +1,14 @@
 #!/usr/bin/env ruby
 module Diamond
   
-  class Arpeggiator
+  class Arpeggiator < Inst::MIDISequencer
     
     extend Forwardable
     
     attr_reader :channel,
                 :input_midi_channel_filter,
                 :midi_sources,
-                :sequence,
-                :sequencer
+                :sequence
     
     def_delegators :sequence, 
                    :gate,
@@ -26,33 +25,6 @@ module Diamond
                    :pattern_offset=,
                    :resolution,
                    :resolution=
-                   
-    def_delegators :sequencer,
-                   :add_midi_destinations,
-                   :add_midi_destination,
-                   :focus,
-                   :join,
-                   :midi_destinations,
-                   :mute,
-                   :muted?,
-                   :pause_clock,
-                   :remove_midi_destinations,
-                   :remove_midi_destination,
-                   :reset?,
-                   :reset,
-                   :reset_when,
-                   :rest?,
-                   :rest_when,
-                   :start,
-                   :start_when,
-                   :stop,
-                   :stop_when,
-                   :sync,
-                   :synced_with?,
-                   :toggle_mute,
-                   :unmute,
-                   :unsync,
-                   :unpause_clock
                 
     DefaultChannel = 0
     DefaultVelocity = 100
@@ -92,19 +64,21 @@ module Diamond
       
       initialize_input(devices)
       initialize_sequence(resolution, options)  
-      initialize_sequencer(tempo_or_input, output_channel, options)
+      
+      super(tempo_or_input, options.merge({ :sequence => @sequence }))
+      @output_processors[:channel_filter] = MIDIChannelFilter.new(output_channel) unless output_channel.nil?
       
       edit(&block) unless block.nil?
     end
     
     def output_midi_channel_filter
-      @sequencer.output_processors[:channel_filter]
+      @output_processors[:channel_filter]
     end
     
     # set the midi channel to restrict input messages to 
     def channel=(val)
       @channel = val
-      @sequencer.output_processors[:channel_filter].channel = val
+      @output_processors[:channel_filter].channel = val
     end
     
     # open the arpeggiator for editing
@@ -151,12 +125,6 @@ module Diamond
     def initialize_sequence(resolution, options = {})
       @sequence = ArpeggiatorSequence.new(resolution, options)
       @sequence.transpose(options[:transpose]) unless options[:transpose].nil?    
-    end
-    
-    # initialize the MIDISequencer
-    def initialize_sequencer(tempo_or_input, output_channel, options = {})
-      @sequencer = Inst::MIDISequencer.new(tempo_or_input, options.merge({ :sequence => @sequence }))
-      @sequencer.output_processors[:channel_filter] = MIDIChannelFilter.new(output_channel) unless output_channel.nil?
     end
     
     def initialize_input(devices)
