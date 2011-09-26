@@ -169,7 +169,7 @@ module Diamond
         @pattern_offset.times { notes.push(notes.shift) }
         notes.each_with_index do |note_msg, i| 
           index = i * note_length
-          @sequence[index] = [Inst::MIDINoteEvent.new(note_msg, @gate)] unless @sequence[index].nil?
+          @sequence[index] = [MIDIMessage::Event::Note.new(note_msg, @gate)] unless @sequence[index].nil?
         end
       end
       @sequence
