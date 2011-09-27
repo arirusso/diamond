@@ -8,6 +8,16 @@ class ApeggiatorTest < Test::Unit::TestCase
   include MIDIMessage
   include TestHelper
   
+  def test_input_process
+    arp = Diamond::Arpeggiator.new(175, :channel => 3)
+    msg = NoteOn["C4"].new(10, 100)
+    results = arp.send(:process_input, msg)
+    assert_equal(nil, results.first)     
+    msg2 = NoteOn["C4"].new(3, 100)
+    results = arp.send(:process_input, msg2)
+    assert_equal(msg2, results.first)     
+  end
+  
   def test_set_rate
     a = Arpeggiator.new(175, :rate => 8)
     a.rate = 16

@@ -6,7 +6,6 @@ module Diamond
     extend Forwardable
     
     attr_reader :channel,
-                :input_midi_channel_filter,
                 :midi_sources,
                 :sequence
     
@@ -66,19 +65,19 @@ module Diamond
       initialize_sequence(resolution, options)  
       
       super(tempo_or_input, options.merge({ :sequence => @sequence }))
-      @output_processors[:channel_filter] = MIDIChannelFilter.new(output_channel) unless output_channel.nil?
+      @output_process << MIDIMessage::Process::Limit.new(:channel, output_channel, :name => :output_channel) unless output_channel.nil?
       
       edit(&block) unless block.nil?
     end
     
-    def output_midi_channel_filter
-      @output_processors[:channel_filter]
+    def output_channel_processor
+      @output_processors.find_by_name(:output_channel)
     end
     
     # set the midi channel to restrict input messages to 
     def channel=(val)
       @channel = val
-      @output_processors[:channel_filter].channel = val
+      output_channel_processor.channel = val
     end
     
     # open the arpeggiator for editing
@@ -118,6 +117,12 @@ module Diamond
       @midi_sources[source].stop
       @midi_sources.delete(source)
     end
+    
+    protected
+    
+    def process_input(msgs)
+      @input_process.nil? ? msgs : @input_process.process(msgs)
+    end
          
     private
     
@@ -128,7 +133,8 @@ module Diamond
     end
     
     def initialize_input(devices)
-      @input_midi_channel_filter = MIDIChannelFilter.new(@channel) unless @channel.nil?
+      @input_process = Inst::ProcessChain.new
+      @input_process << MIDIMessage::Process::Filter.new(:channel, @channel) unless @channel.nil?
       receive_midi_from(get_inputs(devices))
     end
     
@@ -147,7 +153,7 @@ module Diamond
       notes = notes.map do |note|
         note.kind_of?(String) ? klass[note].new(channel, velocity) : note
       end.compact
-      @input_midi_channel_filter.nil? ? notes : @input_midi_channel_filter.process(notes)
+      process_input(notes)
     end
         
     def midi_source_listener(source)
