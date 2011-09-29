@@ -3,12 +3,12 @@
 # MIDI arpeggiator in Ruby
 # (c)2011 Ari Russo and licensed under the Apache 2.0 License
 #
-$:.unshift File.join( File.dirname( __FILE__ ), '../../inst/lib')
+$:.unshift File.join( File.dirname( __FILE__ ), '../../diamond-engine/lib')
 
 # libs 
 require "forwardable"
 
-require "inst"
+require "diamond-engine"
 require "midi-eye"
 require "unimidi"
 

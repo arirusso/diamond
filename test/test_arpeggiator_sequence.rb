@@ -5,8 +5,8 @@ require 'helper'
 class ArpeggiatorSequenceTest < Test::Unit::TestCase
 
   include Diamond
+  include DiamondEngine
   include MIDIMessage
-  include Inst
   include TestHelper
   
   def test_set_rate

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 module Diamond
   
-  class Arpeggiator < Inst::MIDISequencer
+  class Arpeggiator < DiamondEngine::MIDISequencer
     
     extend Forwardable
     
@@ -133,7 +133,7 @@ module Diamond
     end
     
     def initialize_input(devices)
-      @input_process = Inst::ProcessChain.new
+      @input_process = DiamondEngine::ProcessChain.new
       @input_process << MIDIMessage::Process::Filter.new(:channel, @channel) unless @channel.nil?
       receive_midi_from(get_inputs(devices))
     end
