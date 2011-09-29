@@ -11,8 +11,8 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 require "diamond"
 
-@input = UniMIDI::Input.first.open
-@output = UniMIDI::Output.first.open
+@input = UniMIDI::Input.use(:first)
+@output = UniMIDI::Output.use(:first)
 
 opts = { 
   :gate => 90,   

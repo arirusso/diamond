@@ -13,8 +13,8 @@ require "diamond"
 # here is an example that explains a bit more about selecting devices with unimidi:
 # http://github.com/arirusso/unimidi/blob/master/examples/select_a_device.rb
 #
-@input = UniMIDI::Input.first.open
-@output = UniMIDI::Output.first.open
+@input = UniMIDI::Input.use(:first)
+@output = UniMIDI::Output.use(:first)
 
 opts = { 
   :gate => 90,   
