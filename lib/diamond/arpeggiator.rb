@@ -121,7 +121,7 @@ module Diamond
     protected
     
     def process_input(msgs)
-      @input_process.nil? ? msgs : @input_process.process(msgs)
+      @input_process.process(msgs)
     end
          
     private
