@@ -35,7 +35,7 @@ module Diamond
     
     # yields to <em>block</em>, passing in the next messages in the queue
     # also returns the next messages
-    def step(pointer, &block)
+    def at(pointer, &block)
       if @changed && (pointer % @rate == 0)
         update_sequence
         @changed = false
