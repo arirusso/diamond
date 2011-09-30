@@ -80,11 +80,6 @@ module Diamond
       output_channel_processor.channel = val
     end
     
-    # open the arpeggiator for editing
-    def edit(&block)
-      self.instance_eval(&block)
-    end
-    
     # add input notes. takes a single note or an array of notes
     def add(notes, options = {})
       notes = [notes].flatten
