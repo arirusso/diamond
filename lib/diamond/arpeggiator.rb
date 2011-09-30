@@ -23,7 +23,9 @@ module Diamond
                    :pattern_offset,
                    :pattern_offset=,
                    :resolution,
-                   :resolution=
+                   :resolution=,
+                   :transpose,
+                   :transpose=
                 
     DefaultChannel = 0
     DefaultVelocity = 100
