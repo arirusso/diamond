@@ -23,7 +23,7 @@ Ruby 1.9.2+ or JRuby in 1.9 mode
 
 Gem Dependencies:
 
-{diamond-engine}[http://github.com/arirusso/diamond-engine], {midi-eye}[http://github.com/arirusso/midi-eye], {midi-message}[http://github.com/arirusso/midi-message], {topaz}[http://github.com/arirusso/topaz], and {unimidi}[http://github.com/arirusso/unimidi]
+{inst}[http://github.com/arirusso/inst], {midi-eye}[http://github.com/arirusso/midi-eye], {midi-message}[http://github.com/arirusso/midi-message], {topaz}[http://github.com/arirusso/topaz], and {unimidi}[http://github.com/arirusso/unimidi]
 
 these will install automatically with the gem
 
@@ -75,7 +75,9 @@ Check out these posts and examples for more
  
 ==== Posts:
 
+* {Introduction}[http://tx81z.blogspot.com/2011/07/diamond-midi-arpeggiator-in-ruby.html]
 * {Live coding Diamond and syncing multiple arpeggiators to each other}[http://tx81z.blogspot.com/2011/07/live-coding-with-diamond.html]
+* {A note about live coding in IRB with OSX}[http://tx81z.blogspot.com/2011/09/note-about-live-coding-in-irb-with-osx.html]
 
 ==== Examples:
 
