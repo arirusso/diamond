@@ -3,6 +3,8 @@ module Diamond
   
   class Arpeggiator < DiamondEngine::MIDISequencer
     
+    include DiamondEngine::ReceivesOSC
+    
     extend Forwardable
     
     attr_reader :channel,
@@ -65,9 +67,11 @@ module Diamond
       
       initialize_input(devices)
       initialize_sequence(resolution, options)  
-      
+
       super(tempo_or_input, options.merge({ :sequence => @sequence }))
       @output_process << MIDIMessage::Process::Limit.new(:channel, output_channel, :name => :output_channel) unless output_channel.nil?
+      
+      initialize_osc_server(options[:osc_receive_port], options[:osc_map]) unless options[:osc_receive_port].nil? || options[:osc_map].nil?
       
       edit(&block) unless block.nil?
     end
