@@ -8,7 +8,7 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 require "diamond"
 
-@output = UniMIDI::Output.use(:first)
+@output = UniMIDI::Output.gets
 
 map = [
   { 
