@@ -3,13 +3,12 @@ module Diamond
   
   class Arpeggiator < DiamondEngine::MIDISequencer
     
+    include DiamondEngine::ReceivesMIDI
     include DiamondEngine::ReceivesOSC
     
     extend Forwardable
     
-    attr_reader :channel,
-                :midi_sources,
-                :sequence
+    attr_reader :sequence
     
     def_delegators :sequence, 
                    :gate,
@@ -62,28 +61,18 @@ module Diamond
     def initialize(tempo_or_input, options = {}, &block)
       devices = [(options[:midi] || [])].flatten
       resolution = options[:resolution] || 128
-      @channel = options[:input_channel] || options[:channel]
-      output_channel = options[:output_channel]
+      rx_channel = options[:rx_channel]
+      tx_channel = options[:tx_channel] || options[:channel]
       
-      initialize_input(devices)
+      initialize_midi_input(get_inputs(devices), rx_channel)
       initialize_sequence(resolution, options)  
 
       super(tempo_or_input, options.merge({ :sequence => @sequence }))
-      @output_process << MIDIMessage::Process::Limit.new(:channel, output_channel, :name => :output_channel) unless output_channel.nil?
+      self.tx_channel = tx_channel unless tx_channel.nil?
       
-      initialize_osc_server(options[:osc_receive_port], options[:osc_map]) unless options[:osc_receive_port].nil? || options[:osc_map].nil?
+      initialize_osc_receiver(options[:osc_receive_port], options[:osc_map]) unless options[:osc_receive_port].nil? || options[:osc_map].nil?
       
       edit(&block) unless block.nil?
-    end
-    
-    def output_channel_processor
-      @output_processors.find_by_name(:output_channel)
-    end
-    
-    # set the midi channel to restrict input messages to 
-    def channel=(val)
-      @channel = val
-      output_channel_processor.channel = val
     end
     
     # add input notes. takes a single note or an array of notes
@@ -104,39 +93,52 @@ module Diamond
     # remove all input notes
     def remove_all
       @sequence.remove_all
-    end    
+    end
+    alias_method :clear, :remove_all
     
-    # add a midi input to use as a source for arpeggiator notes
-    def add_midi_source(source)      
-      listener = midi_source_listener(source)
-      @midi_sources ||= {}
-      @midi_sources[source] = listener
+    def omni_on
+      @input_channel_filter = nil
+      @input_process.delete_if { |p| p.name == :input_channel }
+    end
+
+    # set the midi channel to restrict input messages to
+    # other messages will be ignored     
+    def rx_channel=(val)
+      @input_channel_filter.nil? ? initialize_rx_channel(val) : @input_channel_filter.bandwidth = val
     end
     
-    # remove a midi input that was being used as a source for arpeggiator notes
-    def remove_midi_source(source)
-      @midi_sources[source].stop
-      @midi_sources.delete(source)
+    # midi channel that input messages are restricted to
+    # other messages are ignored
+    # when nil, the arpeggiator accepts all channels 
+    def rx_channel
+      @input_channel_filter.nil? ? nil : @input_channel_filter.bandwidth
+    end
+        
+    # set the midi channel to restrict output messages to 
+    # all messages will be converted to this channel
+    def tx_channel=(val)
+      @output_channel_processor.nil? ? initialize_tx_channel(val) : @output_channel_processor.range = val
+    end
+    alias_method :channel=, :tx_channel=
+    
+    # midi channel that output messages are converted to
+    # when nil, messages retain whatever channel the input message that they 
+    # were derived from had
+    def tx_channel
+      @output_channel_processor.nil? ? nil : @output_channel_processor.range
     end
     
     protected
     
     def process_input(msgs)
-      @input_process.process(msgs)
+      @input_process.process([msgs].flatten)
     end
          
     private
-    
-    # initialize the arpeggiator sequence
-    def initialize_sequence(resolution, options = {})
-      @sequence = ArpeggiatorSequence.new(resolution, options)
-      @sequence.transpose(options[:transpose]) unless options[:transpose].nil?    
-    end
-    
-    def initialize_input(devices)
-      @input_process = DiamondEngine::ProcessChain.new
-      @input_process << MIDIMessage::Process::Filter.new(:channel, @channel) unless @channel.nil?
-      receive_midi_from(get_inputs(devices))
+
+    def initialize_tx_channel(output_channel)
+      @output_channel_processor = MIDIMessage::Process::Limit.new(:channel, output_channel, :name => :output_channel)
+      @output_process << @output_channel_processor
     end
     
     # returns only valid inputs
@@ -144,8 +146,22 @@ module Diamond
       devices.find_all { |d| d.respond_to?(:type) && d.type == :input && d.respond_to?(:gets) }.compact
     end
     
-    def receive_midi_from(input_devices)
-      input_devices.each { |source| add_midi_source(source) }
+    # initialize the arpeggiator sequence
+    def initialize_sequence(resolution, options = {})
+      @sequence = ArpeggiatorSequence.new(resolution, options)
+      @sequence.transpose(options[:transpose]) unless options[:transpose].nil?    
+    end
+    
+    def initialize_midi_input(devices, rx_channel)
+      @input_process = DiamondEngine::ProcessChain.new
+      self.rx_channel = rx_channel unless rx_channel.nil?
+      initialize_midi_receiver(get_inputs(devices))
+      initialize_midi_note_listener
+    end
+    
+    def initialize_rx_channel(channel)
+      @input_channel_filter = MIDIMessage::Process::Filter.new(:channel, channel, :name => :input_channel)
+      @input_process << @input_channel_filter
     end
     
     def sanitize_input_notes(notes, klass, options)
@@ -157,12 +173,9 @@ module Diamond
       process_input(notes)
     end
         
-    def midi_source_listener(source)
-      listener = MIDIEye::Listener.new(source)
-      listener.listen_for(:class => MIDIMessage::NoteOn) { |event| add(event[:message]) }
-      listener.listen_for(:class => MIDIMessage::NoteOff) { |event| remove(event[:message]) }
-      listener.start(:background => true)
-      listener
+    def initialize_midi_note_listener  
+      receive_midi(:add_note, :class => MIDIMessage::NoteOn) { |this, event| this.add(event[:message]) }
+      receive_midi(:remove_note, :class => MIDIMessage::NoteOff) { |this, event| this.remove(event[:message]) }
     end
   
   end

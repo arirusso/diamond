@@ -13,11 +13,12 @@ require "diamond"
 # here is an example that explains a bit more about selecting devices with unimidi:
 # http://github.com/arirusso/unimidi/blob/master/examples/select_a_device.rb
 #
-@input = UniMIDI::Input.use(:first)
-@output = UniMIDI::Output.use(:first)
+
+@input = UniMIDI::Input.gets
+@output = UniMIDI::Output.gets
 
 opts = { 
-  :gate => 90,   
+  :gate => 20,   
   :interval => 7,
   :midi => [@output, @input],
   :pattern => Diamond::Pattern["UpDown"],
@@ -25,16 +26,18 @@ opts = {
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(140, opts)
+arp = Diamond::Arpeggiator.new(105, opts)
 
 # normally by default the arpeggiator will be in "omni mode" or in other words, accept notes
 # from all MIDI channels
 
 # to tell the arpeggiator to only look at a single channel, just set a channel
 
-arp.input_channel = 0 
+# can also be passed in via the :rx_channel option
 
-# you can also call arp.channel = nil to return it to omni mode
+arp.rx_channel = 0 
+
+# you can also call arp.rx_channel = nil or arp.omni_on to return it to omni mode
 
 # (Diamond does not respond to MIDI Omni On/Off messages)
    
