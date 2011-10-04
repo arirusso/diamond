@@ -8,7 +8,7 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 require "diamond"
 
-@output = UniMIDI::Output.use(:first)
+@output = UniMIDI::Output.gets
 
 opts = { 
   :gate => 90,   
@@ -19,9 +19,9 @@ opts = {
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(175, opts)
+arp = Diamond::Arpeggiator.new(139, opts)
 
-chord = ["C3", "G3", "Bb3", "A4"]
+chord = ["C1", "G1", "Bb2", "A3"]
 
 arp.add(chord)
    
