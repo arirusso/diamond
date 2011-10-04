@@ -23,7 +23,7 @@ Ruby 1.9.2+ or JRuby in 1.9 mode
 
 Gem Dependencies:
 
-{inst}[http://github.com/arirusso/inst], {midi-eye}[http://github.com/arirusso/midi-eye], {midi-message}[http://github.com/arirusso/midi-message], {topaz}[http://github.com/arirusso/topaz], and {unimidi}[http://github.com/arirusso/unimidi]
+{diamond-engine}[http://github.com/arirusso/diamond-engine], {midi-eye}[http://github.com/arirusso/midi-eye], {midi-message}[http://github.com/arirusso/midi-message], {topaz}[http://github.com/arirusso/topaz], and {unimidi}[http://github.com/arirusso/unimidi]
 
 these will install automatically with the gem
 
@@ -31,9 +31,9 @@ these will install automatically with the gem
 
   require "diamond"
 
-First, select a MIDI output using unimidi.  ({more...}[http://github.com/arirusso/unimidi/blob/master/examples/select_a_device.rb])
+First, select a MIDI output using unimidi.  ({more...}[http://tx81z.blogspot.com/2011/10/selecting-midi-device-with-unimidi.html])
 
-  @output = UniMIDI::Output.first.open
+  @output = UniMIDI::Output.gets
 
 The Arpeggiator has a number of {optional parameters}[http://rubydoc.info/github/arirusso/diamond/master/Diamond/Arpeggiator:initialize].  For this example, here's a straightforward setup
 
