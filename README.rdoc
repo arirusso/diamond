@@ -6,12 +6,11 @@
 
 == Features
 
-* Classic arpeggiator functions
-* Uses {unimidi}[http://github.com/arirusso/unimidi] for cross-platform compatibility
-* Run as a background thread for {live coding}[http://en.wikipedia.org/wiki/Live_coding]
+* Classic arpeggiator functions which can be controlled via {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control] or MIDI
+* Cross-platform compatibile using Ruby 1.9 (MRI) or JRuby
+* Run in a background thread for {live coding}[http://en.wikipedia.org/wiki/Live_coding]
 * Generate or sync to MIDI clock
 * Sync between multiple Diamond instances
-* Control via {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control]
 * {Preset}[http://github.com/arirusso/diamond/blob/master/lib/pattern_presets.rb] and {user-definable}[http://github.com/arirusso/diamond/blob/master/examples/define_pattern.rb] pattern algorithms 
 
 == Installation
