@@ -36,7 +36,7 @@ module Diamond
     #
     # the constructor also accepts a number of options -- these options are all editable after initialization by calling for example <em>arpeggiator.gate = 4</em>
     #
-    # * <b>channel</b> (or <b>input_channel</b>) - only respond to input messages to the given MIDI channel. will operate on all input sources
+    # * <b>rx_channel</b> - only respond to input messages to the given MIDI channel. will operate on all input sources. if not given, or nil the arpeggiator will work in omni mode and respond to all messages
     #
     # * <b>gate</b> - <tt>gate</tt> refers to how long the arpeggiated notes will be held out. the <tt>gate</tt> value is a percentage based on the rate.  if the rate is 4, then a gate of 100 is equal to a quarter note. the default <tt>gate</tt> is 75. <tt>Gate</tt> must be positive and less than 500
     #
@@ -46,7 +46,7 @@ module Diamond
     #
     # * <b>midi_clock_output</b> - should this Arpeggiator output midi clock? defaults to false
     #
-    # * <b>output_channel</b> - send output messages to the given MIDI channel despite what channel the input notes were intended for.
+    # * <b>tx_channel</b> - send output messages to the given MIDI channel despite what channel the input notes were intended for.
     #
     # * <b>pattern_offset</b> - <tt>pattern_offset</tt> n means that the arpeggiator will begin on the nth note of the sequence (but not omit any notes). the default <tt>pattern_offset</tt> is 0.
     # 
@@ -64,7 +64,7 @@ module Diamond
       rx_channel = options[:rx_channel]
       tx_channel = options[:tx_channel] || options[:channel]
       
-      initialize_midi_input(get_inputs(devices), rx_channel)
+      initialize_midi_input(get_inputs(devices), rx_channel, options[:midi_map])
       initialize_sequence(resolution, options)  
 
       super(tempo_or_input, options.merge({ :sequence => @sequence }))
@@ -75,18 +75,19 @@ module Diamond
       edit(&block) unless block.nil?
     end
     
-    # add input notes. takes a single note or an array of notes
-    def add(notes, options = {})
-      notes = [notes].flatten
+    # add input notes. takes a single note, multiple note args or an array of notes
+    def add(*a)
+      options = a.last.kind_of?(Hash) ? a.pop : {}
+      notes = [a].flatten
       notes = sanitize_input_notes(notes, MIDIMessage::NoteOn, options)
       @sequence.add(notes)
     end
     alias_method :<<, :add
     
-    # remove input notes. takes a single note or an array of notes
-    def remove(notes, options = {})
-      notes = [notes].flatten
-      notes = sanitize_input_notes(notes, MIDIMessage::NoteOff, options)
+    # remove input notes. takes a single note, multiple note args or an array of notes
+    def remove(*a)
+      notes = [a].flatten
+      #notes = sanitize_input_notes(notes, MIDIMessage::NoteOff, options)
       @sequence.remove(notes)
     end
     
@@ -152,10 +153,10 @@ module Diamond
       @sequence.transpose(options[:transpose]) unless options[:transpose].nil?    
     end
     
-    def initialize_midi_input(devices, rx_channel)
+    def initialize_midi_input(devices, rx_channel, map)
       @input_process = DiamondEngine::ProcessChain.new
       self.rx_channel = rx_channel unless rx_channel.nil?
-      initialize_midi_receiver(get_inputs(devices))
+      initialize_midi_receiver(get_inputs(devices), map)
       initialize_midi_note_listener
     end
     
