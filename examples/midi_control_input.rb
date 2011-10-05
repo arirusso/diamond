@@ -19,7 +19,7 @@ map = [
     :using => :value,
     :original_range => (0..127),
     :new_range => (-24..24),
-    :property => :interval
+    :property => :interval=
   }
 ]
 

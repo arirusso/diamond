@@ -36,7 +36,7 @@ module Diamond
     #
     # the constructor also accepts a number of options -- these options are all editable after initialization by calling for example <em>arpeggiator.gate = 4</em>
     #
-    # * <b>rx_channel</b> - only respond to input messages to the given MIDI channel. will operate on all input sources. if not given, or nil the arpeggiator will work in omni mode and respond to all messages
+    # * <b>rx_channel (or channel)</b> - only respond to input messages to the given MIDI channel. will operate on all input sources. if not given, or nil the arpeggiator will work in omni mode and respond to all messages
     #
     # * <b>gate</b> - <tt>gate</tt> refers to how long the arpeggiated notes will be held out. the <tt>gate</tt> value is a percentage based on the rate.  if the rate is 4, then a gate of 100 is equal to a quarter note. the default <tt>gate</tt> is 75. <tt>Gate</tt> must be positive and less than 500
     #
@@ -61,8 +61,8 @@ module Diamond
     def initialize(tempo_or_input, options = {}, &block)
       devices = [(options[:midi] || [])].flatten
       resolution = options[:resolution] || 128
-      rx_channel = options[:rx_channel]
-      tx_channel = options[:tx_channel] || options[:channel]
+      rx_channel = options[:rx_channel] || options[:channel]
+      tx_channel = options[:tx_channel]
       
       initialize_midi_input(get_inputs(devices), rx_channel, options[:midi_map])
       initialize_sequence(resolution, options)  
@@ -97,6 +97,8 @@ module Diamond
     end
     alias_method :clear, :remove_all
     
+    # sets the rx_channel to nil, allowing the arpeggiator to respond to
+    # messages on all channels
     def omni_on
       @input_channel_filter = nil
       @input_process.delete_if { |p| p.name == :input_channel }
@@ -107,6 +109,7 @@ module Diamond
     def rx_channel=(val)
       @input_channel_filter.nil? ? initialize_rx_channel(val) : @input_channel_filter.bandwidth = val
     end
+    alias_method :channel=, :rx_channel=
     
     # midi channel that input messages are restricted to
     # other messages are ignored
@@ -114,13 +117,13 @@ module Diamond
     def rx_channel
       @input_channel_filter.nil? ? nil : @input_channel_filter.bandwidth
     end
+    alias_method :channel, :rx_channel
         
     # set the midi channel to restrict output messages to 
     # all messages will be converted to this channel
     def tx_channel=(val)
       @output_channel_processor.nil? ? initialize_tx_channel(val) : @output_channel_processor.range = val
     end
-    alias_method :channel=, :tx_channel=
     
     # midi channel that output messages are converted to
     # when nil, messages retain whatever channel the input message that they 
