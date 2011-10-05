@@ -21,12 +21,14 @@ opts = {
 # I gave these different tempos but once they are synced it won't matter
 
 arps = [
-  Diamond::Arpeggiator.new(138, opts),
-  Diamond::Arpeggiator.new(150, opts),
-  Diamond::Arpeggiator.new(160, opts)
+  Diamond::Arpeggiator.new(109, opts),
+  Diamond::Arpeggiator.new(100, opts),
+  Diamond::Arpeggiator.new(90, opts)
 ]
 
-chord = ["C3", "G3", "Bb3", "A4"]
+chord = ["C0", "G0", "Bb0", "A2"]
+
+arps.last.rate = 16
 
 arps.each_with_index do |arp, i|
   arp << chord

@@ -25,7 +25,7 @@ opts = {
 
 arp = Diamond::Arpeggiator.new(@input, opts)
 
-chord = ["C3", "G3", "Bb3", "A4"]
+chord = ["C0", "G0", "Bb0", "A1"]
 
 arp.add(chord)
    

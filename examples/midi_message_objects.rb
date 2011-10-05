@@ -21,11 +21,11 @@ opts = {
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(138, opts)
+arp = Diamond::Arpeggiator.new(108, opts)
 
 include MIDIMessage
 
-notes = ["C3", "E3", "A3", "Bb4"]
+notes = ["C1", "E1", "A1", "Bb2"]
 
 with(:channel => 0, :velocity => 120) do |midi|
   notes.each do |note|

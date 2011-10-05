@@ -21,7 +21,7 @@ opts = {
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(175, opts)
+arp = Diamond::Arpeggiator.new(75, opts)
 
 chord = ["C4", "E4", "G4"]
 
