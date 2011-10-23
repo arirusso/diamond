@@ -10,18 +10,16 @@ require "diamond"
 
 @output = UniMIDI::Output.gets
 
-map = [
-  { 
-    :pattern => '/1/fader1',
-    :range => (-24..24),
-    :property => :interval=
+map = {
+  "/1/fader1" => { 
+    :translate => -24..24,
+    :action => Proc.new { |arpeggiator, val| arpeggiator.interval = val }
   },
-  { 
-    :pattern => '/1/fader2',
-    :range => (-24..24),
-    :property => :transpose
+  "/1/fader2" => { 
+    :translate => -24..24,
+    :action => Proc.new { |arpeggiator, val| arpeggiator.transpose = val }
   }
-]
+}
 
 opts = { 
   :gate => 90,   
@@ -30,8 +28,9 @@ opts = {
   :pattern => Diamond::Pattern["UpDown"],
   :range => 4, 
   :rate => 8,
+  :resolution => 128,
   :osc_map => map,
-  :osc_receive_port => 8000
+  :osc_input_port => 8000
 }
 
 arp = Diamond::Arpeggiator.new(110, opts)

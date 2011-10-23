@@ -4,7 +4,7 @@ module Diamond
   class Arpeggiator < DiamondEngine::MIDISequencer
     
     include DiamondEngine::ReceivesMIDI
-    include DiamondEngine::ReceivesOSC
+    include OSCAccessible
     
     extend Forwardable
     
@@ -70,7 +70,8 @@ module Diamond
       super(tempo_or_input, options.merge({ :sequence => @sequence }))
       self.tx_channel = tx_channel unless tx_channel.nil?
       
-      initialize_osc_receiver(options[:osc_receive_port], options[:osc_map]) unless options[:osc_receive_port].nil? || options[:osc_map].nil?
+      use_osc = !options[:osc_input_port].nil?
+      osc_start(:input_port => options[:osc_input_port], :output => options[:osc_output], :map => options[:osc_map]) if use_osc
       
       edit(&block) unless block.nil?
     end

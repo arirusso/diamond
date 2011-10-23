@@ -21,11 +21,7 @@
 
 Ruby 1.9.2+ or JRuby in 1.9 mode
 
-Gem Dependencies:
-
-{diamond-engine}[http://github.com/arirusso/diamond-engine], {midi-eye}[http://github.com/arirusso/midi-eye], {midi-message}[http://github.com/arirusso/midi-message], {topaz}[http://github.com/arirusso/topaz], and {unimidi}[http://github.com/arirusso/unimidi]
-
-these will install automatically with the gem
+Requires the {diamond-engine}[http://github.com/arirusso/diamond-engine] and {osc-access}[http://github.com/arirusso/osc-access] gems (as well as all of their dependencies).  These should install automatically when you install Diamond using the gem.
 
 == Usage
 

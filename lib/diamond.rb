@@ -9,6 +9,7 @@ require "forwardable"
 
 require "diamond-engine"
 require "midi-eye"
+require "osc-access"
 require "unimidi"
 
 # classes
@@ -20,6 +21,6 @@ require "pattern_presets"
 
 module Diamond
   
-  VERSION = "0.3.0"
+  VERSION = "0.4.0"
   
 end
