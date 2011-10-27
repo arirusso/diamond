@@ -71,7 +71,7 @@ module Diamond
       self.tx_channel = tx_channel unless tx_channel.nil?
       
       use_osc = !options[:osc_input_port].nil?
-      osc_start(:input_port => options[:osc_input_port], :output => options[:osc_output], :map => options[:osc_map]) if use_osc
+      osc_start(:input_port => options[:osc_input_port], :output => options[:osc_output], :map => options[:osc_map], :service_name => options[:name]) if use_osc
       
       edit(&block) unless block.nil?
     end
