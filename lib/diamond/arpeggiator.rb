@@ -80,8 +80,10 @@ module Diamond
     def add(*a)
       options = a.last.kind_of?(Hash) ? a.pop : {}
       notes = [a].flatten
+      note_offs = notes.find_all { |n| n.kind_of?(MIDIMessage::NoteOff) }
       notes = sanitize_input_notes(notes, MIDIMessage::NoteOn, options)
       @sequence.add(notes)
+      remove(*note_offs)
     end
     alias_method :<<, :add
     
