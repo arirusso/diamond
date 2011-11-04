@@ -106,9 +106,9 @@ class ApeggiatorTest < Test::Unit::TestCase
   def test_mute
     arp = Arpeggiator.new(175)    
     assert_equal(false, arp.muted?)       
-    arp.mute
+    arp.mute = true
     assert_equal(true, arp.muted?)
-    arp.unmute
+    arp.mute = false
     assert_equal(false, arp.muted?)
     arp.toggle_mute
     assert_equal(true, arp.muted?)
