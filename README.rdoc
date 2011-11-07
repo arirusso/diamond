@@ -2,7 +2,7 @@
 
 {MIDI arpeggiator}[http://en.wikipedia.org/wiki/Arpeggiator#Arpeggiator] in Ruby
 
-{pic}[http://images.treetrouble.net/images/diamond.jpg]
+{pic}[http://img256.imageshack.us/img256/4514/diamondd.jpg]
 
 == Features
 
