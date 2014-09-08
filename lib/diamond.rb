@@ -1,12 +1,11 @@
-#!/usr/bin/env ruby
 #
+# Diamond
 # MIDI arpeggiator in Ruby
 # (c)2011 Ari Russo and licensed under the Apache 2.0 License
 #
 
 # libs 
 require "forwardable"
-
 require "diamond-engine"
 require "midi-eye"
 require "osc-access"
@@ -17,6 +16,7 @@ require "diamond/arpeggiator"
 require "diamond/arpeggiator_sequence"
 require "diamond/pattern"
 
+# config
 require "pattern_presets"
 
 module Diamond
