@@ -144,7 +144,7 @@ module Diamond
     private
 
     def initialize_tx_channel(output_channel)
-      @output_channel_processor = MIDIMessage::Process::Limit.new(:channel, output_channel, :name => :output_channel)
+      @output_channel_processor = MIDIFX::Limit.new(:channel, output_channel, :name => :output_channel)
       @output_process << @output_channel_processor
     end
     
@@ -167,7 +167,7 @@ module Diamond
     end
     
     def initialize_rx_channel(channel)
-      @input_channel_filter = MIDIMessage::Process::Filter.new(:channel, channel, :name => :input_channel)
+      @input_channel_filter = MIDIFX::Filter.new(:channel, channel, :name => :input_channel)
       @input_process << @input_channel_filter
     end
     
