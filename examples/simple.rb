@@ -2,8 +2,7 @@
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 #
-# this is the most basic setup possible
-# we just set up an arpeggiator and let it run in the foreground
+# A basic arpeggiator that runs in the foreground
 #
 
 require "diamond"
@@ -16,13 +15,18 @@ opts = {
   :midi => @output,
   :pattern => Diamond::Pattern["UpDown"],
   :range => 4, 
-  :rate => 8
+  :rate => 8,
+  :tx_channel => 1
 }
 
-arp = Diamond::Arpeggiator.new(101, opts)
+clock = Diamond::Clock.new(101)
+
+arp = Diamond::Arpeggiator.new(opts)
+
+clock << arp
 
 chord = ["C1", "G1", "Bb2", "A3"]
 
-arp.add(chord)
+arp.add(*chord)
    
-arp.start(:focus => true)
+clock.start(:focus => true)

@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 module Diamond
   
   class ArpeggiatorSequence
@@ -6,6 +5,7 @@ module Diamond
     extend Forwardable
     
     attr_reader :gate,
+                :input_queue,
                 :interval,
                 :pattern,
                 :range,
@@ -13,7 +13,7 @@ module Diamond
                 :pattern_offset,
                 :resolution
 
-    def_delegators :@sequence, :length
+    def_delegators :@sequence, :each, :first, :last, :length
         
     def initialize(resolution, options = {})
       @resolution = resolution
@@ -22,7 +22,7 @@ module Diamond
       @range = constrain((options[:range] || 3), :min => 0)
       @pattern_offset = options[:pattern_offset] || 0
       @pattern = options[:pattern] || Pattern.all.first
-      @input_note_messages = []
+      @input_queue = []
       @rate = constrain((options[:rate] || 8), :min => 0, :max => @resolution)
       @gate = constrain((options[:gate] || 75), :min => 1, :max => 500)
       
@@ -36,7 +36,7 @@ module Diamond
     # yields to <em>block</em>, passing in the next messages in the queue
     # also returns the next messages
     def at(pointer, &block)
-      if @changed && (pointer % @rate == 0)
+      if changed? && (pointer % @rate == 0)
         update_sequence
         @changed = false
       end
@@ -45,11 +45,16 @@ module Diamond
       yield(messages) unless block.nil?
       messages
     end
+
+    def changed?
+      @changed
+    end
     
     # add input note_messages
     # takes a single message or an array
     def add(note_messages)
-      @input_note_messages += [note_messages].flatten
+      messages = [note_messages].flatten.compact
+      @input_queue.concat(messages)
       mark_changed
       true
     end
@@ -57,7 +62,7 @@ module Diamond
     # remove input note messages with the same note value
     # takes a single message or an array
     def remove(note_messages) 
-      @input_note_messages.delete_if do |msg|
+      @input_queue.delete_if do |msg|
         deletion_queue = [note_messages].flatten.map { |note_message| note_message.note }
         deletion_queue.include?(msg.note)
       end
@@ -67,7 +72,7 @@ module Diamond
     
     # remove all input note messages
     def remove_all
-      @input_note_messages.clear
+      @input_queue.clear
       mark_changed
       true
     end
@@ -169,7 +174,7 @@ module Diamond
         @pattern_offset.times { notes.push(notes.shift) }
         notes.each_with_index do |note_msg, i| 
           index = i * note_length
-          @sequence[index] = [DiamondEngine::Event::Note.new(note_msg, @gate)] unless @sequence[index].nil?
+          @sequence[index] = [MIDIInstrument::NoteEvent.new(note_msg, @gate)] unless @sequence[index].nil?
         end
       end
       @sequence
@@ -182,7 +187,7 @@ module Diamond
     def get_note_sequence
       notes = []
       computed_pattern.each do |degree|
-        notes += @input_note_messages.map do |msg| 
+        notes += @input_queue.map do |msg| 
           note = msg.note + degree + @transpose
           MIDIMessage::NoteOn.new(msg.channel, note, msg.velocity)
         end

@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 module Diamond
   
   # the Proc should return a set of scale degrees such as

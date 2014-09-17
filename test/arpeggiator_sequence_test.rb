@@ -1,13 +1,9 @@
-#!/usr/bin/env ruby
-
-require 'helper'
+require "helper"
 
 class ArpeggiatorSequenceTest < Test::Unit::TestCase
 
   include Diamond
-  include DiamondEngine
   include MIDIMessage
-  include TestHelper
   
   def test_set_rate
     a = ArpeggiatorSequence.new(16, :rate => 8)
@@ -49,9 +45,9 @@ class ArpeggiatorSequenceTest < Test::Unit::TestCase
     seq.add(notes)
     llseq = seq.send(:update_sequence)
     assert_equal(24, llseq.length)
-    assert_equal(Event::Note, llseq[0][0].class)
-    assert_equal(Event::Note, llseq[4][0].class)
-    assert_equal(Event::Note, llseq[8][0].class)
+    assert_equal(MIDIInstrument::NoteEvent, llseq[0][0].class)
+    assert_equal(MIDIInstrument::NoteEvent, llseq[4][0].class)
+    assert_equal(MIDIInstrument::NoteEvent, llseq[8][0].class)
     assert_equal([], llseq[1])
     assert_equal([], llseq[5])
     assert_equal([], llseq[9])
