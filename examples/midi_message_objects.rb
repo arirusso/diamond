@@ -2,13 +2,15 @@
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 #
-# this example shows how to create and pass in messages using midi-message
+# This example shows how to create and pass in messages using midi-message
 #
 # http://github.com/arirusso/midi-message
 #
 #
 
 require "diamond"
+
+include MIDIMessage
 
 @output = UniMIDI::Output.gets
 
@@ -21,9 +23,9 @@ opts = {
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(108, opts)
-
-include MIDIMessage
+clock = Diamond::Clock.new(108)
+arp = Diamond::Arpeggiator.new(opts)
+clock << arp
 
 notes = ["C1", "E1", "A1", "Bb2"]
 
@@ -33,4 +35,4 @@ with(:channel => 0, :velocity => 120) do |midi|
   end 
 end
 
-arp.start(:focus => true)
+clock.start(:focus => true)
