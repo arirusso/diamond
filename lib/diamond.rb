@@ -19,9 +19,9 @@ require "diamond/api"
 
 # classes
 require "diamond/arpeggiator"
-require "diamond/arpeggiator_sequence"
 require "diamond/clock"
 require "diamond/pattern"
+require "diamond/sequence"
 require "diamond/sequence_parameters"
 
 # config

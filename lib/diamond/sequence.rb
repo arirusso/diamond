@@ -1,6 +1,6 @@
 module Diamond
 
-  class ArpeggiatorSequence
+  class Sequence
 
     extend Forwardable
 
@@ -12,7 +12,6 @@ module Diamond
       @changed = false
       @input_queue = []
       @queue = []
-      update_sequence
     end
 
     # The bucket of messages for the given pointer
@@ -74,13 +73,20 @@ module Diamond
       messages.flatten.compact
     end
 
+    # Mark the sequence as changed
+    # @return [Boolean]
+    def mark_changed
+      @changed = true
+    end
+
     protected
 
     # Apply the given parameters object
     # @param [SequenceParameters] parameters
     # @return [SequenceParameters]
-    def apply(parameters)
+    def use_parameters(parameters)
       @parameter = parameters
+      update
     end
 
     private
@@ -109,15 +115,9 @@ module Diamond
       end
     end
 
-    # Mark the sequence as changed
-    # @return [Boolean]
-    def mark_changed
-      @changed = true
-    end
-
     # Commit changes to the sequence
     # @return [ArpeggiatorSequence]
-    def update_sequence
+    def update
       notes = get_note_sequence
       initialize_sequence(notes.length)
       populate_sequence(notes) unless notes.empty?
@@ -136,9 +136,9 @@ module Diamond
     # @param [Array<MIDIMessage::NoteOn>] notes
     # @return [Array<Array<NoteEvent>>]
     def populate_sequence(notes)
-      @pattern_offset.times { notes.push(notes.shift) }
+      @parameter.pattern_offset.times { notes.push(notes.shift) }
       notes.each_with_index do |note, i| 
-        index = i * duration
+        index = i * @parameter.duration
         populate_bucket(index, note) unless @sequence[index].nil?
       end
       @sequence

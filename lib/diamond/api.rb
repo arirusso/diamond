@@ -53,6 +53,8 @@ module Diamond
         base.send(:alias_method, :clear, :remove_all)
       end
 
+    end
+
     module SequenceParameters
 
       def self.included(base)

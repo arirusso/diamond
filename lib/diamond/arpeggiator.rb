@@ -29,7 +29,7 @@ module Diamond
       devices = MIDIInstrument::Device.partition(options[:midi])
       resolution = options[:resolution] || 128
 
-      @sequence = ArpeggiatorSequence.new
+      @sequence = Sequence.new
       @parameter = SequenceParameters.new(@sequence, resolution, options) { @sequence.mark_changed }
       @sequencer = Sequencer.new
       initialize_midi(devices, options)

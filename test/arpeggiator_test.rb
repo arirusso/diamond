@@ -6,16 +6,16 @@ class Diamond::ApeggiatorTest < Test::Unit::TestCase
     arp = Diamond::Arpeggiator.new(:rx_channel => 3)
     message = MIDIMessage::NoteOn["C4"].new(10, 100)
     arp.add(message)
-    assert_empty arp.sequence.input_queue
+    assert_empty arp.sequence.instance_variable_get("@input_queue")
 
     message2 = MIDIMessage::NoteOn["C4"].new(3, 100)
     arp.add(message2)
-    arp.sequence.input_queue.expects(:concat).once.with([message2])
+    arp.sequence.instance_variable_get("@input_queue").expects(:concat).once.with([message2])
 
     arp.omni_on
     message3 = MIDIMessage::NoteOn["C4"].new(2, 100)
     arp.add(message3)
-    arp.sequence.input_queue.expects(:concat).once.with([message3])       
+    arp.sequence.instance_variable_get("@input_queue").expects(:concat).once.with([message3])       
   end
   
   def test_set_rate

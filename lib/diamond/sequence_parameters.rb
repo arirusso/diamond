@@ -25,7 +25,7 @@ module Diamond
       @resolution = resolution
       @callback = callback
       apply_options(options)
-      sequence.send(:apply, self)
+      sequence.send(:use_parameters, self)
     end
 
     # Set the gate property
@@ -133,9 +133,10 @@ module Diamond
     def constrain(value, options = {})
       min = options[:range].nil? ? options[:min] : options[:range].begin
       max = options[:range].nil? ? options[:max] : options[:range].end
-      new_value = [value, min].max unless min.nil?
-      new_value = [value, max].min unless max.nil?
-      new_value || value
+      new_value = value
+      new_value = min.nil? ? new_value : [new_value, min].max
+      new_value = max.nil? ? new_value : [new_value, max].min
+      new_value
     end
 
   end
