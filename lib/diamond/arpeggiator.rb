@@ -1,5 +1,6 @@
 module Diamond
 
+  # The arpeggiator core
   class Arpeggiator
 
     include API::MIDI
@@ -27,8 +28,9 @@ module Diamond
       devices = MIDIInstrument::Device.partition(options[:midi])
       resolution = options[:resolution] || 128
 
+      @sequence = ArpeggiatorSequence.new(resolution, options)
+      @sequencer = Sequencer.new
       initialize_midi(devices, options)
-      initialize_sequencer(resolution, devices[:output], options)
       initialize_osc(options) if !!options[:osc_input_port]
     end
 
@@ -40,42 +42,61 @@ module Diamond
     end
     alias_method :<<, :add
 
+    # Add note offs to cancel input
+    # @param [Array<MIDIMessage>, MIDIMessage, *MIDIMessage] args
+    # @return [Array<MIDIMessage>]
     def remove(*args)
+      # should convert strings/note on to note off
       @midi.input.add(*args)
     end
 
+    # Emit any note off messages that are currently pending in the queue.  The clock triggers this 
+    # when stopping or pausing
+    # @return [Array<MIDIMessage::NoteOff>]
     def emit_pending_note_offs
       messages = @sequence.pending_note_offs
       @midi.output.puts(*messages)
+      messages
     end
 
     private
 
-    def sanitize_input_notes(notes, klass, options)
-      channel = options[:channel] || DefaultChannel
-      velocity = options[:velocity] || DefaultVelocity
-      notes = notes.map do |note|
-        note.kind_of?(String) ? klass[note].new(channel, velocity) : note
-      end.compact
-      process_input(notes)
-    end
-
+    # Initialize MIDI input and output
+    # @param [Hash] devices
+    # @param [Hash] options
+    # @option options [Fixnum] :channel The receive channel (also: :rx_channel)
+    # @option options [Fixnum] :tx_channel The transmit channel
+    # @return [Boolean]
     def initialize_midi(devices, options = {})
       @midi = MIDIInstrument::Node.new
-      @midi.input.devices.concat(devices[:input])
-      @midi.output.devices.concat(devices[:output])
-      @midi.input.channel = options[:rx_channel] || options[:channel]
-      @midi.output.channel = options[:tx_channel] 
-      @midi.input.receive(:class => MIDIMessage::NoteOn) { |event| @sequence.add(event[:message]) }
-      @midi.input.receive(:class => MIDIMessage::NoteOff) { |event| @sequence.remove(event[:message]) }
+      initialize_midi_input(devices[:input], options[:rx_channel] || options[:channel])
+      initialize_midi_output(devices[:output], options[:tx_channel])
+      true
     end
 
-    def initialize_sequencer(resolution, outputs, options = {})
-      @sequence = ArpeggiatorSequence.new(resolution, options)
-      @sequencer = Sequencer.new
+    # Initialize MIDI input, adding and removing notes from the sequence
+    # @param [Array<UniMIDI::Input>] inputs
+    # @param [Fixnum] channel
+    # @return [Boolean]
+    def initialize_midi_input(inputs, channel)
+      @midi.input.devices.concat(inputs)
+      @midi.input.channel = channel
+      @midi.input.receive(:class => MIDIMessage::NoteOn) { |event| @sequence.add(event[:message]) }
+      @midi.input.receive(:class => MIDIMessage::NoteOff) { |event| @sequence.remove(event[:message]) }
+      true
+    end
+
+    # Initialize MIDI output, enabling the sequencer to emit notes
+    # @param [Array<UniMIDI::Output>] outputs
+    # @param [Fixnum] channel
+    # @return [Boolean]
+    def initialize_midi_output(outputs, channel)
+      @midi.output.devices.concat(outputs)
+      @midi.output.channel = channel 
       @sequencer.event.perform do |data| 
         @midi.output.puts(data) unless data.empty?
       end
+      true
     end
 
     def initialize_osc(options = {})
