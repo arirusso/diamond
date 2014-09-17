@@ -41,7 +41,12 @@ module Diamond
     alias_method :<<, :add
 
     def remove(*args)
-      @midi.add_messages(*args)
+      @midi.input.add(*args)
+    end
+
+    def emit_pending_note_offs
+      messages = @sequence.pending_note_offs
+      @midi.output.puts(*messages)
     end
 
     private

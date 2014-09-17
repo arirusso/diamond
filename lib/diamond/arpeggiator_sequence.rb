@@ -127,11 +127,14 @@ module Diamond
     end
     alias_method :transpose=, :transpose
     
-    # returns an array containing all NoteOff messages in the queue
+    # All NoteOff messages in the queue
     def pending_note_offs
-      @queue.map do |slot|
-        slot.find { |m| m.class == MIDIMessage::NoteOff } unless slot.nil?
-      end.flatten.compact
+      messages = @queue.map do |bucket|
+        unless bucket.nil?
+          bucket.select { |m| m.class == MIDIMessage::NoteOff }       
+        end
+      end
+      messages.flatten.compact
     end
         
     private

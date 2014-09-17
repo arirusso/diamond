@@ -4,11 +4,25 @@ module Diamond
 
     extend Forwardable
 
-    def_delegators :@clock, :event, :pause, :start, :stop, :unpause
+    def_delegators :@clock, :event, :pause, :unpause
 
     def initialize(*args)
       @arpeggiators = []
       @clock = Sequencer::Clock.new(*args)
+    end
+
+    def start(options = {})
+      begin
+        @clock.start(options)
+      rescue SystemExit, Interrupt => exception
+        stop
+      end
+    end
+
+    def stop
+      @arpeggiators.each { |arpeggiator| arpeggiator.emit_pending_note_offs }
+      @clock.stop
+      true
     end
 
     def add(arpeggiator)
