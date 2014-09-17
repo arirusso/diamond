@@ -8,6 +8,7 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../../sequencer/lib')
 $:.unshift File.join( File.dirname( __FILE__ ), '../../midi-instrument/lib')
 
 # libs 
+require "analog"
 require "forwardable"
 require "midi-instrument"
 require "midi-message"
