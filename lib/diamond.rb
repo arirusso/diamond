@@ -22,7 +22,7 @@ require "diamond/arpeggiator"
 require "diamond/arpeggiator_sequence"
 require "diamond/clock"
 require "diamond/pattern"
-require "diamond/process_chain"
+require "diamond/sequence_parameters"
 
 # config
 require "pattern_presets"

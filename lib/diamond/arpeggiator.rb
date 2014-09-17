@@ -5,9 +5,10 @@ module Diamond
 
     include API::MIDI
     include API::Sequence
+    include API::SequenceParameters
     include OSCAccessible
 
-    attr_reader :sequence, :sequencer
+    attr_reader :parameter, :sequence, :sequencer
 
     DefaultChannel = 0
     DefaultVelocity = 100
@@ -28,7 +29,8 @@ module Diamond
       devices = MIDIInstrument::Device.partition(options[:midi])
       resolution = options[:resolution] || 128
 
-      @sequence = ArpeggiatorSequence.new(resolution, options)
+      @sequence = ArpeggiatorSequence.new
+      @parameter = SequenceParameters.new(@sequence, resolution, options) { @sequence.mark_changed }
       @sequencer = Sequencer.new
       initialize_midi(devices, options)
       initialize_osc(options) if !!options[:osc_input_port]

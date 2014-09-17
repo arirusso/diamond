@@ -49,6 +49,16 @@ module Diamond
         base.send(:def_delegators,
                   :@sequence, 
                   :sequence, 
+                  :remove_all)
+        base.send(:alias_method, :clear, :remove_all)
+      end
+
+    module SequenceParameters
+
+      def self.included(base)
+        base.send(:extend, Forwardable)
+        base.send(:def_delegators,
+                  :@parameter, 
                   :gate,
                   :gate=,
                   :interval,
@@ -61,13 +71,10 @@ module Diamond
                   :rate=,
                   :pattern_offset,
                   :pattern_offset=,
-                  :remove_all,
                   :resolution,
                   :resolution=,
                   :transpose,
-                  :transpose=
-                 )
-        base.send(:alias_method, :clear, :remove_all)
+                  :transpose=)
       end
 
     end
