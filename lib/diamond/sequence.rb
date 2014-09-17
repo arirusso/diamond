@@ -19,7 +19,7 @@ module Diamond
     # @return [Array<MIDIMessage>]
     def at(pointer)
       if changed? && (pointer % @parameter.rate == 0)
-        update_sequence
+        update
         @changed = false
       end
       enqueue_next(pointer)
@@ -164,9 +164,9 @@ module Diamond
     # @return [Array<MIDIMessage::NoteOn>]
     def get_note_sequence
       notes = @parameter.computed_pattern.map do |degree|
-        @input_queue.map do |msg| 
-          note = msg.note + degree + @parameter.transpose
-          MIDIMessage::NoteOn.new(msg.channel, note, msg.velocity)
+        @input_queue.map do |message| 
+          note = message.note + degree + @parameter.transpose
+          MIDIMessage::NoteOn.new(message.channel, note, message.velocity)
         end
       end
       notes.flatten.compact
