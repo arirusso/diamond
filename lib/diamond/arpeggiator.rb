@@ -14,7 +14,7 @@ module Diamond
 
     # @param [Hash] options
     # @option options [Fixnum] :rx_channel (or :channel) Only respond to input messages to the given MIDI channel. will operate on all input sources. if not included, or nil the arpeggiator will work in omni mode and respond to all messages
-    # @option options [Fixnum] :gate Duration of the arpeggiated notes. The value is a percentage based on the rate.  If the rate is 4, then a gate of 100 is equal to a quarter note. the default <tt>gate</tt> is 75. <tt>Gate</tt> must be positive and less than 500
+    # @option options [Fixnum] :gate Duration of the arpeggiated notes. The value is a percentage based on the rate.  If the rate is 4, then a gate of 100 is equal to a quarter note. (default: 75) must be 1..500
     # @option options [Fixnum] :interval Increment (pattern) over (interval) scale degrees (range) times.  May be positive or negative. (default: 12)
     # @option options [Array<UniMIDI::Input, UniMIDI::Output>, UniMIDI::Input, UniMIDI::Output] :midi MIDI devices to use
     # @option options [Boolean] :midi_clock_output Should this Arpeggiator output midi clock? (default: false)
@@ -22,7 +22,7 @@ module Diamond
     # @option options [Fixnum] :pattern_offset Begin on the nth note of the sequence (but not omit any notes). (default: 0)
     # @option options [Pattern] :pattern Compute the contour of the arpeggiated melody
     # @option options [Fixnum] :range Increment the (pattern) over (interval) scale degrees (range) times. Must be positive (abs will be used). (default: 3)
-    # @option options [Fixnum] :rate How fast the arpeggios will be played. Must be positive (abs will be used). (default: 8, eighth note.) rate may be 0 (whole note) or greater but must be equal to or less than <tt>resolution</tt>
+    # @option options [Fixnum] :rate How fast the arpeggios will be played. Must be positive (abs will be used). (default: 8, eighth note.) must be 0..resolution
     # @option options [Fixnum] :resolution Numeric resolution for rhythm (default: 128)   
     def initialize(options = {}, &block)
       devices = MIDIInstrument::Device.partition(options[:midi])
@@ -46,8 +46,8 @@ module Diamond
     # @param [Array<MIDIMessage>, MIDIMessage, *MIDIMessage] args
     # @return [Array<MIDIMessage>]
     def remove(*args)
-      # should convert strings/note on to note off
-      @midi.input.add(*args)
+      messages = MIDIInstrument::Message.to_note_offs(*args)
+      @midi.input.add(messages.compact)
     end
 
     # Emit any note off messages that are currently pending in the queue.  The clock triggers this 
