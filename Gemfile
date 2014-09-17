@@ -7,6 +7,7 @@ group :test do
   gem "shoulda-context"
 end
 
-gem "diamond-engine"
-gem "osc-access"
-gem "midi-fx"
+gem "midi-instrument"
+gem "midi-message"
+gem "sequencer"
+gem "unimidi"

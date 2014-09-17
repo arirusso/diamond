@@ -10,7 +10,7 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../../midi-instrument/lib')
 # libs 
 require "forwardable"
 require "midi-instrument"
-require "osc-access"
+require "midi-message"
 require "sequencer"
 require "unimidi"
 
