@@ -27,9 +27,6 @@ require "diamond/pattern"
 require "diamond/sequence"
 require "diamond/sequence_parameters"
 
-# config
-require "pattern_presets"
-
 module Diamond
   
   VERSION = "0.4.3"
