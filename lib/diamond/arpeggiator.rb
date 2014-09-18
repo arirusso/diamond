@@ -6,7 +6,6 @@ module Diamond
     include API::MIDI
     include API::Sequence
     include API::SequenceParameters
-    include OSCAccessible
 
     attr_reader :parameter, :sequence, :sequencer
 
@@ -25,6 +24,8 @@ module Diamond
     # @option options [Fixnum] :range Increment the (pattern) over (interval) scale degrees (range) times. Must be positive (abs will be used). (default: 3)
     # @option options [Fixnum] :rate How fast the arpeggios will be played. Must be positive (abs will be used). (default: 8, eighth note.) must be 0..resolution
     # @option options [Fixnum] :resolution Numeric resolution for rhythm (default: 128)   
+    # @option options [Hash] :osc_map A map of OSC addresses and properties
+    # @option options [Fixnum] :osc_port The port to listen for OSC on
     def initialize(options = {}, &block)
       devices = MIDIInstrument::Device.partition(options[:midi])
       resolution = options[:resolution] || 128
@@ -33,7 +34,7 @@ module Diamond
       @parameter = SequenceParameters.new(@sequence, resolution, options) { @sequence.mark_changed }
       @sequencer = Sequencer.new
       initialize_midi(devices, options)
-      initialize_osc(options) if !!options[:osc_input_port]
+      initialize_osc(options)
     end
 
     # Add MIDI input notes 
@@ -52,6 +53,8 @@ module Diamond
       @midi.input.add(messages.compact)
     end
 
+    private
+
     # Emit any note off messages that are currently pending in the queue.  The clock triggers this 
     # when stopping or pausing
     # @return [Array<MIDIMessage::NoteOff>]
@@ -60,8 +63,6 @@ module Diamond
       @midi.output.puts(*messages)
       messages
     end
-
-    private
 
     # Initialize MIDI input and output
     # @param [Hash] devices
@@ -74,6 +75,16 @@ module Diamond
       initialize_midi_input(devices[:input], options[:rx_channel] || options[:channel])
       initialize_midi_output(devices[:output], options[:tx_channel])
       true
+    end
+
+    # @param [Hash] options
+    # @option options [Hash] :osc_map A map of OSC addresses and properties
+    # @option options [Fixnum] :osc_port The port to listen for OSC on
+    def initialize_osc(options = {})
+      if !options[:osc_map].nil?
+        @osc = OSC::Controller.new(self, options[:osc_map], :port => options[:osc_port]) 
+        @osc.start
+      end
     end
 
     # Initialize MIDI input, adding and removing notes from the sequence
@@ -95,14 +106,11 @@ module Diamond
     def initialize_midi_output(outputs, channel)
       @midi.output.devices.concat(outputs)
       @midi.output.channel = channel 
-      @sequencer.event.perform do |data| 
+      @sequencer.event.perform << proc do |data| 
         @midi.output.puts(data) unless data.empty?
       end
+      @sequencer.event.stop << proc { emit_pending_note_offs }
       true
-    end
-
-    def initialize_osc(options = {})
-      osc_start(:input_port => options[:osc_input_port], :output => options[:osc_output], :map => options[:osc_map], :service_name => options[:name])
     end
 
   end

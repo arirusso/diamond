@@ -8,11 +8,12 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../../sequencer/lib')
 $:.unshift File.join( File.dirname( __FILE__ ), '../../midi-instrument/lib')
 
 # libs 
-require "analog"
 require "forwardable"
 require "midi-instrument"
 require "midi-message"
+require "scale"
 require "sequencer"
+require "topaz"
 require "unimidi"
 
 # modules
@@ -21,6 +22,7 @@ require "diamond/api"
 # classes
 require "diamond/arpeggiator"
 require "diamond/clock"
+require "diamond/osc/controller"
 require "diamond/pattern"
 require "diamond/sequence"
 require "diamond/sequence_parameters"

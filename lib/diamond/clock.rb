@@ -20,7 +20,7 @@ module Diamond
     end
 
     def stop
-      @arpeggiators.each { |arpeggiator| arpeggiator.emit_pending_note_offs }
+      @arpeggiators.each { |arpeggiator| arpeggiator.sequencer.event.do_stop }
       @clock.stop
       true
     end

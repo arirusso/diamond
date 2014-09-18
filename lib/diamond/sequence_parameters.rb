@@ -2,12 +2,21 @@ module Diamond
 
   class SequenceParameters
 
+    RANGE = {
+      :gate => 1..500,
+      :interval => -48..48,
+      :pattern_offset => -16..16,
+      :range => 0..10,
+      :rate => 0..64,
+      :transpose => -64..64
+    }
+
     attr_reader :gate,
       :interval,
       :pattern,
+      :pattern_offset,
       :range,
       :rate,
-      :pattern_offset,
       :resolution
 
     # @param [Sequence] sequence
@@ -32,7 +41,7 @@ module Diamond
     # @param [Fixnum] num
     # @return [Fixnum]
     def gate=(num)
-      @gate = constrain(num, :min => 1, :max => 500)
+      @gate = constrain(num, :range => RANGE[:gate])
       mark_changed
       @gate
     end
@@ -59,7 +68,7 @@ module Diamond
     # @param [Fixnum] range
     # @return [Fixnum]
     def range=(num)
-      @range = constrain(num, :min => 0)
+      @range = constrain(num, :range => RANGE[:range])
       mark_changed
       @range
     end
@@ -68,7 +77,7 @@ module Diamond
     # @param [Fixnum] num
     # @return [Fixnum]
     def rate=(num)
-      @rate = constrain(num, :min => 0, :max => @resolution)
+      @rate = constrain(num, :range => RANGE[:rate].begin..@resolution)
       mark_changed
       @rate
     end
@@ -114,12 +123,12 @@ module Diamond
     # @param [Hash] options
     # @return [ArpeggiatorSequence::Parameters]
     def apply_options(options)
-      @interval = options[:interval] || 12
-      @range = constrain((options[:range] || 3), :min => 0)
-      @pattern_offset = options[:pattern_offset] || 0
+      @interval = constrain((options[:interval] || 12), :range => RANGE[:interval])
+      @range = constrain((options[:range] || 3), :range => RANGE[:range])
+      @pattern_offset = constrain((options[:pattern_offset] || 0),:range => RANGE[:pattern_offset])
       @pattern = options[:pattern] || Pattern.all.first
       @rate = constrain((options[:rate] || 8), :range => 0..@resolution)
-      @gate = constrain((options[:gate] || 75), :range => 1..500)
+      @gate = constrain((options[:gate] || 75), :range => RANGE[:gate])
       self
     end
 
