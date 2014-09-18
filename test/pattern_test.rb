@@ -18,32 +18,32 @@ class PatternTest < Test::Unit::TestCase
   end
   
   def test_range_and_interval
-    pattern = Pattern["Up"]
+    pattern = Pattern.find("Up")
     result = pattern.compute(3, 7)
     assert_equal(4, result.length)   
     assert_equal([0, 7, 14, 21], result)            
   end
     
   def test_up
-    pattern = Pattern["Up"]
+    pattern = Pattern.find("Up")
     result = pattern.compute(2, 12)
     assert_equal([0, 12, 24], result)    
   end
   
   def test_down
-    pattern = Pattern["Down"]
+    pattern = Pattern.find("Down")
     result = pattern.compute(2, 12)
     assert_equal([24, 12, 0], result)    
   end
 
   def test_updown
-    pattern = Pattern["UpDown"]
+    pattern = Pattern.find("UpDown")
     result = pattern.compute(3, 12)
     assert_equal([0, 12, 24, 36, 24, 12, 0], result)    
   end
 
   def test_downup
-    pattern = Pattern["DownUp"]
+    pattern = Pattern.find("DownUp")
     result = pattern.compute(3, 12)
     assert_equal([36, 24, 12, 0, 12, 24, 36], result)    
   end
