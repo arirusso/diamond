@@ -26,7 +26,7 @@ module Diamond
     # @option options [Fixnum] :gate Duration of the arpeggiated notes. The value is a percentage based on the rate.  If the rate is 4, then a gate of 100 is equal to a quarter note. (default: 75). must be 1..500
     # @option options [Fixnum] :interval Increment (pattern) over (interval) scale degrees (range) times.  May be positive or negative. (default: 12)
     # @option options [Fixnum] :pattern_offset Begin on the nth note of the sequence (but not omit any notes). (default: 0)
-    # @option options [Pattern] :pattern Compute the contour of the arpeggiated melody
+    # @option options [String, Pattern] :pattern Computes the contour of the arpeggiated melody.  Can be the name of a pattern or a pattern object.
     # @option options [Fixnum] :range Increment the (pattern) over (interval) scale degrees (range) times. Must be positive (abs will be used). (default: 3)
     # @option options [Fixnum] :rate How fast the arpeggios will be played. Must be positive (abs will be used). (default: 8, eighth note.) must be 0..resolution
     # @param [Proc] callback
@@ -127,10 +127,21 @@ module Diamond
       @interval = constrain((options[:interval] || 12), :range => RANGE[:interval])
       @range = constrain((options[:range] || 3), :range => RANGE[:range])
       @pattern_offset = constrain((options[:pattern_offset] || 0),:range => RANGE[:pattern_offset])
-      @pattern = options[:pattern] || Pattern.first
       @rate = constrain((options[:rate] || 8), :range => 0..@resolution)
       @gate = constrain((options[:gate] || 75), :range => RANGE[:gate])
+      @pattern = get_pattern(options[:pattern])
       self
+    end
+
+    # Derive a pattern from the options or using the default
+    # @param [Pattern, String, nil] option
+    # @return [Pattern, nil]
+    def get_pattern(option)
+      @pattern = case option
+                 when Pattern then option
+                 when String then Pattern.find(option)
+                 end
+      @pattern ||= Pattern.first
     end
 
     # Constrain the given value based on the sequence options
