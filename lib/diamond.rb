@@ -4,8 +4,6 @@
 # MIDI arpeggiator in Ruby
 # (c)2011-2014 Ari Russo and licensed under the Apache 2.0 License
 #
-$:.unshift File.join( File.dirname( __FILE__ ), '../../sequencer/lib')
-$:.unshift File.join( File.dirname( __FILE__ ), '../../midi-instrument/lib')
 
 # libs 
 require "forwardable"
