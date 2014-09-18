@@ -1,9 +1,7 @@
 #!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
-#
 # A basic arpeggiator that runs in the foreground
-#
 
 require "diamond"
 
@@ -13,7 +11,7 @@ options = {
   :gate => 90,   
   :interval => 7,
   :midi => @output,
-  :pattern => Diamond::Pattern["UpDown"],
+  :pattern => "UpDown",
   :range => 4, 
   :rate => 8,
   :tx_channel => 1
