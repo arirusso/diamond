@@ -75,7 +75,7 @@ arpeggiator << "C5"
 
 Now we'll start the clock and arpeggiator.  
 
-Note that by default, the clock will run in a background thread. If you're working in {IRB}[http://en.wikipedia.org/wiki/Interactive_Ruby_Shell] this will allow you to continue to code while the arpeggiator runs. To start in the *foreground*, pass `:focus => true` to `Clock#start`.
+Note that by default, the clock will run in a background thread. If you're working in a [PRY](http://pryrepl.org)/[IRB](http://en.wikipedia.org/wiki/Interactive_Ruby_Shell)/etc this will allow you to continue to code while the arpeggiator runs. To start in the *foreground*, pass `:focus => true` to `Clock#start`.
 
 ```ruby
 clock.start
