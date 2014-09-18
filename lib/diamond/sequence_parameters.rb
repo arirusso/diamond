@@ -127,7 +127,7 @@ module Diamond
       @interval = constrain((options[:interval] || 12), :range => RANGE[:interval])
       @range = constrain((options[:range] || 3), :range => RANGE[:range])
       @pattern_offset = constrain((options[:pattern_offset] || 0),:range => RANGE[:pattern_offset])
-      @pattern = options[:pattern] || Pattern.all.first
+      @pattern = options[:pattern] || Pattern.first
       @rate = constrain((options[:rate] || 8), :range => 0..@resolution)
       @gate = constrain((options[:gate] || 75), :range => RANGE[:gate])
       self
