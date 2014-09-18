@@ -1,7 +1,9 @@
 module Diamond
 
+  # Convenience methods for the instrument
   module API
 
+    # MIDI convenience methods
     module MIDI
 
       def self.included(base)
@@ -26,18 +28,28 @@ module Diamond
                  )
       end
 
+      # Add a MIDI input
+      # @param [UniMIDI::Input] source
+      # @return [Array<UniMIDI::Input>]
       def add_midi_source(source)
         @midi.inputs << source
       end
 
+      # Remove a MIDI input
+      # @param [UniMIDI::Input] source
+      # @return [Array<UniMIDI::Input>]
       def remove_midi_source(source)
         @midi.inputs.delete(source)
       end
 
+      # MIDI inputs associated with this instrument
+      # @return [Array<UniMIDI::Input>]
       def midi_sources
         @midi.inputs
       end
 
+      # Is the instrument MIDI output muted?
+      # @return [Boolean]
       def mute?
         @midi.output.mute?
       end
@@ -45,6 +57,7 @@ module Diamond
 
     end
 
+    # Convenience methods dealing with the sequence
     module Sequence
 
       def self.included(base)
@@ -58,6 +71,7 @@ module Diamond
 
     end
 
+    # Convenience methods dealing with the sequence parameters
     module SequenceParameters
 
       def self.included(base)
