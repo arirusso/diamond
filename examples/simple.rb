@@ -9,7 +9,7 @@ require "diamond"
 
 @output = UniMIDI::Output.gets
 
-opts = { 
+options = { 
   :gate => 90,   
   :interval => 7,
   :midi => @output,
@@ -19,14 +19,14 @@ opts = {
   :tx_channel => 1
 }
 
-clock = Diamond::Clock.new(101)
+@clock = Diamond::Clock.new(101)
 
-arp = Diamond::Arpeggiator.new(opts)
+@arpeggiator = Diamond::Arpeggiator.new(options)
 
-clock << arp
+@clock << @arpeggiator
 
 chord = ["C1", "G1", "Bb2", "A3"]
 
-arp.add(*chord)
+@arpeggiator.add(*chord)
    
-clock.start(:focus => true)
+@clock.start(:focus => true)
