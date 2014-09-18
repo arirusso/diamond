@@ -31,30 +31,18 @@ module Diamond
       @parameter = SequenceParameters.new(@sequence, resolution, options) { @sequence.mark_changed }
       @sequencer = Sequencer.new
 
-      initialize_midi_devices(devices, options)
-      initialize_midi_output
-      initialize_midi_note_control
-      initialize_midi_parameter_control(options[:midi_control]) if !options[:midi_control].nil?
+      initialize_midi(devices, options)
       initialize_osc_parameter_control(options[:osc_control], :port => options[:port]) if !options[:osc_control].nil?
     end
 
-    # Add MIDI input notes 
-    # @param [Array<MIDIMessage>, MIDIMessage, *MIDIMessage] args
-    # @return [Array<MIDIMessage>]
-    def add(*args)
-      @midi.input << args
-    end
-    alias_method :<<, :add
-
-    # Add note offs to cancel input
-    # @param [Array<MIDIMessage>, MIDIMessage, *MIDIMessage] args
-    # @return [Array<MIDIMessage>]
-    def remove(*args)
-      messages = MIDIInstrument::Message.to_note_offs(*args)
-      @midi.input.add(messages.compact)
-    end
-
     private
+
+    def initialize_midi(devices, options = {})
+      @midi = MIDI.new(devices, options)
+      @midi.enable_output(@sequencer)
+      @midi.enable_note_control(@sequence)
+      @midi.enable_parameter_control(@parameter, options[:midi_control]) if !options[:midi_control].nil?
+    end
 
     # @param [Hash] options
     # @option options [Hash] :osc_map A map of OSC addresses and properties
@@ -64,26 +52,6 @@ module Diamond
       @osc_controller.start
     end
 
-    # Initialize a user-defined map of control change messages
-    # @param [Array<Hash>] map
-    # @return [Boolean]
-    def initialize_midi_parameter_control(map)
-      from_range = 0..127
-      @midi.input.receive(:class => MIDIMessage::ControlChange) do |event|
-        message = event[:message]
-        if @midi.input.channel.nil? || @midi.input.channel == message.channel
-          index = message.index
-          mapping = map.find { |mapping| mapping[:index] == index }
-          property = mapping[:property]
-          to_range = SequenceParameters::RANGE[property]
-          value = message.value
-          value = Scale.transform(value).from(from_range).to(to_range)
-          puts "MIDI: Arpeggiator #{property}= #{value}"
-          @parameter.send("#{property}=", value)
-        end
-      end
-    end
-
     # Emit any note off messages that are currently pending in the queue.  The clock triggers this 
     # when stopping or pausing
     # @return [Array<MIDIMessage::NoteOff>]
@@ -91,49 +59,6 @@ module Diamond
       messages = @sequence.pending_note_offs
       @midi.output.puts(*messages)
       messages
-    end
-
-    # Initialize MIDI input and output
-    # @param [Hash] devices
-    # @param [Hash] options
-    # @option options [Fixnum] :channel The receive channel (also: :rx_channel)
-    # @option options [Array<Hash>] :midi_control Specify a user defined control change message map
-    # @option options [Fixnum] :tx_channel The transmit channel
-    # @return [Boolean]
-    def initialize_midi_devices(devices, options = {})
-      @midi = MIDIInstrument::Node.new
-      @midi.input.devices.concat(devices[:input])
-      @midi.input.channel = options[:rx_channel] || options[:channel]
-      @midi.output.devices.concat(devices[:output])
-      @midi.output.channel = options[:tx_channel]
-      @midi
-    end
-
-    # Initialize adding and removing MIDI notes from the sequence
-    def initialize_midi_note_control
-      @midi.input.receive(:class => MIDIMessage::NoteOn) do |event|
-        message = event[:message]
-        if @midi.input.channel.nil? || @midi.input.channel == message.channel
-          @sequence.add(message)
-        end
-      end   
-      @midi.input.receive(:class => MIDIMessage::NoteOff) do |event| 
-        message = event[:message]
-        if @midi.input.channel.nil? || @midi.input.channel == message.channel
-          @sequence.remove(message)
-        end
-      end
-      true
-    end
-
-    # Initialize MIDI output, enabling the sequencer to emit notes
-    # @return [Boolean]
-    def initialize_midi_output
-      @sequencer.event.perform << proc do |data| 
-        @midi.output.puts(data) unless data.empty?
-      end
-      @sequencer.event.stop << proc { emit_pending_note_offs }
-      true
     end
 
   end

@@ -20,6 +20,7 @@ require "diamond/api"
 # classes
 require "diamond/arpeggiator"
 require "diamond/clock"
+require "diamond/midi"
 require "diamond/osc/controller"
 require "diamond/pattern"
 require "diamond/sequence"

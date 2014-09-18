@@ -8,9 +8,12 @@ module Diamond
         base.send(:extend, Forwardable)
         base.send(:def_delegators, 
                   :@midi,
+                  :<<,
+                  :add,
                   :mute,
                   :mute=,
                   :omni_on, 
+                  :remove,
                   :rx_channel, 
                   :receive_channel,
                   :rx_channel=,
