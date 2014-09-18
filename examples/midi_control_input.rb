@@ -1,42 +1,40 @@
 #!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
-#
-# this is the most basic setup possible
-# we just set up an arpeggiator and let it run in the foreground
-#
+# Control the arpeggiator using MIDI control change messages
 
 require "diamond"
 
 @input = UniMIDI::Input.gets
 @output = UniMIDI::Output.gets
 
-map = [
+midi_map = [
   { 
-    :match => {
-      :class => MIDIMessage::ControlChange,
-      :index => 1 }, 
-    :using => :value,
-    :original_range => (0..127),
-    :new_range => (-24..24),
-    :property => :interval=
+    :property => :interval, 
+    :index => 1
+  },
+  { 
+    :property => :transpose, 
+    :index => 2
   }
+  # etc
 ]
 
-opts = { 
+options = { 
   :gate => 90,   
   :interval => 7,
   :midi => [@input, @output],
-  :pattern => Diamond::Pattern["UpDown"],
+  :pattern => "UpDown",
   :range => 4, 
   :rate => 8,
-  :midi_map => map
+  :midi_control => midi_map,
+  :midi_debug => true
 }
 
-arp = Diamond::Arpeggiator.new(110, opts)
+@clock = Diamond::Clock.new(101)
+@arpeggiator = Diamond::Arpeggiator.new(options)
+@clock << @arpeggiator
 
-chord = ["C3", "G3", "Bb3", "A4"]
-
-arp << chord
-   
-arp.start(:focus => true)
+chord = ["C1", "G1", "Bb2", "A3"]
+@arpeggiator.add(*chord)
+@clock.start(:focus => true)

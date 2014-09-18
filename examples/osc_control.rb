@@ -26,6 +26,7 @@ options = {
   :midi => @output,
   :osc_control => osc_map,
   :osc_port => 8000,
+  :osc_debug => true,
   :pattern => "UpDown",
   :range => 4, 
   :rate => 8,
