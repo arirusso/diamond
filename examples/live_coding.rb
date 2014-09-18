@@ -1,30 +1,30 @@
-#!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
+# A basic live coding setup
 #
-# this example shows a basic live coding setup
-# you would normally enter this code in to irb or some kind of live coding text editor setup
+# Use this code in irb or some other live coding environment
 #
-# if you run this as a script, it will exit before doing anything
+# If you run this as a script, it will exit before doing anything
 #
 
 require "diamond"
 
 @output = UniMIDI::Output.gets
 
-opts = { 
+options = { 
   :gate => 90,   
   :interval => 7,
   :midi => @output,
-  :pattern => Diamond::Pattern["UpDown"],
+  :pattern => "UpDown",
   :range => 4, 
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(138, opts)
+c = Diamond::Clock.new(101)
+a = Diamond::Arpeggiator.new(options)
+c << a
 
 chord = ["C3", "G3", "Bb3", "A4"]
-
-arp << chord
+a << chord
    
-arp.start
+c.start   
