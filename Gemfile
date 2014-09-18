@@ -8,12 +8,13 @@ group :test do
 end
 
 gem "analog"
+gem "basic-sequencer"
+gem "eventmachine"
 gem "midi-instrument"
 gem "midi-message"
 gem "midi-topaz"
-gem "basic-sequencer"
+gem "osc-ruby"
 gem "unimidi"
 
-# for OSC:
-gem "eventmachine"
-gem "osc-ruby"
+
+
