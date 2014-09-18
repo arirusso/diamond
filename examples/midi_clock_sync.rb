@@ -1,34 +1,27 @@
 #!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
-#
-# this example is the same as the "simple.rb" one, except that it syncs to MIDI clock
+# This example is the same as the "simple.rb", except that it syncs to MIDI clock
 # from a unimidi input
-#
-# we just set up an arpeggiator and let it run in the foreground
-#
-#
 
 require "diamond"
 
 @input = UniMIDI::Input.gets
 @output = UniMIDI::Output.gets
 
-opts = { 
+options = { 
   :gate => 90,   
   :interval => 7,
   :midi => @output,
-  :pattern => Diamond::Pattern["UpDown"],
+  :pattern => "UpDown",
   :range => 4, 
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(@input, opts)
+@clock = Diamond::Clock.new(@input)
+@arpeggiator = Diamond::Arpeggiator.new(options)
+@clock << @arpeggiator
 
-chord = ["C0", "G0", "Bb0", "A1"]
-
-arp.add(chord)
-   
-arp.start(:focus => true)
-
-# the arpeggiator will actually start when it begins receiving clock messages
+chord = ["C1", "G1", "Bb2", "A3"]
+@arpeggiator.add(*chord)
+@clock.start(:focus => true)
