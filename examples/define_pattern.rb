@@ -1,11 +1,27 @@
 #!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
+# This example shows how to define an arpeggiator pattern
+#
+
 require "diamond"
+
+#
+# The pattern procedure should return an array of numeric scale degrees.  For example, 
+# given (3, 7) the "Up" pattern will return [0, 7, 14, 21]
+#
+def fibonacci(n)
+  n = fibonacci( n - 1 ) + fibonacci( n - 2 ) if n > 1
+  n
+end
+
+Diamond::Pattern.add("fibonacci") { |range, interval| 0.upto(range).map { |n| fibonacci(n) } }
+
+# Then the usual arpeggiator setup...
 
 @output = UniMIDI::Output.gets
 
-opts = { 
+options = { 
   :gate => 90, 
   :range => 4, 
   :interval => 7,
@@ -13,20 +29,15 @@ opts = {
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(112, opts)
+@arpeggiator = Diamond::Arpeggiator.new(options)
+@clock = Diamond::Clock.new(110)
+@clock << @arpeggiator
 
 chord = ["C3", "G3", "Bb3", "A4"]
 
-arp.add(chord)
+@arpeggiator.add(chord)
 
-#
-# the Pattern Proc should return a set of scale degrees.
-#  for example, given (3, 7) the "Up" pattern will return [0, 7, 14, 21]
-#
-arp.pattern = Diamond::Pattern.new("Up") do |r, i|
-  a = []
-  0.upto(r) { |n| a << (n * i) }
-  a
-end
-   
-arp.start(:focus => true)
+# Assign the custom pattern...
+@arpeggiator.pattern = Diamond::Pattern.find("fibonacci")
+
+@clock.start(:focus => true)
