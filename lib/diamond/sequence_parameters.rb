@@ -1,5 +1,6 @@
 module Diamond
 
+  # User-controller parameters that are used to formulate the note event sequence
   class SequenceParameters
 
     RANGE = {

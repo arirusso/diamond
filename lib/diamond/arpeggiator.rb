@@ -9,9 +9,6 @@ module Diamond
 
     attr_reader :parameter, :sequence, :sequencer
 
-    DefaultChannel = 0
-    DefaultVelocity = 100
-
     # @param [Hash] options
     # @option options [Fixnum] :rx_channel (or :channel) Only respond to input messages to the given MIDI channel. will operate on all input sources. if not included, or nil the arpeggiator will work in omni mode and respond to all messages
     # @option options [Fixnum] :gate Duration of the arpeggiated notes. The value is a percentage based on the rate.  If the rate is 4, then a gate of 100 is equal to a quarter note. (default: 75) must be 1..500

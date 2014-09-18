@@ -1,5 +1,6 @@
 module Diamond
 
+  # The note event sequence from where the arpeggiator output is derived
   class Sequence
 
     extend Forwardable
