@@ -14,6 +14,7 @@ module Diamond
     # @option options [Fixnum] :interval Increment (pattern) over (interval) scale degrees (range) times.  May be positive or negative. (default: 12)
     # @option options [Array<UniMIDI::Input, UniMIDI::Output>, UniMIDI::Input, UniMIDI::Output] :midi MIDI devices to use
     # @option options [Array<Hash>] :midi_control A user-defined mapping of MIDI cc to arpeggiator params
+    # @option options [Boolean] :midi_debug Whether to send debug output about MIDI to standard out
     # @option options [Fixnum] :rx_channel (or :channel) Only respond to input messages to the given MIDI channel. will operate on all input sources. if not included, or nil the arpeggiator will work in omni mode and respond to all messages
     # @option options [Fixnum] :tx_channel Send output messages to the given MIDI channel despite what channel the input notes were intended for.
     # @option options [Fixnum] :pattern_offset Begin on the nth note of the sequence (but not omit any notes). (default: 0)
@@ -23,6 +24,7 @@ module Diamond
     # @option options [Fixnum] :resolution Numeric resolution for rhythm (default: 128)   
     # @option options [Hash] :osc_control A user-defined map of OSC addresses and properties to arpeggiator params
     # @option options [Fixnum] :osc_port The port to listen for OSC on
+    # @option options [Boolean] :osc_debug Whether to send debug output about OSC to standard out
     def initialize(options = {}, &block)
       resolution = options.fetch(:resolution, 128)
 
@@ -40,12 +42,15 @@ module Diamond
     # @param [Hash] options
     # @option options [Array<UniMIDI::Input, UniMIDI::Output>, UniMIDI::Input, UniMIDI::Output] :midi MIDI devices to use
     # @option options [Array<Hash>] :midi_control A user-defined mapping of MIDI cc to arpeggiator params
+    # @option options [Boolean] :midi_debug Whether to send debug output about MIDI to standard out
     # @option options [Fixnum] :rx_channel (or :channel) Only respond to input messages to the given MIDI channel. will operate on all input sources. if not included, or nil the arpeggiator will work in omni mode and respond to all messages
     # @option options [Fixnum] :tx_channel Send output messages to the given MIDI channel despite what channel the input notes were intended for.
     # @return [MIDI::Node]
      def initialize_midi(options = {})
+      receive_channel = options[:rx_channel] || options[:channel]
+      transmit_channel = options[:tx_channel]
       devices = MIDIInstrument::Device.partition(options[:midi])
-      @midi = MIDI.new(devices, options)
+      @midi = MIDI.new(devices, :debug => !!options[:midi_debug], :receive_channel => receive_channel, :transmit_channel => transmit_channel)
       @midi.enable_output(@sequencer)
       @midi.enable_note_control(@sequence)
       @midi.enable_parameter_control(@parameter, options[:midi_control]) if !options[:midi_control].nil?
@@ -57,7 +62,7 @@ module Diamond
     # @option options [Fixnum] :osc_port The port to listen for OSC on
     # @return [OSC::Node]
     def initialize_osc(options = {})
-      @osc = OSC.new(:server_port => options[:osc_port])
+      @osc = OSC.new(:debug => !!options[:osc_debug], :server_port => options[:osc_port])
       @osc.enable_parameter_control(@parameter, options[:osc_control]) if !options[:osc_control].nil?
       @osc
     end

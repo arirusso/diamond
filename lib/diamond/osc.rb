@@ -28,7 +28,7 @@ module Diamond
           @server.add_method(item[:address]) do |message|
             value = message.to_a[0]
             value = Scale.transform(value).from(from_range).to(to_range)
-            puts "OSC: Arpeggiator (#{@subject.object_id}) #{property}= #{value}" if @debug
+            puts "[DEBUG]: OSC: #{property}= #{value}" if @debug
             subject.send("#{property}=", value)
             true
           end

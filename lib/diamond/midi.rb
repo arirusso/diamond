@@ -69,7 +69,7 @@ module Diamond
             to_range = SequenceParameters::RANGE[property]
             value = message.value
             value = Scale.transform(value).from(from_range).to(to_range)
-            puts "MIDI: Arpeggiator #{property}= #{value}"
+            puts "[DEBUG] MIDI: #{property}= #{value}" if @debug
             parameters.send("#{property}=", value)
           end
         end
@@ -82,7 +82,7 @@ module Diamond
       # @option options [Fixnum] :channel The receive channel (also: :rx_channel)
       def initialize_input(inputs, options = {})
         @midi.input.devices.concat(inputs)
-        @midi.input.channel = options[:rx_channel] || options[:channel]
+        @midi.input.channel = options[:receive_channel]
       end
 
     end
@@ -123,7 +123,7 @@ module Diamond
       # @option options [Fixnum] :tx_channel The transmit channel
       def initialize_output(outputs, options = {})
         @midi.output.devices.concat(outputs)
-        @midi.output.channel = options[:tx_channel]
+        @midi.output.channel = options[:transmit_channel]
       end
 
     end
@@ -140,6 +140,7 @@ module Diamond
       # @option options [Fixnum] :channel The receive channel (also: :rx_channel)
       # @option options [Fixnum] :tx_channel The transmit channel
       def initialize(devices, options = {})
+        @debug = options.fetch(:debug, false)
         @midi = MIDIInstrument::Node.new
         initialize_input(devices[:input], options)
         initialize_output(devices[:output], options)
