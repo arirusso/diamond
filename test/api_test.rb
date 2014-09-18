@@ -17,13 +17,20 @@ class Diamond::APITest < Test::Unit::TestCase
           @arpeggiator = Diamond::Arpeggiator.new(:rx_channel => 3)
         end
 
-        should "set omni on" do
+        should "not acknowledge message with wrong rx channel" do
+          @arpeggiator.sequence.expects(:add).never
           @arpeggiator.add(@messages[0])
           assert_empty @arpeggiator.sequence.instance_variable_get("@input_queue")
+        end
 
+        should "acknowledge message with rx channel" do
+          @arpeggiator.sequence.expects(:add).once
           @arpeggiator.add(@messages[1])
           @arpeggiator.sequence.instance_variable_get("@input_queue").expects(:concat).once.with([@messages[1]])
+        end
 
+        should "with omni on, acknowledge any rx channel" do
+          @arpeggiator.sequence.expects(:add).once
           @arpeggiator.omni_on
           @arpeggiator.add(@messages[2])
           @arpeggiator.sequence.instance_variable_get("@input_queue").expects(:concat).once.with([@messages[2]]) 
