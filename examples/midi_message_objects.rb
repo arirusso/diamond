@@ -1,12 +1,7 @@
 #!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
-#
-# This example shows how to create and pass in messages using midi-message
-#
-# http://github.com/arirusso/midi-message
-#
-#
+# Create and pass in messages using midi-message objects
 
 require "diamond"
 
@@ -18,7 +13,7 @@ opts = {
   :gate => 90,   
   :interval => 7,
   :midi => @output,
-  :pattern => Diamond::Pattern["UpDown"],
+  :pattern => "UpDown",
   :range => 4, 
   :rate => 8
 }
