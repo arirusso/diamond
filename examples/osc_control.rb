@@ -1,42 +1,38 @@
 #!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
-#
-# this is the most basic setup possible
-# we just set up an arpeggiator and let it run in the foreground
-#
+# A simple OSC control setup
+# You'll need the osc-ruby gem which doesn't bundle with diamond by default
 
 require "diamond"
 
 @output = UniMIDI::Output.gets
 
-map = {
-  "/1/fader1" => { 
-    :translate => -24..24,
-    :action => Proc.new { |arpeggiator, val| arpeggiator.interval = val }
-  },
-  "/1/fader2" => { 
-    :translate => -24..24,
-    :action => Proc.new { |arpeggiator, val| arpeggiator.transpose = val }
-  }
-}
+osc_map = [
+  { :property => :interval, :address => "/1/rotaryA", :value => (0..1.0) },
+  { :property => :transpose, :address => "/1/rotaryB" }
+]
 
-opts = { 
+options = { 
   :gate => 90,   
   :interval => 7,
   :midi => @output,
+  :osc_map => osc_map,
+  :osc_port => 8000,
   :pattern => Diamond::Pattern["UpDown"],
   :range => 4, 
   :rate => 8,
-  :resolution => 128,
-  :osc_map => map,
-  :osc_input_port => 8000
+  :resolution => 128
 }
 
-arp = Diamond::Arpeggiator.new(110, opts)
 
-chord = ["C3", "G3", "Bb3", "A4"]
+@arpeggiator = Diamond::Arpeggiator.new(options)
 
-arp << chord
+@clock = Diamond::Clock.new(110)
+@clock << @arpeggiator
+
+chord = ["C1", "G1", "Bb2", "A3"]
+
+@arpeggiator.add(*chord)
    
-arp.start(:focus => true)
+@clock.start(:focus => true)
