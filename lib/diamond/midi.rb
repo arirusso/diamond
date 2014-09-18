@@ -38,16 +38,18 @@ module Diamond
       # Initialize adding and removing MIDI notes from the sequence
       # @param [Sequence] sequence
       # @return [Boolean]
-      def enable_note_control(sequence)
+      def enable_note_control(sequence)  
         @midi.input.receive(:class => MIDIMessage::NoteOn) do |event|
           message = event[:message]
           if @midi.input.channel.nil? || @midi.input.channel == message.channel
+            puts "[DEBUG] MIDI: add note from input #{message.name} channel: #{message.channel}" if @debug
             sequence.add(message)
           end
-        end   
+        end 
         @midi.input.receive(:class => MIDIMessage::NoteOff) do |event| 
           message = event[:message]
           if @midi.input.channel.nil? || @midi.input.channel == message.channel
+            puts "[DEBUG] MIDI: remove note from input #{message.name} channel: #{message.channel}" if @debug
             sequence.remove(message)
           end
         end
@@ -69,7 +71,7 @@ module Diamond
             to_range = SequenceParameters::RANGE[property]
             value = message.value
             value = Scale.transform(value).from(from_range).to(to_range)
-            puts "[DEBUG] MIDI: #{property}= #{value}" if @debug
+            puts "[DEBUG] MIDI: #{property}= #{value} channel: #{message.channel}" if @debug
             parameters.send("#{property}=", value)
           end
         end
@@ -108,8 +110,15 @@ module Diamond
       # @param [Sequencer::Core] sequencer
       # @return [Boolean]
       def enable_output(sequencer)
-        sequencer.event.perform << proc do |data| 
-          @midi.output.puts(data) unless data.empty?
+        sequencer.event.perform << proc do |bucket|
+          unless bucket.empty?
+            if @debug
+              bucket.each do |message|
+                puts "[DEBUG] MIDI: output #{message.name} channel: #{message.channel}"
+              end
+            end
+            @midi.output.puts(bucket)
+          end
         end
         sequencer.event.stop << proc { emit_pending_note_offs }
         true
