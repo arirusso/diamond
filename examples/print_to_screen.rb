@@ -1,30 +1,25 @@
 #!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
+# Similar to "simple.rb" except the MIDI messages produced by the arpeggiator are printed to the screen
 #
-# this a very basic setup, again. set up an arpeggiator and let it run in the foreground
-#
-# the messages produced will be printed to the screen
-#
-# there's no MIDI output
-#
+# There's no MIDI output
 
 require "diamond"
-require "pp"
 
-opts = { 
+options = { 
   :gate => 90,   
   :interval => 7,
   :midi => $stdout,
-  :pattern => Diamond::Pattern["UpDown"],
+  :pattern => "UpDown",
   :range => 4, 
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(75, opts)
+@clock = Diamond::Clock.new(101)
+@arpeggiator = Diamond::Arpeggiator.new(options)
+@clock << @arpeggiator
 
-chord = ["C4", "E4", "G4"]
-
-arp.add(chord)
-   
-arp.start(:focus => true)
+chord = ["C1", "G1", "Bb2", "A3"]
+@arpeggiator.add(*chord)
+@clock.start(:focus => true)
