@@ -11,7 +11,7 @@ gem "analog"
 gem "midi-instrument"
 gem "midi-message"
 gem "midi-topaz"
-gem "sequencer"
+gem "basic-sequencer"
 gem "unimidi"
 
 # for OSC:
