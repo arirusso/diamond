@@ -18,3 +18,6 @@ module TestHelper
 end
 
 TestHelper.select_devices
+
+# Stub out OSC networking
+::EM.stubs(:run).returns(:true)
