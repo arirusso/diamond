@@ -17,13 +17,14 @@ osc_map = [
     :property => :transpose, 
     :address => "/1/rotaryB" 
   }
+  # etc
 ]
 
 options = { 
   :gate => 90,   
   :interval => 7,
   :midi => @output,
-  :osc_map => osc_map,
+  :osc_control => osc_map,
   :osc_port => 8000,
   :pattern => "UpDown",
   :range => 4, 
