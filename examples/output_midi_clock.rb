@@ -1,27 +1,24 @@
 #!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
-#
-# this is an example where the arpeggiator outputs midi clock
-#
+
+# Output MIDI clock messages
 
 require "diamond"
 
 @output = UniMIDI::Output.gets
 
-opts = { 
+options = { 
   :gate => 90,   
   :interval => 7,
-  :midi => @output,
-  :midi_clock_output => true,
-  :pattern => Diamond::Pattern["UpDown"],
+  :pattern => "UpDown",
   :range => 4, 
   :rate => 8
 }
 
-arp = Diamond::Arpeggiator.new(98, opts)
+@clock = Diamond::Clock.new(101, :output => @output)
+@arpeggiator = Diamond::Arpeggiator.new(options)
+@clock << @arpeggiator
 
-chord = ["C3", "G3", "Bb3", "A4"]
-
-arp.add(chord)
-   
-arp.start(:focus => true)
+chord = ["C1", "G1", "Bb2", "A3"]
+@arpeggiator.add(*chord)
+@clock.start(:focus => true)
