@@ -1,27 +1,36 @@
 module Diamond
   
+  # Pattern that the sequence is derived from given the parameters and input
   class Pattern
     
     attr_reader :name
     
+    # @param [String, Symbol] name A name to identify the pattern by eg "up/down"
+    # @param [Proc] proc The pattern procedure
     def initialize(name, &proc)
       @name = name
       @proc = proc      
     end
     
-    # compute scale degrees using the pattern with the given <em>range</em> and <em>interval</em>
+    # Compute scale degrees using the pattern with the given range and interval
+    # @param [Fixnum] range
+    # @param [Interval] interval
+    # @return [Array<Fixnum>]
     def compute(range, interval)
       @proc.call(range, interval)
     end
     
-    # all patterns
+    # All patterns
+    # @return [Array<Pattern>]
     def self.all
       @patterns
     end
     
-    # find a pattern by its name
+    # Find a pattern by its name (case insensitive)
+    # @param [String, Symbol] name
+    # @return [Pattern]
     def self.find(name)
-      all.find { |p| p.name.downcase == name.downcase }
+      all.find { |pattern| pattern.name.to_s.downcase == name.to_s.downcase }
     end
     
     @patterns = []
