@@ -9,7 +9,6 @@ module Diamond
       def self.included(base)
         base.send(:extend, Forwardable)
         base.send(:def_delegators, :@midi,
-                  :<<,
                   :input,
                   :inputs,
                   :omni_on,
