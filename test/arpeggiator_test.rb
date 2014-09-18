@@ -4,10 +4,6 @@ class Diamond::ApeggiatorTest < Test::Unit::TestCase
 
   context "Arpeggiator" do
 
-    setup do
-      ::OSC::EMServer.any_instance.stubs(:run).returns(:true)
-    end
-
     context "#initialize" do
 
       should "have defaults" do

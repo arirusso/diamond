@@ -4,10 +4,6 @@ class Diamond::APITest < Test::Unit::TestCase
 
   context "API" do
 
-    setup do
-      ::OSC::EMServer.any_instance.stubs(:run).returns(:true)
-    end
-
     context "MIDI" do
 
       context "#omni_on" do
