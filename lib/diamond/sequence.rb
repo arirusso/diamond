@@ -47,7 +47,7 @@ module Diamond
     # Remove input note messages with the same note value
     # @param [Array<MIDIMessage::NoteOn, MIDIMessage::NoteOff>, MIDIMessage::NoteOff, MIDIMessage::NoteOn, *MIDIMessage::NoteOff, *MIDIMessage::NoteOn] note_messages
     # @return [Boolean]
-    def remove(*note_messages) 
+    def remove(*note_messages)
       messages = [note_messages].flatten
       deletion_queue = messages.map(&:note)
       @input_queue.delete_if { |message| deletion_queue.include?(message.note) }
