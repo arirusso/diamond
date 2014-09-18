@@ -10,6 +10,7 @@ require "diamond"
 options = { 
   :gate => 90,   
   :interval => 7,
+  :midi => @output,
   :pattern => "UpDown",
   :range => 4, 
   :rate => 8
