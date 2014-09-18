@@ -37,16 +37,20 @@ module Diamond
     end
 
     # Add an arpeggiator to this clock's control
-    # @param [Arpeggiator] arpeggiator
+    # @param [Array<Arpeggiator>, Arpeggiator] arpeggiator
     # @return [Boolean]
     def add(arpeggiator)
-      unless @arpeggiators.include?(arpeggiator)
-        @arpeggiators << arpeggiator
-        reset_tick
-        true
-      else
-        false
+      arpeggiators = [arpeggiator].flatten
+      result = arpeggiators.map do |arpeggiator|
+        unless @arpeggiators.include?(arpeggiator)
+          @arpeggiators << arpeggiator
+          reset_tick
+          true
+        else
+          false
+        end
       end
+      result.any?
     end
     alias_method :<<, :add
 
@@ -54,13 +58,17 @@ module Diamond
     # @param [Arpeggiator] arpeggiator
     # @return [Boolean]
     def remove(arpeggiator)
-      if @arpeggiators.include?(arpeggiator)
-        @arpeggiators.delete(arpeggiator)
-        reset_tick
-        true
-      else
-        false
+      arpeggiators = [arpeggiator].flatten
+      result = arpeggiators.map do |arpeggiator|
+        if @arpeggiators.include?(arpeggiator)
+          @arpeggiators.delete(arpeggiator)
+          reset_tick
+          true
+        else
+          false
+        end
       end
+      result.any?
     end
 
     private
