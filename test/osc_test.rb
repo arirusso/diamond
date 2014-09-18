@@ -1,23 +1,10 @@
 require "helper"
 
-class Diamond::OSC::ControllerTest < Test::Unit::TestCase
+class Diamond::OSCTest < Test::Unit::TestCase
 
-  context "OSC::Server" do
+  context "OSC" do
 
-    context "#start" do
-
-      setup do
-        @controller = Diamond::OSC::Controller.new(Object.new, [], :port => 8000)
-      end
-
-      should "start server" do
-        ::OSC::EMServer.any_instance.expects(:run).once
-        @controller.start
-      end
-
-    end
-
-    context "#initialize_map" do
+    context "#enable_parameter_control" do
 
       setup do
         @map = [
@@ -25,14 +12,23 @@ class Diamond::OSC::ControllerTest < Test::Unit::TestCase
          { :property => :transpose, :address => "/1/rotaryB" }
         ]
         @addresses = @map.map { |mapping| mapping[:address] }
+        @osc = Diamond::OSC.new(:server_port => 8000)
+      end
+
+      should "start server" do
+        ::OSC::EMServer.any_instance.expects(:run).once
+        @osc.enable_parameter_control(Object.new, @map)
+        ::OSC::EMServer.any_instance.unstub(:run)
       end
 
       should "assign map" do
         ::OSC::EMServer.any_instance.expects(:add_method).times(@map.size).with do |arg| 
           assert @addresses.include?(arg)
         end
-        @controller = Diamond::OSC::Controller.new(Object.new, @map, :port => 8000)
+        @osc.enable_parameter_control(Object.new, @map)
+        ::OSC::EMServer.any_instance.unstub(:add_method)
       end
+
     end
 
   end
