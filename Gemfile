@@ -10,5 +10,10 @@ end
 gem "analog"
 gem "midi-instrument"
 gem "midi-message"
+gem "midi-topaz"
 gem "sequencer"
 gem "unimidi"
+
+# for OSC:
+gem "eventmachine"
+gem "osc-ruby"
