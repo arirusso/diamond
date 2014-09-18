@@ -3,6 +3,7 @@ module Diamond
   # Enable the instrument to use OSC
   module OSC
 
+    # An access point for dealing with all OSC functionality for the instrument
     class Node
 
       # @param [Hash] options
@@ -54,6 +55,7 @@ module Diamond
 
     end
 
+    # Shortcut to Diamond::OSC::Node.new
     def self.new(*args)
       Node.new(*args)
     end

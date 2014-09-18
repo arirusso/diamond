@@ -1,7 +1,9 @@
 module Diamond
 
+  # Enable the instrument to use MIDI
   module MIDI
 
+    # Methods dealing with MIDI input
     module Input
 
       def self.included(base)
@@ -85,6 +87,7 @@ module Diamond
 
     end
 
+    # Methods dealing with MIDI output
     module Output
 
       def self.included(base)
@@ -125,6 +128,7 @@ module Diamond
 
     end
 
+    # An access point for dealing with all MIDI functionality for the instrument
     class Node
 
       include Input
@@ -143,6 +147,7 @@ module Diamond
 
     end
 
+    # Shortcut to Diamond::MIDI::Node.new
     def self.new(*args)
       Node.new(*args)
     end
