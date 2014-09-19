@@ -5,7 +5,7 @@ module Diamond
 
     extend Forwardable
 
-    def_delegators :@clock, :event, :pause, :unpause
+    def_delegators :@clock, :event, :pause, :tempo, :tempo=, :unpause
 
     # @param [Fixnum, UniMIDI::Input] tempo_or_input
     # @param [Hash] options
