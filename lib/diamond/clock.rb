@@ -9,7 +9,7 @@ module Diamond
 
     # @param [Fixnum, UniMIDI::Input] tempo_or_input
     # @param [Hash] options
-    # @option options [Array<UniMIDI::Output>, UniMIDI::Output] :outputs MIDI output device(s)
+    # @option options [Array<UniMIDI::Output>, UniMIDI::Output] :output MIDI output device(s) (also: :outputs)
     def initialize(*args)
       @arpeggiators = []
       @clock = Sequencer::Clock.new(*args)
