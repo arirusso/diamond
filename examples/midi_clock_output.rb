@@ -16,7 +16,7 @@ options = {
   :rate => 8
 }
 
-@clock = Diamond::Clock.new(101, :output => @output)
+@clock = Diamond::Clock.new(101, :outputs => @output)
 @arpeggiator = Diamond::Arpeggiator.new(options)
 @clock << @arpeggiator
 
