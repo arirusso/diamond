@@ -6,7 +6,7 @@ class Diamond::SequenceParametersTest < Test::Unit::TestCase
 
     setup do
       @sequence = Diamond::Sequence.new
-      @params = Diamond::SequenceParameters.new(@sequence, 16) { @sequence.mark_changed }
+      @params = Diamond::SequenceParameters.new(@sequence, 128) { @sequence.mark_changed }
     end
 
     context "#rate=" do
@@ -15,6 +15,28 @@ class Diamond::SequenceParametersTest < Test::Unit::TestCase
         @sequence.expects(:mark_changed).once
         @params.rate = 16
         assert_equal 16, @params.rate
+      end
+
+      should "scale gate down" do
+        @params.rate = 16
+        @params.gate = 50
+        assert_equal 16, @params.rate
+        assert_equal 50, @params.gate
+
+        @params.rate = 8
+        assert_equal 8, @params.rate
+        assert_equal 25, @params.gate
+      end
+
+      should "scale gate up" do
+        @params.rate = 8
+        @params.gate = 50
+        assert_equal 8, @params.rate
+        assert_equal 50, @params.gate
+
+        @params.rate = 16
+        assert_equal 16, @params.rate
+        assert_equal 100, @params.gate
       end
 
     end
@@ -51,6 +73,12 @@ class Diamond::SequenceParametersTest < Test::Unit::TestCase
         assert_not_equal 125, @params.gate
         @params.gate = 125
         assert_equal 125, @params.gate
+      end
+
+      should "constrain gate to what rate and resolution allow for" do
+        @params.rate = 16
+        @params.gate = 10
+        assert_equal 13, @params.gate
       end
 
     end
