@@ -38,11 +38,14 @@ module Diamond
       sequence.send(:use_parameters, self)
     end
 
-    # Set the gate property
+    # Set the gate property. Is constrained to go only as low as the rate and resolution allow.
     # @param [Fixnum] num
     # @return [Fixnum]
     def gate=(num)
-      @gate = constrain(num, :range => RANGE[:gate])
+      # find the lowest gate value possible for the rate and resolution
+      factor = @resolution.to_f / @rate
+      lowest = 100.0 / factor
+      @gate = constrain(num, :range => lowest..RANGE[:gate].end)
       mark_changed
       @gate
     end
@@ -74,11 +77,15 @@ module Diamond
       @range
     end
 
-    # Set the rate property
+    # Set the rate property. This will also scale the gate accordingly
     # @param [Fixnum] num
     # @return [Fixnum]
     def rate=(num)
+      # Scale the gate according to the new gate
+      old_rate = @rate
+      change = old_rate.to_f / num
       @rate = constrain(num, :range => RANGE[:rate].begin..@resolution)
+      self.gate = @gate * change
       mark_changed
       @rate
     end
