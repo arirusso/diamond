@@ -8,8 +8,8 @@ module Diamond
       :interval => -48..48,
       :pattern_offset => -16..16,
       :range => 0..10,
-      :rate => 0..64,
-      :transpose => -64..64
+      :rate => 0..128,
+      :transpose => -72..72
     }
 
     attr_reader :gate,
