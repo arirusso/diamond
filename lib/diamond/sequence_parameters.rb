@@ -3,15 +3,6 @@ module Diamond
   # User-controller parameters that are used to formulate the note event sequence
   class SequenceParameters
 
-    RANGE = {
-      :gate => 1..500,
-      :interval => -48..48,
-      :pattern_offset => -16..16,
-      :range => 0..10,
-      :rate => 0..128,
-      :transpose => -72..72
-    }
-
     attr_reader :gate,
       :interval,
       :pattern,
@@ -38,6 +29,21 @@ module Diamond
       sequence.send(:use_parameters, self)
     end
 
+    # Dynamically produce an acceptable range for the given param
+    # @param [Symbol] param
+    # @return [Range]
+    def constraints(param)
+      ranges = {
+        :gate => proc { get_lowest_gate..500 },
+        :interval => proc { -48..48 },
+        :pattern_offset => proc { -16..16 },
+        :range => proc { 0..10 },
+        :rate => proc { 0..@resolution },
+        :transpose => proc { -72..72 }
+      }
+      ranges[param].call
+    end
+
     # Set the gate property. Is constrained to go only as low as the rate and resolution allow.
     # @param [Fixnum] num
     # @param [Hash] options
@@ -45,7 +51,7 @@ module Diamond
     # @return [Fixnum]
     def gate=(num, options = {})
       should_constrain = options.fetch(:constrain, true)
-      @gate = should_constrain ? constrain(num, :range => get_lowest_gate..RANGE[:gate].end) : num
+      @gate = should_constrain ? constrain(num, :range => constraints(:gate)) : num
       mark_changed
       @gate
     end
@@ -57,7 +63,7 @@ module Diamond
     # @param [Fixnum]
     def interval=(num, options = {})
       should_constrain = options.fetch(:constrain, true)
-      @interval = should_constrain ? constrain(num, :range => RANGE[:interval]) : num
+      @interval = should_constrain ? constrain(num, :range => constraints(:interval)) : num
       mark_changed
       @interval
     end
@@ -78,7 +84,7 @@ module Diamond
     # @return [Fixnum]
     def range=(num, options = {})
       should_constrain = options.fetch(:constrain, true)
-      @range = should_constrain ? constrain(num, :range => RANGE[:range]) : num
+      @range = should_constrain ? constrain(num, :range => constraints(:range)) : num
       mark_changed
       @range
     end
@@ -93,8 +99,8 @@ module Diamond
       change = num / @rate.to_f
       new_gate = (@gate * change).ceil
       if options.fetch(:constrain, true)
-        @rate = constrain(num, :range => RANGE[:rate].begin..@resolution)
-        @gate = constrain(new_gate, :range => get_lowest_gate..RANGE[:gate].end)
+        @rate = constrain(num, :range => constraints(:rate))
+        @gate = constrain(new_gate, :range => constraints(:gate))
       else
         @rate = num
         @gate = new_gate
@@ -151,11 +157,11 @@ module Diamond
     # @param [Hash] options
     # @return [ArpeggiatorSequence::Parameters]
     def apply_options(options)
-      @interval = constrain((options[:interval] || 12), :range => RANGE[:interval])
-      @range = constrain((options[:range] || 3), :range => RANGE[:range])
-      @pattern_offset = constrain((options[:pattern_offset] || 0),:range => RANGE[:pattern_offset])
-      @rate = constrain((options[:rate] || 8), :range => 0..@resolution)
-      @gate = constrain((options[:gate] || 75), :range => RANGE[:gate])
+      @interval = constrain((options[:interval] || 12), :range => constraints(:interval))
+      @range = constrain((options[:range] || 3), :range => constraints(:range))
+      @pattern_offset = constrain((options[:pattern_offset] || 0),:range => constraints(:pattern_offset))
+      @rate = constrain((options[:rate] || 8), :range => constraints(:rate))
+      @gate = constrain((options[:gate] || 75), :range => constraints(:gate))
       @pattern = get_pattern(options[:pattern])
       self
     end

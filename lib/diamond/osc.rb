@@ -23,11 +23,11 @@ module Diamond
         start_server
         maps = map.map do |item|
           property = item[:property]
-          from_range = item[:value] || (0..1.0)
-          to_range = SequenceParameters::RANGE[property]
+          osc_range = item[:value] || (0..1.0)
           @server.add_method(item[:address]) do |message|
             value = message.to_a[0]
-            value = Scale.transform(value).from(from_range).to(to_range)
+            parameter_range = arpeggiator.parameter.constraints(property)
+            value = Scale.transform(value).from(osc_range).to(parameter_range)
             puts "[DEBUG]: OSC: #{property}= #{value}" if @debug
             arpeggiator.parameter.send("#{property}=", value)
             true

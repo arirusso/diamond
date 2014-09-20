@@ -8,6 +8,7 @@ class Diamond::ApeggiatorTest < Test::Unit::TestCase
 
       should "have defaults" do
         @arpeggiator = Diamond::Arpeggiator.new
+        assert_equal 128, @arpeggiator.resolution
         assert_equal 8, @arpeggiator.rate
         assert_equal 3, @arpeggiator.range    
         assert_equal 12, @arpeggiator.interval  
@@ -15,6 +16,7 @@ class Diamond::ApeggiatorTest < Test::Unit::TestCase
 
       should "allow setting params" do
         @arpeggiator = Diamond::Arpeggiator.new(:interval => 7, :range => 4, :rate => 16)
+        assert_equal 128, @arpeggiator.resolution
         assert_equal 16, @arpeggiator.rate
         assert_equal 4, @arpeggiator.range    
         assert_equal 7, @arpeggiator.interval  

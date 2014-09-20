@@ -60,16 +60,16 @@ module Diamond
       # @param [Array<Hash>] map
       # @return [Boolean]
       def enable_parameter_control(arpeggiator, map)
-        from_range = 0..127
+        midi_cc_range = 0..127
         @midi.input.receive(:class => MIDIMessage::ControlChange) do |event|
           message = event[:message]
           if @midi.input.channel.nil? || @midi.input.channel == message.channel
             index = message.index
             mapping = map.find { |mapping| mapping[:index] == index }
             property = mapping[:property]
-            to_range = SequenceParameters::RANGE[property]
+            parameter_range = apeggiator.parameter.constraints(property)
             value = message.value
-            value = Scale.transform(value).from(from_range).to(to_range)
+            value = Scale.transform(value).from(midi_cc_range).to(parameter_range)
             puts "[DEBUG] MIDI: #{property}= #{value} channel: #{message.channel}" if @debug
             arpeggiator.parameter.send("#{property}=", value)
           end
