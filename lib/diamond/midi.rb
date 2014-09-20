@@ -35,31 +35,31 @@ module Diamond
       end
 
       # Initialize adding and removing MIDI notes from the sequence
-      # @param [Sequence] sequence
+      # @param [Arpeggiator] arpeggiator
       # @return [Boolean]
-      def enable_note_control(sequence)  
+      def enable_note_control(arpeggiator)  
         @midi.input.receive(:class => MIDIMessage::NoteOn) do |event|
           message = event[:message]
           if @midi.input.channel.nil? || @midi.input.channel == message.channel
             puts "[DEBUG] MIDI: add note from input #{message.name} channel: #{message.channel}" if @debug
-            sequence.add(message)
+            arpeggiator.sequence.add(message)
           end
         end 
         @midi.input.receive(:class => MIDIMessage::NoteOff) do |event| 
           message = event[:message]
           if @midi.input.channel.nil? || @midi.input.channel == message.channel
             puts "[DEBUG] MIDI: remove note from input #{message.name} channel: #{message.channel}" if @debug
-            sequence.remove(message)
+            arpeggiator.sequence.remove(message)
           end
         end
         true
       end
 
       # Initialize a user-defined map of control change messages
-      # @param [SequenceParameters] parameters
+      # @param [Arpeggiator] arpeggiator
       # @param [Array<Hash>] map
       # @return [Boolean]
-      def enable_parameter_control(parameters, map)
+      def enable_parameter_control(arpeggiator, map)
         from_range = 0..127
         @midi.input.receive(:class => MIDIMessage::ControlChange) do |event|
           message = event[:message]
@@ -71,7 +71,7 @@ module Diamond
             value = message.value
             value = Scale.transform(value).from(from_range).to(to_range)
             puts "[DEBUG] MIDI: #{property}= #{value} channel: #{message.channel}" if @debug
-            parameters.send("#{property}=", value)
+            arpeggiator.parameter.send("#{property}=", value)
           end
         end
       end
@@ -106,10 +106,10 @@ module Diamond
       end
 
       # Initialize MIDI output, enabling the sequencer to emit notes
-      # @param [Sequencer::Core] sequencer
+      # @param [Arpeggiator] arpeggiator
       # @return [Boolean]
-      def enable_output(sequencer)
-        sequencer.event.perform << proc do |bucket|
+      def enable_output(arpeggiator)
+        arpeggiator.sequencer.event.perform << proc do |bucket|
           unless bucket.empty?
             if @debug
               bucket.each do |message|
@@ -119,11 +119,21 @@ module Diamond
             @midi.output.puts(bucket)
           end
         end
-        sequencer.event.stop << proc { emit_pending_note_offs }
+        arpeggiator.sequencer.event.stop << proc { emit_pending_note_offs(arpeggiator) }
         true
       end
 
       private
+
+      # Emit any note off messages that are currently pending in the queue.  The clock triggers this 
+      # when stopping or pausing
+      # @param [Arpeggiator] arpeggiator
+      # @return [Array<MIDIMessage::NoteOff>]
+      def emit_pending_note_offs(arpeggiator)
+        messages = arpeggiator.sequence.pending_note_offs
+        @midi.output.puts(*messages)
+        messages
+      end
 
       # Initialize MIDI output
       # @param [Array<UniMIDI::Output>] outputs

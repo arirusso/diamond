@@ -16,10 +16,10 @@ module Diamond
       end
 
       # Enable controlling the instrument via OSC
-      # @param [Object] subject The object to operate on when messages are received
+      # @param [Arpeggiator] arpeggiator The arpeggiator to operate on when messages are received
       # @param [Array<Hash>] map
       # @return [Boolean]
-      def enable_parameter_control(subject, map)
+      def enable_parameter_control(arpeggiator, map)
         start_server
         maps = map.map do |item|
           property = item[:property]
@@ -29,7 +29,7 @@ module Diamond
             value = message.to_a[0]
             value = Scale.transform(value).from(from_range).to(to_range)
             puts "[DEBUG]: OSC: #{property}= #{value}" if @debug
-            subject.send("#{property}=", value)
+            arpeggiator.parameter.send("#{property}=", value)
             true
           end
           true

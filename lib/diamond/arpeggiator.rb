@@ -51,9 +51,9 @@ module Diamond
       transmit_channel = options[:tx_channel]
       devices = MIDIInstrument::Device.partition(options[:midi])
       @midi = MIDI.new(devices, :debug => !!options[:midi_debug], :receive_channel => receive_channel, :transmit_channel => transmit_channel)
-      @midi.enable_output(@sequencer)
-      @midi.enable_note_control(@sequence)
-      @midi.enable_parameter_control(@parameter, options[:midi_control]) if !options[:midi_control].nil?
+      @midi.enable_output(self)
+      @midi.enable_note_control(self)
+      @midi.enable_parameter_control(self, options[:midi_control]) if !options[:midi_control].nil?
       @midi
     end
 
@@ -65,15 +65,6 @@ module Diamond
       @osc = OSC.new(:debug => !!options[:osc_debug], :server_port => options[:osc_port])
       @osc.enable_parameter_control(@parameter, options[:osc_control]) if !options[:osc_control].nil?
       @osc
-    end
-
-    # Emit any note off messages that are currently pending in the queue.  The clock triggers this 
-    # when stopping or pausing
-    # @return [Array<MIDIMessage::NoteOff>]
-    def emit_pending_note_offs
-      messages = @sequence.pending_note_offs
-      @midi.output.puts(*messages)
-      messages
     end
 
   end
