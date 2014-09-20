@@ -40,21 +40,24 @@ module Diamond
 
     # Set the gate property. Is constrained to go only as low as the rate and resolution allow.
     # @param [Fixnum] num
+    # @param [Hash] options
+    # @option options [Boolean] :constrain When false, will skip constraints (default: true)
     # @return [Fixnum]
-    def gate=(num)
-      # find the lowest gate value possible for the rate and resolution
-      factor = @resolution.to_f / @rate
-      lowest = 100.0 / factor
-      @gate = constrain(num, :range => lowest..RANGE[:gate].end)
+    def gate=(num, options = {})
+      should_constrain = options.fetch(:constrain, true)
+      @gate = should_constrain ? constrain(num, :range => get_lowest_gate..RANGE[:gate].end) : num
       mark_changed
       @gate
     end
 
     # Set the interval property
     # @param [Fixnum] num
+    # @param [Hash] options
+    # @option options [Boolean] :constrain When false, will skip constraints (default: true)
     # @param [Fixnum]
-    def interval=(num)
-      @interval = num
+    def interval=(num, options = {})
+      should_constrain = options.fetch(:constrain, true)
+      @interval = should_constrain ? constrain(num, :range => RANGE[:interval]) : num
       mark_changed
       @interval
     end
@@ -70,22 +73,32 @@ module Diamond
 
     # Set the range property
     # @param [Fixnum] range
+    # @param [Hash] options
+    # @option options [Boolean] :constrain When false, will skip constraints (default: true)
     # @return [Fixnum]
-    def range=(num)
-      @range = constrain(num, :range => RANGE[:range])
+    def range=(num, options = {})
+      should_constrain = options.fetch(:constrain, true)
+      @range = should_constrain ? constrain(num, :range => RANGE[:range]) : num
       mark_changed
       @range
     end
 
     # Set the rate property. This will also scale the gate accordingly
     # @param [Fixnum] num
+    # @param [Hash] options
+    # @option options [Boolean] :constrain When false, will skip constraints (default: true)
     # @return [Fixnum]
-    def rate=(num)
+    def rate=(num, options = {})
       # Scale the gate according to the new gate
-      old_rate = @rate
-      change = old_rate.to_f / num
-      @rate = constrain(num, :range => RANGE[:rate].begin..@resolution)
-      self.gate = @gate * change
+      change = num / @rate.to_f
+      new_gate = (@gate * change).ceil
+      if options.fetch(:constrain, true)
+        @rate = constrain(num, :range => RANGE[:rate].begin..@resolution)
+        @gate = constrain(new_gate, :range => get_lowest_gate..RANGE[:gate].end)
+      else
+        @rate = num
+        @gate = new_gate
+      end
       mark_changed
       @rate
     end
@@ -122,6 +135,13 @@ module Diamond
     end
 
     private
+
+    # Find the lowest gate value possible for the rate and resolution
+    # @return [Float]
+    def get_lowest_gate
+      factor = @resolution.to_f / @rate
+      (100.0 / factor).ceil
+    end
 
     # Mark that there's been a change in the sequence
     def mark_changed
