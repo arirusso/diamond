@@ -21,7 +21,6 @@ module Diamond
     def at(pointer)
       if changed? && (pointer % @parameter.rate == 0)
         update
-        @changed = false
       end
       enqueue_next(pointer)
       messages = @queue.shift || []
@@ -122,6 +121,7 @@ module Diamond
       notes = get_note_sequence
       initialize_sequence(notes.length)
       populate_sequence(notes) unless notes.empty?
+      @changed = false
       @sequence
     end
 
