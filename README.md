@@ -27,7 +27,7 @@
 require "diamond"
 ```
 
-First, select a MIDI output using [unimidi](https://github.com/arirusso/unimidi). ([more about that...](http://tx81z.blogspot.com/2011/10/selecting-midi-device-with-unimidi.html))
+First, select a MIDI output using [unimidi](https://github.com/arirusso/unimidi). ([more about that here](http://tx81z.blogspot.com/2011/10/selecting-midi-device-with-unimidi.html))
 
 ```ruby
 @output = UniMIDI::Output.gets
@@ -60,7 +60,7 @@ Point the clock to the arpeggiator
 clock << arpeggiator
 ```
 
-Of course, an arpeggiator needs notes to work with. You can use a MIDI input for that. ([see example](http://github.com/arirusso/diamond/blob/master/examples/midi_note_input.rb)). However, again for the sake of simplicity here's a chord in Ruby
+The arpeggiator will play based on inputted notes or chords; a MIDI input can be used for that. ([see example](http://github.com/arirusso/diamond/blob/master/examples/midi_note_input.rb)). It's also possible to enter notes in Ruby:
 
 ```ruby
 chord = ["C3", "G3", "Bb3", "A4"]
@@ -73,15 +73,15 @@ arpeggiator.add(chord)
 arpeggiator << "C5"
 ```
 
-Now we'll start the clock and arpeggiator.  
-
-Note that by default, the clock will run in a background thread. If you're working in a [PRY](http://pryrepl.org)/[IRB](http://en.wikipedia.org/wiki/Interactive_Ruby_Shell)/etc this will allow you to continue to code while the arpeggiator runs. To start in the *foreground*, pass `:focus => true` to `Clock#start`.
+Starting the clock will also start the arpeggiator:
 
 ```ruby
 clock.start
 ```
 
-All of the [arpeggiator options](http://rubydoc.info/github/arirusso/diamond/master/Diamond/Arpeggiator:initialize) can be controlled on the on the fly
+Note that by default, the clock will run in a background thread. If you're working in a [PRY](http://pryrepl.org)/[IRB](http://en.wikipedia.org/wiki/Interactive_Ruby_Shell)/etc this will allow you to continue to code while the arpeggiator runs. To start in the *foreground*, pass `:focus => true` to `Clock#start`.
+
+All of the [arpeggiator options](http://rubydoc.info/github/arirusso/diamond/master/Diamond/Arpeggiator:initialize) can be controlled while the arpeggiator is running.
 
 ```ruby
 arpeggiator.rate = 16
