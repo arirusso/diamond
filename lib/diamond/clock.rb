@@ -1,18 +1,26 @@
 module Diamond
 
-  # A wrapper for Sequencer::Clock (and thus Topaz::Tempo) that's geared towards the arpeggiator
+  # A wrapper for Topaz::Tempo that's geared towards the arpeggiator
   class Clock
 
     extend Forwardable
 
-    def_delegators :@clock, :add_midi_output, :event, :midi_outputs, :remove_midi_output, :pause, :tempo, :tempo=, :unpause
+    def_delegators :@clock, :midi_output, :event, :pause, :running?, :tempo, :tempo=, :unpause
 
     # @param [Fixnum, UniMIDI::Input] tempo_or_input
     # @param [Hash] options
     # @option options [Array<UniMIDI::Output>, UniMIDI::Output] :output MIDI output device(s) (also: :outputs)
-    def initialize(*args)
+    def initialize(tempo_or_input, options = {})
       @arpeggiators = []
-      @clock = Sequencer::Clock.new(*args)
+      output = options[:output] || options[:outputs] || options[:midi]
+      initialize_clock(tempo_or_input, :output => output)
+      initialize_events
+    end
+
+    # Shortcut to the clock's MIDI output devices
+    # @return [Array<UniMIDI::Output>]
+    def midi_outputs
+      @clock.midi_output.devices
     end
 
     # Start the clock
@@ -36,53 +44,52 @@ module Diamond
       true
     end
 
-    # Add an arpeggiator to this clock's control
+    # Add arpeggiator(s) to this clock's control
     # @param [Array<Arpeggiator>, Arpeggiator] arpeggiator
-    # @return [Boolean]
+    # @return [Array<Arpeggiator>]
     def add(arpeggiator)
       arpeggiators = [arpeggiator].flatten
-      result = arpeggiators.map do |arpeggiator|
-        unless @arpeggiators.include?(arpeggiator)
-          @arpeggiators << arpeggiator
-          reset_tick
-          true
-        else
-          false
-        end
-      end
-      result.any?
+      @arpeggiators += arpeggiators
+      @arpeggiators
     end
     alias_method :<<, :add
 
-    # Remove an arpeggiator from this clock's control
-    # @param [Arpeggiator] arpeggiator
-    # @return [Boolean]
+    # Remove arpeggiator(s) from this clock's control
+    # @param [Array<Arpeggiator>, Arpeggiator] arpeggiator
+    # @return [Array<Arpeggiator>]
     def remove(arpeggiator)
       arpeggiators = [arpeggiator].flatten
-      result = arpeggiators.map do |arpeggiator|
-        if @arpeggiators.include?(arpeggiator)
-          @arpeggiators.delete(arpeggiator)
-          reset_tick
-          true
-        else
-          false
-        end
-      end
-      result.any?
+      @arpeggiators.delete_if? { |arpeggiator| arpeggiators.include?(arpeggiator) }
+      @arpeggiators
     end
 
     private
 
-    # Reset the clock's tick event (used when arpeggiators are added or removed)
-    # @return [Array<Arpeggiator>] Arpeggiators that are now actively controlled by this clock
-    def reset_tick
-      @clock.event.tick.clear
-      @arpeggiators.map do |arpeggiator|
-        @clock.event.tick << proc { arpeggiator.sequencer.exec(arpeggiator.sequence) }
-        arpeggiator.sequencer.event.stop { @clock.stop }
-        arpeggiator
-      end
+    # @param [Fixnum, UniMIDI::Input] tempo_or_input
+    # @param [Hash] options
+    # @option options [Array<UniMIDI::Output>, UniMIDI::Output] :output MIDI output device(s)
+    # @option options [Fixnum] :resolution
+    # @return [Topaz::Clock]
+    def initialize_clock(tempo_or_input, options = {})
+      @clock = Topaz::Clock.new(tempo_or_input, :midi => options[:output])
+      resolution = options.fetch(:resolution, 128)
+      @clock.interval = @clock.interval * (resolution / @clock.interval)
+      @clock
     end
+
+    # Initialize the tick event
+    # @return [Boolean]
+    def initialize_events
+      @clock.event.tick << proc do
+        @arpeggiators.each do |arpeggiator|
+          arpeggiator.sequencer.exec(arpeggiator.sequence)
+          arpeggiator.sequencer.event.stop { @clock.stop }
+          arpeggiator
+        end
+      end
+      true
+    end
+
   end
 
 end

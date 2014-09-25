@@ -25,7 +25,7 @@ class Diamond::ClockTest < Test::Unit::TestCase
       should "add MIDI output" do
         output = Object.new
         refute @clock.midi_outputs.include?(output)
-        @clock.add_midi_output(output)
+        @clock.midi_output.devices << output
         assert_not_nil @clock.midi_outputs
         assert_not_empty @clock.midi_outputs
         assert @clock.midi_outputs.include?(output)
@@ -38,11 +38,12 @@ class Diamond::ClockTest < Test::Unit::TestCase
       should "remove MIDI output" do
         output = Object.new
         refute @clock.midi_outputs.include?(output)
-        @clock.add_midi_output(output)
+        @clock.midi_output.devices << output
         assert_not_nil @clock.midi_outputs
         assert_not_empty @clock.midi_outputs
         assert @clock.midi_outputs.include?(output)
-        @clock.remove_midi_output(output)
+
+        @clock.midi_output.devices.delete(output)
         refute @clock.midi_outputs.include?(output)
       end
 
