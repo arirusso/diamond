@@ -80,10 +80,12 @@ module Diamond
     # Initialize the tick event
     # @return [Boolean]
     def initialize_events
+      @arpeggiators.each do |arpeggiator|
+        arpeggiator.sequencer.event.stop << proc { @clock.stop }
+      end
       @clock.event.tick << proc do
-        @arpeggiators.each do |arpeggiator|
+        @arpeggiators.map do |arpeggiator|
           arpeggiator.sequencer.exec(arpeggiator.sequence)
-          arpeggiator.sequencer.event.stop { @clock.stop }
           arpeggiator
         end
       end
