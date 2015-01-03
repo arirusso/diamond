@@ -5,7 +5,7 @@
 # (c)2011-2014 Ari Russo and licensed under the Apache 2.0 License
 #
 
-# libs 
+# libs
 require "forwardable"
 require "midi-instrument"
 require "midi-message"
@@ -29,7 +29,7 @@ require "diamond/sequence"
 require "diamond/sequence_parameters"
 
 module Diamond
-  
-  VERSION = "0.5.3"
-  
+
+  VERSION = "0.5.4"
+
 end
