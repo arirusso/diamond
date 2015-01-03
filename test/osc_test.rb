@@ -13,20 +13,23 @@ class Diamond::OSCTest < Minitest::Test
         ]
         @addresses = @map.map { |mapping| mapping[:address] }
         @osc = Diamond::OSC.new(:server_port => 8000)
-      end
-
-      should "start server" do
         ::OSC::EMServer.any_instance.expects(:run).once
-        @osc.enable_parameter_control(Object.new, @map)
-        ::OSC::EMServer.any_instance.unstub(:run)
-      end
-
-      should "assign map" do
         ::OSC::EMServer.any_instance.expects(:add_method).times(@map.size).with do |arg|
           assert @addresses.include?(arg)
         end
-        @osc.enable_parameter_control(Object.new, @map)
+      end
+
+      teardown do
+        ::OSC::EMServer.any_instance.unstub(:run)
         ::OSC::EMServer.any_instance.unstub(:add_method)
+      end
+
+      should "start server" do
+        @osc.enable_parameter_control(Object.new, @map)
+      end
+
+      should "assign map" do
+        @osc.enable_parameter_control(Object.new, @map)
       end
 
     end

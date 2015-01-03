@@ -23,14 +23,14 @@ class Diamond::APITest < Minitest::Test
         end
 
         should "acknowledge message with rx channel" do
-          @arpeggiator.add(@messages[1])
           @arpeggiator.sequence.instance_variable_get("@input_queue").expects(:concat).once.with([@messages[1]])
+          @arpeggiator.add(@messages[1])
         end
 
         should "with omni on, acknowledge any rx channel" do
           @arpeggiator.omni_on
-          @arpeggiator.add(@messages[2])
           @arpeggiator.sequence.instance_variable_get("@input_queue").expects(:concat).once.with([@messages[2]])
+          @arpeggiator.add(@messages[2])
         end
 
       end

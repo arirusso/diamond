@@ -11,8 +11,15 @@ class Diamond::SequenceParametersTest < Minitest::Test
 
     context "#rate=" do
 
+      setup do
+        @sequence.expects(:mark_changed).times(7)
+      end
+
+      teardown do
+        @sequence.unstub(:mark_changed)
+      end
+
       should "set rate" do
-        @sequence.expects(:mark_changed).once
         @params.rate = 16
         assert_equal 16, @params.rate
       end
@@ -43,12 +50,18 @@ class Diamond::SequenceParametersTest < Minitest::Test
 
     context "#range=" do
 
+      setup do
+        @sequence.expects(:mark_changed).times(2)
+      end
+
+      teardown do
+        @sequence.unstub(:mark_changed)
+      end
+
       should "set range" do
-        @sequence.expects(:mark_changed).once
         @params.range = 4
         assert_equal 4, @params.range
 
-        @sequence.expects(:mark_changed).once
         @params.range += 1
         assert_equal 5, @params.range
       end
@@ -57,8 +70,15 @@ class Diamond::SequenceParametersTest < Minitest::Test
 
     context "#interval=" do
 
-      should "set interval" do
+      setup do
         @sequence.expects(:mark_changed).once
+      end
+
+      teardown do
+        @sequence.unstub(:mark_changed)
+      end
+
+      should "set interval" do
         refute_equal 7, @params.interval
         @params.interval = 7
         assert_equal 7, @params.interval
@@ -68,8 +88,15 @@ class Diamond::SequenceParametersTest < Minitest::Test
 
     context "#gate=" do
 
+      setup do
+        @sequence.expects(:mark_changed).times(3)
+      end
+
+      teardown do
+        @sequence.unstub(:mark_changed)
+      end
+
       should "set gate" do
-        @sequence.expects(:mark_changed).once
         refute_equal 125, @params.gate
         @params.gate = 125
         assert_equal 125, @params.gate
@@ -85,8 +112,15 @@ class Diamond::SequenceParametersTest < Minitest::Test
 
     context "#pattern_offset=" do
 
-      should "set pattern offset" do
+      setup do
         @sequence.expects(:mark_changed).once
+      end
+
+      teardown do
+        @sequence.unstub(:mark_changed)
+      end
+
+      should "set pattern offset" do
         refute_equal 5, @params.pattern_offset
         @params.pattern_offset = 5
         assert_equal 5, @params.pattern_offset
