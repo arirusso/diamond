@@ -1,6 +1,6 @@
 require "helper"
 
-class PatternTest < Test::Unit::TestCase
+class PatternTest < Minitest::Test
 
   context "Pattern" do
 
@@ -26,7 +26,7 @@ class PatternTest < Test::Unit::TestCase
         pattern = Diamond::Pattern.find("Up")
         result = pattern.compute(3, 7)
         assert_equal 4, result.length
-        assert_equal [0, 7, 14, 21], result        
+        assert_equal [0, 7, 14, 21], result
       end
 
     end
@@ -35,25 +35,25 @@ class PatternTest < Test::Unit::TestCase
       should "populate Up" do
         pattern = Diamond::Pattern.find("Up")
         result = pattern.compute(2, 12)
-        assert_equal [0, 12, 24], result    
+        assert_equal [0, 12, 24], result
       end
 
       should "populate Down" do
         pattern = Diamond::Pattern.find("Down")
         result = pattern.compute(2, 12)
-        assert_equal [24, 12, 0], result  
+        assert_equal [24, 12, 0], result
       end
 
       should "populate UpDown" do
         pattern = Diamond::Pattern.find("UpDown")
         result = pattern.compute(3, 12)
-        assert_equal [0, 12, 24, 36, 24, 12, 0], result   
+        assert_equal [0, 12, 24, 36, 24, 12, 0], result
       end
 
       should "populate DownUp" do
         pattern = Diamond::Pattern.find("DownUp")
         result = pattern.compute(3, 12)
-        assert_equal [36, 24, 12, 0, 12, 24, 36], result   
+        assert_equal [36, 24, 12, 0, 12, 24, 36], result
       end
 
     end

@@ -1,6 +1,6 @@
 require "helper"
 
-class Diamond::OSCTest < Test::Unit::TestCase
+class Diamond::OSCTest < Minitest::Test
 
   context "OSC" do
 
@@ -22,7 +22,7 @@ class Diamond::OSCTest < Test::Unit::TestCase
       end
 
       should "assign map" do
-        ::OSC::EMServer.any_instance.expects(:add_method).times(@map.size).with do |arg| 
+        ::OSC::EMServer.any_instance.expects(:add_method).times(@map.size).with do |arg|
           assert @addresses.include?(arg)
         end
         @osc.enable_parameter_control(Object.new, @map)
@@ -34,4 +34,3 @@ class Diamond::OSCTest < Test::Unit::TestCase
   end
 
 end
-

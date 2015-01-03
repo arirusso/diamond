@@ -1,6 +1,6 @@
 require "helper"
 
-class Diamond::APITest < Test::Unit::TestCase
+class Diamond::APITest < Minitest::Test
 
   context "API" do
 
@@ -30,7 +30,7 @@ class Diamond::APITest < Test::Unit::TestCase
         should "with omni on, acknowledge any rx channel" do
           @arpeggiator.omni_on
           @arpeggiator.add(@messages[2])
-          @arpeggiator.sequence.instance_variable_get("@input_queue").expects(:concat).once.with([@messages[2]]) 
+          @arpeggiator.sequence.instance_variable_get("@input_queue").expects(:concat).once.with([@messages[2]])
         end
 
       end
@@ -45,7 +45,7 @@ class Diamond::APITest < Test::Unit::TestCase
 
         should "add a midi source" do
           @arpeggiator.add_midi_source(@input)
-          assert_not_empty @arpeggiator.midi_sources
+          refute_empty @arpeggiator.midi_sources
           assert @arpeggiator.midi_sources.include?(@input)
         end
 
@@ -57,7 +57,7 @@ class Diamond::APITest < Test::Unit::TestCase
           @input = $test_device[:input]
           @arpeggiator = Diamond::Arpeggiator.new
           @arpeggiator.add_midi_source(@input)
-          assert_not_empty @arpeggiator.midi_sources
+          refute_empty @arpeggiator.midi_sources
           assert @arpeggiator.midi_sources.include?(@input)
         end
 
@@ -75,7 +75,7 @@ class Diamond::APITest < Test::Unit::TestCase
         end
 
         should "mute the arpeggiator" do
-          refute @arpeggiator.muted?     
+          refute @arpeggiator.muted?
           @arpeggiator.mute = true
           assert @arpeggiator.muted?
           @arpeggiator.mute = false
@@ -97,7 +97,7 @@ class Diamond::APITest < Test::Unit::TestCase
       context "#rate=" do
 
         should "set the rate" do
-          assert_not_equal 16, @arpeggiator.rate
+          refute_equal 16, @arpeggiator.rate
           @arpeggiator.rate = 16
           assert_equal 16, @arpeggiator.rate
         end
@@ -110,7 +110,7 @@ class Diamond::APITest < Test::Unit::TestCase
           @arpeggiator.range = 4
           assert_equal 4, @arpeggiator.range
           @arpeggiator.range += 1
-          assert_equal 5, @arpeggiator.range 
+          assert_equal 5, @arpeggiator.range
         end
 
       end
@@ -118,9 +118,9 @@ class Diamond::APITest < Test::Unit::TestCase
       context "#interval=" do
 
         should "set the interval" do
-          assert_not_equal 7, @arpeggiator.interval
+          refute_equal 7, @arpeggiator.interval
           @arpeggiator.interval = 7
-          assert_equal 7, @arpeggiator.interval 
+          assert_equal 7, @arpeggiator.interval
         end
 
       end
@@ -128,9 +128,9 @@ class Diamond::APITest < Test::Unit::TestCase
       context "#gate=" do
 
         should "set the gate" do
-          assert_not_equal 125, @arpeggiator.gate
+          refute_equal 125, @arpeggiator.gate
           @arpeggiator.gate = 125
-          assert_equal 125, @arpeggiator.gate 
+          assert_equal 125, @arpeggiator.gate
         end
 
       end
@@ -138,7 +138,7 @@ class Diamond::APITest < Test::Unit::TestCase
       context "#pattern_offset=" do
 
         should "set the offset" do
-          assert_not_equal 5, @arpeggiator.pattern_offset
+          refute_equal 5, @arpeggiator.pattern_offset
           @arpeggiator.pattern_offset = 5
           assert_equal 5, @arpeggiator.pattern_offset
         end

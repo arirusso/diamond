@@ -1,6 +1,6 @@
 require "helper"
 
-class Diamond::SequenceTest < Test::Unit::TestCase
+class Diamond::SequenceTest < Minitest::Test
 
   context "Sequence" do
 
@@ -33,4 +33,3 @@ class Diamond::SequenceTest < Test::Unit::TestCase
   end
 
 end
-

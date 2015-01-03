@@ -1,6 +1,6 @@
 require "helper"
 
-class Diamond::SequenceParametersTest < Test::Unit::TestCase
+class Diamond::SequenceParametersTest < Minitest::Test
 
   context "SequenceParameters" do
 
@@ -50,7 +50,7 @@ class Diamond::SequenceParametersTest < Test::Unit::TestCase
 
         @sequence.expects(:mark_changed).once
         @params.range += 1
-        assert_equal 5, @params.range   
+        assert_equal 5, @params.range
       end
 
     end
@@ -59,9 +59,9 @@ class Diamond::SequenceParametersTest < Test::Unit::TestCase
 
       should "set interval" do
         @sequence.expects(:mark_changed).once
-        assert_not_equal 7, @params.interval
+        refute_equal 7, @params.interval
         @params.interval = 7
-        assert_equal 7, @params.interval 
+        assert_equal 7, @params.interval
       end
 
     end
@@ -70,7 +70,7 @@ class Diamond::SequenceParametersTest < Test::Unit::TestCase
 
       should "set gate" do
         @sequence.expects(:mark_changed).once
-        assert_not_equal 125, @params.gate
+        refute_equal 125, @params.gate
         @params.gate = 125
         assert_equal 125, @params.gate
       end
@@ -87,9 +87,9 @@ class Diamond::SequenceParametersTest < Test::Unit::TestCase
 
       should "set pattern offset" do
         @sequence.expects(:mark_changed).once
-        assert_not_equal 5, @params.pattern_offset
+        refute_equal 5, @params.pattern_offset
         @params.pattern_offset = 5
-        assert_equal 5, @params.pattern_offset   
+        assert_equal 5, @params.pattern_offset
       end
 
     end
@@ -97,28 +97,27 @@ class Diamond::SequenceParametersTest < Test::Unit::TestCase
     context "#constrain" do
 
       should "constrain max only" do
-        assert_equal 40, @params.send(:constrain, 50, :max => 40)  
-        assert_equal 30, @params.send(:constrain, 30, :max => 40)  
+        assert_equal 40, @params.send(:constrain, 50, :max => 40)
+        assert_equal 30, @params.send(:constrain, 30, :max => 40)
       end
 
       should "constain min only" do
-        assert_equal 40, @params.send(:constrain, 30, :min => 40)  
-        assert_equal 50, @params.send(:constrain, 50, :min => 40)  
+        assert_equal 40, @params.send(:constrain, 30, :min => 40)
+        assert_equal 50, @params.send(:constrain, 50, :min => 40)
       end
 
       should "constrain to min and max" do
         assert_equal 10, @params.send(:constrain, 5, :min => 10, :max => 100)
-        assert_equal 100, @params.send(:constrain, 500, :min => 10, :max => 100)  
-        assert_equal 50, @params.send(:constrain, 50, :min => 10, :max => 100) 
+        assert_equal 100, @params.send(:constrain, 500, :min => 10, :max => 100)
+        assert_equal 50, @params.send(:constrain, 50, :min => 10, :max => 100)
       end
 
       should "constrain to range" do
         assert_equal 10, @params.send(:constrain, 5, :range => 10..100)
-        assert_equal 100, @params.send(:constrain, 500, :range => 10..100)  
-        assert_equal 50, @params.send(:constrain, 50, :range => 10..100) 
+        assert_equal 100, @params.send(:constrain, 500, :range => 10..100)
+        assert_equal 50, @params.send(:constrain, 50, :range => 10..100)
       end
 
     end
   end
 end
-

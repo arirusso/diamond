@@ -1,6 +1,6 @@
 require "helper"
 
-class Diamond::ClockTest < Test::Unit::TestCase
+class Diamond::ClockTest < Minitest::Test
 
   context "Clock" do
 
@@ -13,8 +13,8 @@ class Diamond::ClockTest < Test::Unit::TestCase
       should "get MIDI output" do
         output = Object.new
         @clock = Diamond::Clock.new(120, :output => output)
-        assert_not_nil @clock.midi_outputs
-        assert_not_empty @clock.midi_outputs
+        refute_nil @clock.midi_outputs
+        refute_empty @clock.midi_outputs
         assert @clock.midi_outputs.include?(output)
       end
 
@@ -26,8 +26,8 @@ class Diamond::ClockTest < Test::Unit::TestCase
         output = Object.new
         refute @clock.midi_outputs.include?(output)
         @clock.midi_output.devices << output
-        assert_not_nil @clock.midi_outputs
-        assert_not_empty @clock.midi_outputs
+        refute_nil @clock.midi_outputs
+        refute_empty @clock.midi_outputs
         assert @clock.midi_outputs.include?(output)
       end
 
@@ -39,8 +39,8 @@ class Diamond::ClockTest < Test::Unit::TestCase
         output = Object.new
         refute @clock.midi_outputs.include?(output)
         @clock.midi_output.devices << output
-        assert_not_nil @clock.midi_outputs
-        assert_not_empty @clock.midi_outputs
+        refute_nil @clock.midi_outputs
+        refute_empty @clock.midi_outputs
         assert @clock.midi_outputs.include?(output)
 
         @clock.midi_output.devices.delete(output)
