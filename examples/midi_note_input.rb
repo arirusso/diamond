@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-$:.unshift File.join( File.dirname( __FILE__ ), '../lib')
+$:.unshift(File.join("..", "lib"))
 
 # Enter notes using MIDI input
 
@@ -14,13 +14,13 @@ require "diamond"
 @input = UniMIDI::Input.gets
 @output = UniMIDI::Output.gets
 
-options = { 
-  :gate => 20,   
+options = {
+  :gate => 20,
   :interval => 7,
   :midi => [@output, @input],
   #:midi_debug => true, # uncomment this for debug output about MIDI messages in the console
   :pattern => "UpDown",
-  :range => 4, 
+  :range => 4,
   :rate => 8
 }
 
@@ -33,7 +33,7 @@ options = {
 # To only look at a single channel, set the input channel via Arpeggiator#rx_channel=
 # Can also be passed in to the Arpeggiator constructor via the :rx_channel option
 
-@arpeggiator.rx_channel = 0 
+@arpeggiator.rx_channel = 0
 
 # You can then call arp.rx_channel = nil or arp.omni_on to return it to omni mode
 # (Diamond does not respond to MIDI Omni On/Off messages)
@@ -44,5 +44,5 @@ options = {
 
 @clock.start(:focus => true)
 
-# When you play notes, they will be sent to the arpeggiator the same way 
+# When you play notes, they will be sent to the arpeggiator the same way
 # Arpeggiator#add is used in most of the other examples

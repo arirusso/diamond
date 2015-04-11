@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-$:.unshift File.join( File.dirname( __FILE__ ), '../lib')
+$:.unshift(File.join("..", "lib"))
 
 # Control the arpeggiator using MIDI control change messages
 
@@ -9,23 +9,23 @@ require "diamond"
 @output = UniMIDI::Output.gets
 
 midi_map = [
-  { 
-    :property => :interval, 
+  {
+    :property => :interval,
     :index => 1
   },
-  { 
-    :property => :transpose, 
+  {
+    :property => :transpose,
     :index => 2
   }
   # etc
 ]
 
-options = { 
-  :gate => 90,   
+options = {
+  :gate => 90,
   :interval => 7,
   :midi => [@input, @output],
   :pattern => "UpDown",
-  :range => 4, 
+  :range => 4,
   :rate => 8,
   :midi_control => midi_map,
   :midi_debug => true

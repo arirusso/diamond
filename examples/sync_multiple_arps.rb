@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-$:.unshift File.join( File.dirname( __FILE__ ), '../lib')
+$:.unshift(File.join("..", "lib"))
 
 # Sync multiple Arpeggiators to each other
 
@@ -8,12 +8,12 @@ require "diamond"
 @output = UniMIDI::Output.gets
 
 # Basic options
-options = { 
-  :gate => 90,   
+options = {
+  :gate => 90,
   :interval => 7,
   :midi => @output,
   :pattern => "UpDown",
-  :range => 2, 
+  :range => 2,
   :rate => 8
 }
 

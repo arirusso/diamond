@@ -1,4 +1,4 @@
-$:.unshift File.join( File.dirname( __FILE__ ), '../lib')
+$:.unshift(File.join("..", "lib"))
 
 # A basic live coding setup
 #
@@ -11,12 +11,12 @@ require "diamond"
 
 @output = UniMIDI::Output.gets
 
-options = { 
-  :gate => 90,   
+options = {
+  :gate => 90,
   :interval => 7,
   :midi => @output,
   :pattern => "UpDown",
-  :range => 4, 
+  :range => 4,
   :rate => 8
 }
 
@@ -26,5 +26,5 @@ c << a
 
 chord = ["C3", "G3", "Bb3", "A4"]
 a << chord
-   
-c.start   
+
+c.start

@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-$:.unshift File.join( File.dirname( __FILE__ ), '../lib')
+$:.unshift(File.join("..", "lib"))
 
 # Similar to "simple.rb" except the MIDI messages produced by the arpeggiator are printed to the screen
 #
@@ -7,12 +7,12 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 require "diamond"
 
-options = { 
-  :gate => 90,   
+options = {
+  :gate => 90,
   :interval => 7,
   :midi => $stdout,
   :pattern => "UpDown",
-  :range => 4, 
+  :range => 4,
   :rate => 8
 }
 

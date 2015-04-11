@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-$:.unshift File.join( File.dirname( __FILE__ ), '../lib')
+$:.unshift(File.join("..", "lib"))
 
 # This example shows how to define an arpeggiator pattern
 #
@@ -7,7 +7,7 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 require "diamond"
 
 #
-# The pattern procedure should return an array of numeric scale degrees.  For example, 
+# The pattern procedure should return an array of numeric scale degrees.  For example,
 # given (3, 7) the "Up" pattern will return [0, 7, 14, 21]
 #
 def fibonacci(n)
@@ -21,9 +21,9 @@ Diamond::Pattern.add("fibonacci") { |range, interval| 0.upto(range).map { |n| fi
 
 @output = UniMIDI::Output.gets
 
-options = { 
-  :gate => 90, 
-  :range => 4, 
+options = {
+  :gate => 90,
+  :range => 4,
   :interval => 7,
   :midi => @output,
   :rate => 8

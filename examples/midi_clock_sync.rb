@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-$:.unshift File.join( File.dirname( __FILE__ ), '../lib')
+$:.unshift(File.join("..", "lib"))
 
 # This example is the same as the "simple.rb", except that it syncs to MIDI clock
 # from a unimidi input
@@ -9,12 +9,12 @@ require "diamond"
 @input = UniMIDI::Input.gets
 @output = UniMIDI::Output.gets
 
-options = { 
-  :gate => 90,   
+options = {
+  :gate => 90,
   :interval => 7,
   :midi => @output,
   :pattern => "UpDown",
-  :range => 4, 
+  :range => 4,
   :rate => 8
 }
 

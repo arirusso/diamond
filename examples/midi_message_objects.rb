@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-$:.unshift File.join( File.dirname( __FILE__ ), '../lib')
+$:.unshift(File.join("..", "lib"))
 
 # Create and pass in messages using midi-message objects
 
@@ -9,12 +9,12 @@ include MIDIMessage
 
 @output = UniMIDI::Output.gets
 
-opts = { 
-  :gate => 90,   
+opts = {
+  :gate => 90,
   :interval => 7,
   :midi => @output,
   :pattern => "UpDown",
-  :range => 4, 
+  :range => 4,
   :rate => 8
 }
 
@@ -27,7 +27,7 @@ notes = ["C1", "E1", "A1", "Bb2"]
 with(:channel => 0, :velocity => 120) do |midi|
   notes.each do |note|
     arp.add(midi.note_on(note))
-  end 
+  end
 end
 
 clock.start(:focus => true)
