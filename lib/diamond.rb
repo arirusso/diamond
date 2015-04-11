@@ -1,8 +1,9 @@
 #
 # Diamond
-#
 # MIDI arpeggiator in Ruby
-# (c)2011-2014 Ari Russo and licensed under the Apache 2.0 License
+#
+# (c)2011-2015 Ari Russo
+# Apache 2.0 License
 #
 
 # libs

@@ -11,16 +11,16 @@
 * MIDI clock IO
 * Multiplex clocks and arpeggiators
 * Suited to [live coding](http://en.wikipedia.org/wiki/Live_coding)
-* Generative arpeggio patterns 
+* Generative arpeggio patterns
 
 ##Installation
 
 `gem install diamond`
-  
+
   or with Bundler, add this to your Gemfile
-  
-`gem "diamond"` 
-  
+
+`gem "diamond"`
+
 ##Usage
 
 ```ruby
@@ -36,16 +36,16 @@ First, select a MIDI output using [unimidi](https://github.com/arirusso/unimidi)
 The Diamond arpeggiator has a number of [optional parameters](http://rubydoc.info/github/arirusso/diamond/master/Diamond/Arpeggiator:initialize).  For this example, here's a straightforward setup
 
 ```ruby
-options = { 
-  :gate => 90, 
+options = {
+  :gate => 90,
   :interval => 7,
   :midi => @output,
   :pattern => "UpDown",
-  :range => 4,     
+  :range => 4,
   :rate => 8
 }
 
-arpeggiator = Diamond::Arpeggiator.new(options) 
+arpeggiator = Diamond::Arpeggiator.new(options)
 ```
 
 Create a clock object, passing in a tempo value. In this case the tempo will be 138 BPM
@@ -69,7 +69,7 @@ chord = ["C3", "G3", "Bb3", "A4"]
 Use `Arpeggiator#add` and `Arpeggiator#remove` to change the notes that the arpeggiator sees. (`Arpeggiator#<<` is the same as add)  
 
 ```ruby
-arpeggiator.add(chord)   
+arpeggiator.add(chord)
 arpeggiator << "C5"
 ```
 
@@ -110,7 +110,7 @@ This [blog post](http://tx81z.blogspot.com/2011/07/live-coding-with-diamond.html
 * [Use Diamond as a master MIDI clock](http://github.com/arirusso/diamond/blob/master/examples/midi_clock_output.rb)
 
 [More...](http://github.com/arirusso/diamond/blob/master/examples)
- 
+
 ##Other Documentation
 
 * [rdoc](http://rubydoc.info/github/arirusso/diamond)
@@ -123,4 +123,4 @@ This [blog post](http://tx81z.blogspot.com/2011/07/live-coding-with-diamond.html
 
 Apache 2.0, See the file LICENSE
 
-Copyright (c) 2011-2014 Ari Russo
+Copyright (c) 2011-2015 [Ari Russo](http://arirusso.com)
