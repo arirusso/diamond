@@ -2,7 +2,6 @@
 $:.unshift(File.join("..", "lib"))
 
 # This example shows how to define an arpeggiator pattern
-#
 
 require "diamond"
 
