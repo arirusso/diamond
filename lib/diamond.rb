@@ -31,6 +31,6 @@ require "diamond/sequence_parameters"
 
 module Diamond
 
-  VERSION = "0.5.7"
+  VERSION = "0.5.8"
 
 end
