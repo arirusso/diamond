@@ -59,7 +59,7 @@ module Diamond
     # @return [Array<Arpeggiator>]
     def remove(arpeggiator)
       arpeggiators = [arpeggiator].flatten
-      @arpeggiators.delete_if? { |arpeggiator| arpeggiators.include?(arpeggiator) }
+      @arpeggiators.delete_if { |arpeggiator| arpeggiators.include?(arpeggiator) }
       @arpeggiators
     end
 
