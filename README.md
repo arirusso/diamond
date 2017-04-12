@@ -1,10 +1,10 @@
-#Diamond
+# Diamond
 
 [MIDI arpeggiator](http://en.wikipedia.org/wiki/Arpeggiator#Arpeggiator) in Ruby
 
 ![diamond](http://1.bp.blogspot.com/-at6MuXyeuwY/TgoTFCeQP7I/AAAAAAAAAF4/WbjtunQ4IQc/s320/687474703a2f2f696d616765732e7472656574726f75626c652e6e65742f696d616765732f6469616d6f6e642e6a7067.jpeg)
 
-##Features
+## Features
 
 * Classic arpeggiator functionality and patterns
 * [OSC](http://en.wikipedia.org/wiki/Open_Sound_Control) and MIDI remote control
@@ -13,7 +13,7 @@
 * Suited to [live coding](http://en.wikipedia.org/wiki/Live_coding)
 * Generative arpeggio patterns
 
-##Installation
+## Installation
 
 `gem install diamond`
 
@@ -21,7 +21,7 @@
 
 `gem "diamond"`
 
-##Usage
+## Usage
 
 ```ruby
 require "diamond"
@@ -93,13 +93,13 @@ arpeggiator.remove("C5", "A4")
 
 This [blog post](http://tx81z.blogspot.com/2011/07/live-coding-with-diamond.html) explains what is happening in the video.
 
-####Posts
+#### Posts
 
 * [Introduction](http://tx81z.blogspot.com/2011/07/diamond-midi-arpeggiator-in-ruby.html)
 * [Live coding Diamond and syncing multiple arpeggiators to each other](http://tx81z.blogspot.com/2011/07/live-coding-with-diamond.html)
 * [A note about live coding in IRB with OSX](http://tx81z.blogspot.com/2011/09/note-about-live-coding-in-irb-with-osx.html)
 
-####Examples
+#### Examples
 
 * [Control via OSC](http://github.com/arirusso/diamond/blob/master/examples/osc_control.rb)
 * [Define a Pattern](http://github.com/arirusso/diamond/blob/master/examples/define_pattern.rb)
@@ -111,15 +111,15 @@ This [blog post](http://tx81z.blogspot.com/2011/07/live-coding-with-diamond.html
 
 [More...](http://github.com/arirusso/diamond/blob/master/examples)
 
-##Other Documentation
+## Other Documentation
 
 * [rdoc](http://rubydoc.info/github/arirusso/diamond)
 
-##Author
+## Author
 
 * [Ari Russo](http://github.com/arirusso) <ari.russo at gmail.com>
 
-##License
+## License
 
 Apache 2.0, See the file LICENSE
 
